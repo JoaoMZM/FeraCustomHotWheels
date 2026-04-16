@@ -6,7 +6,7 @@
   Objetivo de propósito de acadêmico, com objetivo de realização do TCC para o Curso Técnico em Desenvolvimento de Sistemas da Escola SENAI "Dr. Celso Charuri". O projeto        busca também, sanar dificuldades de gerenciamento de negócios do cliente, aplicando conhecimentos adquiridos no curso técnico: 
   - Modelagem e relacionamento do banco de dados;
   - Programação Back-End;
-  - Programação Front-End;hhj
+  - Programação Front-End;
   - Desenvolvimento Mobile;
   - Desenvolvimento de design e interfaces;
   - Metodologias de desenvolvimento;
@@ -15,12 +15,14 @@
   - Versionamento.
 
 ## Tecnologias Utilizadas
+
   ### Front-End
     - HTML5;
     - CSS;
     - JavaScript;
     - React;
     - Bootstrap.
+    
   ### Back-End
     - Node.js;
     - Express;
