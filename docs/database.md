@@ -21,7 +21,7 @@ Representa os clientes da loja que estão cadastrados no sistema.
 - Clientes X Cartao;
 - Clientes X Pedidos.
 
-## 🛒 Entidade: Produtos
+## 📍 Entidade: Enderecos
 ![Entidade produtos](../assets/EnderecosEntidade.png)
 
 ### 📌 Descrição
@@ -36,12 +36,11 @@ Representa o endereço dos clientes cadastrados na loja.
 - cep_endereco;
 - UF_endereco;
 - complemento_endereco;
-- estado_descricao;
-- estado_endereco;
-- id_cliente (FK);
+- id_cliente (FK).
 
 ### 🔗 Relacionamentos
-- Endereços X Clientes;
+- Pagamentos X Pedidos;
+- Pagamentos X Cartao;
 
 ## 📞 Entidade: Telefones
 ![Entidade telefones](../assets/TelefonesEntidade.png)
@@ -67,17 +66,17 @@ Representa os pedidos realizados pelos clientes da loja, mais especificamente se
 - id_pedido (PK);
 - data_pedido;
 - status_pedido;
-- id_cliente (FK).
+- id_cliente (FK)
 
 ### 🔗 Relacionamentos
 - Pedidos X Clientes;
 - Pedidos X itens_pedidos.
 
-##  Entidade: Cartao
+## 💳 Entidade: Cartao
 ![Entidade cartão](../assets/CartaoEntidade.png)
 
 ### 📌 Descrição
-Representa os cartões de crédito/débit
+Representa os cartões de crédito/débito dos clientes.
 
 ### 🧾 Atributos
 - id_pedido (PK);
@@ -88,3 +87,97 @@ Representa os cartões de crédito/débit
 ### 🔗 Relacionamentos
 - Pedidos X Clientes;
 - Pedidos X itens_pedidos.
+
+## 💲 Entidade: Pagamentos
+![Entidade pagamentos](../assets/pagamentosEntidade.png)
+
+### 📌 Descrição
+Representa os pagamentos realizados pelos clientes.
+
+### 🧾 Atributos
+- id_pagamento (PK);
+- id_pedido (FK);
+- id_cartao (FK);
+- metodo_pagamento;
+- status_pagamento;
+- valor_pagamento;
+- email_pagador;
+- numero_parcelar;
+- data_pagamento.
+
+### 🔗 Relacionamentos
+- Pedidos X Clientes;
+- Pedidos X itens_pedidos.
+
+## 📦 Entidade: itens_pedidos
+![Entidade itens pedidos](../assets/itensPedidosEntidade.png)
+
+### 📌 Descrição
+Representa os itens pedidos pelo cliente.
+
+### 🧾 Atributos
+- id_itens_pedidos (PK);
+- id_pedido (FK);
+- id_produto (FK);
+- quantidade;
+- preco_unitario.
+
+### 🔗 Relacionamentos
+- itens_pedidos X Produtos;
+- itens_pedidos X Pedidos.
+
+## 🛒 Entidade: Produtos
+![Entidade entidade produtos](../assets/produtosEntidade.png)
+
+### 📌 Descrição
+Representa os produtos disponíveis na loja.
+
+### 🧾 Atributos
+- id_produto (PK);
+- nome_produto;
+- descricao_produto;
+- preco_produto;
+- estoque_produto;
+- id_categoria;
+- cor;
+- limitado;
+- modelo.
+
+### 🔗 Relacionamentos
+- Produtos X itens_pedidos;
+- Produtos X Categorias.
+
+## 🛒 Entidade: Produtos
+![Entidade entidade produtos](../assets/produtosEntidade.png)
+
+### 📌 Descrição
+Representa os produtos disponíveis na loja.
+
+### 🧾 Atributos
+- id_produto (PK);
+- nome_produto;
+- descricao_produto;
+- preco_produto;
+- estoque_produto;
+- id_categoria (FK);
+- cor;
+- limitado;
+- modelo.
+
+### 🔗 Relacionamentos
+- Produtos X itens_pedidos;
+- Produtos X Categorias.
+
+## 🏷️ Entidade: Categorias
+![Entidade entidade categorias](../assets/categoriasEntidade.png)
+
+### 📌 Descrição
+Representa as possíveis categorias que um produto pode ter na loja.
+
+### 🧾 Atributos
+- id_categoria (PK);
+- nome_categoria;
+- descricao_categoria;
+
+### 🔗 Relacionamentos
+- Categorias X Produtos.
