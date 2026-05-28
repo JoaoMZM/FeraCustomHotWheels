@@ -23,7 +23,7 @@ const clienteRepository = {
         `;
         const values = [id];
         const [rows] = await db.execute(sql, values);
-        return rows[0]; 
+        return rows[0];
     },
 
     criar: async (cliente) => {
@@ -96,6 +96,17 @@ const clienteRepository = {
         const values = [numero];
         const [rows] = await db.execute(sql, values);
         return rows;
+    },
+    buscarClientePorTelefone: async (numero) => {
+        const sql = `
+        SELECT c.*, t.numero AS telefone 
+        FROM clientes c 
+        INNER JOIN telefones t ON c.id_cliente = t.id_cliente 
+        WHERE t.numero = ?
+    `;
+        const values = [numero];
+        const [rows] = await db.execute(sql, values);
+        return rows[0]; // Retorna o cliente encontrado ou undefined caso não exista
     }
 }
 
