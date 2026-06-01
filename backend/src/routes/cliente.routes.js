@@ -6,6 +6,12 @@ const clienteRoutes = Router();
 clienteRoutes.get('/', clienteController.buscarTodosClientes);
 clienteRoutes.get('/:id', clienteController.buscarClientePorID);
 clienteRoutes.get('/login/teste', validarToken, clienteController.testeLogin);
+
+// ── NOVA ROTA ADICIONADA ──────────────────────────────────────────────────
+// Ela vai responder em: GET /clientes/confirmar
+clienteRoutes.get('/confirmar', clienteController.confirmarConta);
+// ──────────────────────────────────────────────────────────────────────────
+
 clienteRoutes.post('/', clienteController.incluirCliente);
 clienteRoutes.post('/login', clienteController.loginCliente);
 clienteRoutes.post('/logout', clienteController.logoutCliente);

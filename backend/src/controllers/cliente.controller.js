@@ -4,8 +4,11 @@ import clienteRepository from "../repositories/cliente.repository.js";
 import { validarEmail } from "../utils/validarEmail.js";
 import { validarTelefone } from "../utils/validarNumero.js";
 import { limparNumero } from "../utils/limparNumero.js";
+import { randomBytes } from 'crypto';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer'; 
+
 const clienteController = {
 
     buscarTodosClientes: async (req, res) => {
@@ -46,21 +49,19 @@ const clienteController = {
     incluirCliente: async (req, res) => {
         try {
             const { nome, cpf, email, senha, telefone } = req.body;
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(senha, salt);
 
-            const cpfLimpo = limparNumero(cpf);
-            const telefoneLimpo = limparNumero(telefone);
             if (!nome || !cpf || !email || !senha || !telefone) {
                 return res.status(400).json({ sucesso: false, message: "Campos obrigatórios não informados" });
             }
+
+            const cpfLimpo = limparNumero(cpf);
+            const telefoneLimpo = limparNumero(telefone);
 
             if (!validarCPF(cpf)) {
                 return res.status(400).json({ sucesso: false, message: "CPF inválido" });
             }
 
             const clienteExistente = await clienteRepository.buscarPorCpf(cpfLimpo);
-
             if (clienteExistente && clienteExistente.length > 0) {
                 return res.status(400).json({ sucesso: false, message: "CPF já cadastrado" });
             }
@@ -70,7 +71,6 @@ const clienteController = {
             }
 
             const clienteExistente2 = await clienteRepository.buscarPorEmail(email);
-
             if (clienteExistente2 && clienteExistente2.length > 0) {
                 return res.status(400).json({ sucesso: false, message: "E-mail já cadastrado" });
             }
@@ -79,11 +79,49 @@ const clienteController = {
                 return res.status(400).json({ sucesso: false, message: "Telefone inválido" });
             }
 
-            const cliente = Cliente.criar({ nome, cpf: cpfLimpo, email, senha: hashedPassword, telefone: telefoneLimpo });
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(senha, salt);
+
+            // ── GERANDO O TOKEN DE CONFIRMAÇÃO ──────────────────────────────────
+            const tokenConfirmacao = crypto.randomBytes(20).toString('hex');
+
+            // Passamos os novos campos para a criação da entidade
+            const cliente = Cliente.criar({
+                nome,
+                cpf: cpfLimpo,
+                email,
+                senha: hashedPassword,
+                telefone: telefoneLimpo,
+                confirmado: 0, // Começa inativo (0 ou false dependendo do seu DB)
+                token_confirmacao: tokenConfirmacao
+            });
 
             const resultado = await clienteRepository.criar(cliente);
 
-            return res.status(201).json({ sucesso: true, message: "Cliente criado com sucesso", result: resultado });
+            const linkConfirmacao = `http://localhost:5173/confirmar-conta?token=${tokenConfirmacao}`;
+
+            await transporter.sendMail({
+                from: '"Fera Custom" <noreply@feracustom.com>',
+                to: email,
+                subject: "Confirme sua conta - Fera Custom Hot Wheels",
+                html: `
+                    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 8px;">
+                        <h2 style="color: #e60000;">Olá, ${nome}!</h2>
+                        <p>Obrigado por se cadastrar na Fera Custom Hot Wheels.</p>
+                        <p>Para ativar sua conta e liberar seu acesso ao sistema, clique no botão vermelho abaixo:</p>
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="${linkConfirmacao}" style="background: #e60000; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Confirmar Minha Conta</a>
+                        </div>
+                        <p style="font-size: 12px; color: #666;">Se o botão não funcionar, copie e cole este link no seu navegador:<br>${linkConfirmacao}</p>
+                    </div>
+                `
+            });
+
+            return res.status(201).json({
+                sucesso: true,
+                message: "Cliente criado com sucesso! Verifique seu e-mail para confirmar a conta.",
+                result: resultado
+            });
 
         } catch (error) {
             console.error(error);
@@ -98,7 +136,7 @@ const clienteController = {
             if (!id) {
                 return res.status(400).json({ message: "ID é obrigatório" });
             }
-            
+
             const { nome, cpf, email, senha, telefone } = req.body;
             const cpfLimpo = limparNumero(cpf);
             const telefoneLimpo = limparNumero(telefone);
@@ -139,6 +177,7 @@ const clienteController = {
             return res.status(500).json({ message: 'Erro no servidor', errorMessage: error.message });
         }
     },
+
     loginCliente: async (req, res) => {
         try {
             const { authMethod, senha } = req.body;
@@ -150,21 +189,25 @@ const clienteController = {
             };
             if (!authMethod || !senha) return res.status(400).json({ message: "Informe todos os campos" });
 
-            const usuario = await clienteRepository.buscarPorEmail(authMethod);
-
-            console.log(authMethod, usuario)
+            const usuarioResult = await clienteRepository.buscarPorEmail(authMethod);
+            const usuario = usuarioResult && usuarioResult[0];
 
             if (!usuario) {
                 return res.status(404).json({ message: "Usuário não encontrado" });
             }
 
-            const validPassword = await bcrypt.compare(senha, usuario[0].senha);
+            // ── VERIFICAÇÃO SE A CONTA FOI CONFIRMADA ───────────────────────────
+            // Ajuste o termo se no seu banco estiver true/false ou 1/0
+            if (!usuario.confirmado || usuario.confirmado === 0) {
+                return res.status(401).json({ message: "Sua conta ainda não foi ativada. Verifique seu e-mail de confirmação." });
+            }
 
+            const validPassword = await bcrypt.compare(senha, usuario.senha);
             if (!validPassword) return res.status(400).json({ message: "Senha inválida" });
 
             res.clearCookie('token', cookieOptions);
 
-            const token = jwt.sign({ id_cliente: usuario[0].id_cliente }, process.env.TOKEN_SECRET, { expiresIn: '1m' });
+            const token = jwt.sign({ id_cliente: usuario.id_cliente }, process.env.TOKEN_SECRET, { expiresIn: '1m' });
 
             res.cookie('token', token, { ...cookieOptions, maxAge: 60000 });
 
@@ -174,6 +217,7 @@ const clienteController = {
             return res.status(500).json({ message: 'Erro no servidor', errorMessage: error.message });
         }
     },
+
     logoutCliente: async (req, res) => {
         try {
             const cookieOptions = {
@@ -182,7 +226,7 @@ const clienteController = {
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax'
             };
-            
+
             res.clearCookie('token', cookieOptions);
 
             return res.status(200).json({ message: "Logout realizado com sucesso!" });
@@ -192,6 +236,7 @@ const clienteController = {
             return res.status(500).json({ message: "Erro ao tentar fazer logout." });
         }
     },
+
     testeLogin: async (req, res) => {
         try {
             return res.status(200).json({ message: "Você está logado com token" });
@@ -199,7 +244,34 @@ const clienteController = {
             console.error(error);
             return res.status(500).json({ message: 'Erro no servidor', errorMessage: error.message });
         }
+    },
+
+    confirmarConta: async (req, res) => {
+        try {
+            const { token } = req.query;
+
+            if (!token) {
+                return res.status(400).json({ message: "Token de confirmação não fornecido." });
+            }
+
+            // Você precisa implementar essa função de busca lá no seu clienteRepository!
+            const usuarioResult = await clienteRepository.buscarPorTokenConfirmacao(token);
+            const usuario = usuarioResult && usuarioResult[0];
+
+            if (!usuario) {
+                return res.status(400).json({ message: "Link de confirmação inválido ou expirado." });
+            }
+
+            // Executa a atualização no banco de dados limpando o token e ativando
+            // Você também precisará criar esse método atualizarStatusConfirmado no seu clienteRepository
+            await clienteRepository.atualizarStatusConfirmado(usuario.id_cliente);
+
+            return res.status(200).json({ message: "Sua conta foi ativada com sucesso! Você já pode fazer o login." });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Erro interno ao confirmar conta.", errorMessage: error.message });
+        }
     }
-};
+}
 
 export default clienteController;

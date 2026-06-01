@@ -2,6 +2,7 @@ import e from 'express';
 import 'dotenv/config';
 import routes from './src/routes/routes.js';
 import https from 'https';
+import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -13,6 +14,10 @@ const __dirname = path.dirname(__filename);
 const app = e();
 app.use(e.json());
 app.use(cookieParser());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 app.use('/', routes);
 
 const SERVER_PORT = process.env.SERVER_PORT;
