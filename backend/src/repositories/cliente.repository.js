@@ -3,7 +3,6 @@ import { db } from "../configs/database.js"
 const clienteRepository = {
 
     selecionar: async () => {
-        // Melhorei aqui também trazendo o telefone junto na listagem geral
         const sql = `
             SELECT c.*, t.numero AS telefone 
             FROM clientes c 
@@ -14,7 +13,6 @@ const clienteRepository = {
     },
 
     selecionarPorId: async (id) => {
-        // SOLUÇÃO DO BUG: Traz o número do telefone junto com os dados do cliente
         const sql = `
             SELECT c.*, t.numero AS telefone 
             FROM clientes c 
@@ -52,7 +50,6 @@ const clienteRepository = {
     },
 
     editar: async (cliente) => {
-        // CORREÇÃO: Trocado 'WHERE id=?' por 'WHERE id_cliente=?'
         const sqlCliente = 'UPDATE clientes SET nome=?, cpf=?, email=?, senha=? WHERE id_cliente=?';
         const valuesCliente = [cliente.nome, cliente.cpf, cliente.email, cliente.senha, cliente.id_cliente];
         const [rows] = await db.execute(sqlCliente, valuesCliente);
@@ -70,7 +67,6 @@ const clienteRepository = {
         const sqlTelefone = 'DELETE FROM telefones WHERE id_cliente = ?';
         await db.execute(sqlTelefone, [id]);
 
-        // CORREÇÃO: Trocado 'WHERE id = ?' por 'WHERE id_cliente = ?'
         const sqlCliente = 'DELETE FROM clientes WHERE id_cliente = ?';
         const values = [id];
         const [rows] = await db.execute(sqlCliente, values);
@@ -106,7 +102,14 @@ const clienteRepository = {
     `;
         const values = [numero];
         const [rows] = await db.execute(sql, values);
-        return rows[0]; // Retorna o cliente encontrado ou undefined caso não exista
+        return rows[0];
+    },
+    atualizarSenha: async (idCliente, novaSenhaHash) => {
+        const query = 'UPDATE clientes SET senha = ? WHERE id_cliente = ?';
+
+        const [rows] = await db.execute(query, [novaSenhaHash, idCliente]);
+
+        return rows;
     }
 }
 

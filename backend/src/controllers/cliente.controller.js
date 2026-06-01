@@ -98,8 +98,7 @@ const clienteController = {
             if (!id) {
                 return res.status(400).json({ message: "ID é obrigatório" });
             }
-
-            // CORREÇÃO: Removi id_cliente (que já vem pelo req.params.id) e adicionei o telefone
+            
             const { nome, cpf, email, senha, telefone } = req.body;
             const cpfLimpo = limparNumero(cpf);
             const telefoneLimpo = limparNumero(telefone);
@@ -163,9 +162,9 @@ const clienteController = {
 
             if (!validPassword) return res.status(400).json({ message: "Senha inválida" });
 
-            const token = jwt.sign({ id_cliente: usuario[0].id_cliente }, process.env.TOKEN_SECRET, { expiresIn: '1m' });
-
             res.clearCookie('token', cookieOptions);
+
+            const token = jwt.sign({ id_cliente: usuario[0].id_cliente }, process.env.TOKEN_SECRET, { expiresIn: '1m' });
 
             res.cookie('token', token, { ...cookieOptions, maxAge: 60000 });
 
