@@ -63,13 +63,15 @@ Durante o desenvolvimento, a equipe aplica e consolida conceitos de:
 - [x] Gerenciamento de estoque dos produtos;
 - [x] Carrinho de compras.
 
-*(Nota: Você pode trocar o `[x]` por `[ ]` nas funcionalidades que ainda estão sendo desenvolvidas para acompanhar o progresso)*
 
 ---
 
 ## 👥 Integrantes da Equipe
 
-* **João Maziero** * **Lucas Campos** * **Lara Giovanna** * **Kauã Henzo**
+* **João Maziero** 
+* **Kauã Henzo**
+* **Lara Giovanna** 
+* **Lucas Campos** 
 * **Guilherme Medeiros**
 
 ---
