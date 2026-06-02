@@ -75,17 +75,17 @@ export const logoutUsuario = async () => {
 
 export const confirmarContaUsuario = async (token) => {
     try {
-        const response = await fetch(`${API_URL}/clientes/confirmar?token=${token}`, {
+        const response = await fetch(`http://localhost:443/clientes/confirmar?token=${token}`, {
             method: 'GET',
-            credentials: 'include' 
+            credentials: 'include'
         });
-        
+
         const data = await response.json();
-        
+
         if (!response.ok) {
             throw new Error(data.message || 'Erro ao confirmar conta.');
         }
-        
+
         return data;
     } catch (error) {
         console.error('Erro no serviço de confirmação:', error);

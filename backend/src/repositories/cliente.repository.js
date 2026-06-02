@@ -118,7 +118,7 @@ const clienteRepository = {
         return rows;
     },
 
-    // ── NOVO MÉTODO: BUSCA O CLIENTE PELO TOKEN DO E-MAIL ────────────────────
+
     buscarPorTokenConfirmacao: async (token) => {
         const sql = 'SELECT * FROM clientes WHERE token_confirmacao = ?';
         const values = [token];

@@ -5,9 +5,20 @@ import { validarEmail } from "../utils/validarEmail.js";
 import { validarTelefone } from "../utils/validarNumero.js";
 import { limparNumero } from "../utils/limparNumero.js";
 import { randomBytes } from 'crypto';
+import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer'; 
+import nodemailer from 'nodemailer';
+
+
+const transporter = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "51571378dd3f08", 
+    pass: "e39b27d4ee2f2e"  
+  }
+});
 
 const clienteController = {
 
@@ -92,16 +103,16 @@ const clienteController = {
                 email,
                 senha: hashedPassword,
                 telefone: telefoneLimpo,
-                confirmado: 0, // Começa inativo (0 ou false dependendo do seu DB)
+                confirmado: 0,
                 token_confirmacao: tokenConfirmacao
             });
 
             const resultado = await clienteRepository.criar(cliente);
 
-            const linkConfirmacao = `http://localhost:5173/confirmar-conta?token=${tokenConfirmacao}`;
+            const linkConfirmacao = `http://localhost:5173/?confirmar=true&token=${tokenConfirmacao}`;
 
             await transporter.sendMail({
-                from: '"Fera Custom" <noreply@feracustom.com>',
+                from: '"Fera Custom Hot Wheels" <noreply@feracustom.com>',
                 to: email,
                 subject: "Confirme sua conta - Fera Custom Hot Wheels",
                 html: `
@@ -254,7 +265,6 @@ const clienteController = {
                 return res.status(400).json({ message: "Token de confirmação não fornecido." });
             }
 
-            // Você precisa implementar essa função de busca lá no seu clienteRepository!
             const usuarioResult = await clienteRepository.buscarPorTokenConfirmacao(token);
             const usuario = usuarioResult && usuarioResult[0];
 
@@ -262,8 +272,6 @@ const clienteController = {
                 return res.status(400).json({ message: "Link de confirmação inválido ou expirado." });
             }
 
-            // Executa a atualização no banco de dados limpando o token e ativando
-            // Você também precisará criar esse método atualizarStatusConfirmado no seu clienteRepository
             await clienteRepository.atualizarStatusConfirmado(usuario.id_cliente);
 
             return res.status(200).json({ message: "Sua conta foi ativada com sucesso! Você já pode fazer o login." });

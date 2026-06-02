@@ -1,34 +1,35 @@
-import React, { useState } from 'react';
-
-import LoginPage from './pages/usuarios/login.page.jsx';
-import CadastroPage from './pages/usuarios/cadastro.page.jsx';
-import RecuperarSenhaPage from './pages/usuarios/recuperacao.page.js';
-import ConfirmarContaPage from './pages/usuarios/confirmarConta.page.jsx';
+import React, { useState, useEffect } from 'react';
+import LoginPage from './pages/usuarios/login.page';
+import CadastroPage from './pages/usuarios/cadastro.page';
+import ConfirmarContaPage from './pages/usuarios/confirmarConta.page';
 
 export default function App() {
+    // Começa na tela de login por padrão
+    const [telaAtual, setTelaAtual] = useState('login'); 
 
-    const [pagina, setPagina] = useState('login');
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('confirmar') === 'true') {
+            setTelaAtual('confirmar-conta');
+        }
+    }, []);
 
     return (
-        <div>
-
-            {pagina === 'login' && (
-                <LoginPage
-                    onNavigateToCadastro={() => setPagina('cadastro')}
-                    onNavigateToRecuperarSenha={() => setPagina('recuperar')}
-                />
+        <div className="app-container">
+            {/* Tela de Login */}
+            {telaAtual === 'login' && (
+                <LoginPage onNavigateToCadastro={() => setTelaAtual('cadastro')} />
+            )}
+            
+            {/* Tela de Cadastro */}
+            {telaAtual === 'cadastro' && (
+                <CadastroPage onNavigateToLogin={() => setTelaAtual('login')} />
             )}
 
-            {pagina === 'cadastro' && (
-                <CadastroPage />
+            {/* Tela de Confirmação de Conta */}
+            {telaAtual === 'confirmar-conta' && (
+                <ConfirmarContaPage onNavigateToLogin={() => setTelaAtual('login')} />
             )}
-
-            {pagina === 'recuperar' && (
-                <RecuperarSenhaPage
-                    onVoltarLogin={() => setPagina('login')}
-                />
-            )}
-
         </div>
     );
 }
