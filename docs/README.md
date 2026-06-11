@@ -70,7 +70,7 @@ Durante o desenvolvimento, a equipe aplica e consolida conceitos de:
 
 * **João Maziero** 
 * **Kauã Henzo**
-* **Lara Giovanna** 
+* **Lara Giovana** 
 * **Lucas Campos** 
 * **Guilherme Medeiros**
 
