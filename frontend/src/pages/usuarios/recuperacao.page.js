@@ -34,7 +34,7 @@ export default function RecuperarSenhaPage({ onVoltarLogin }) {
 
             setSucesso('Enviamos um link de recuperação para seu e-mail.');
 
-        } catch (err) {
+        } catch (error) {
             setErro('Erro ao enviar recuperação.');
         } finally {
             setCarregando(false);

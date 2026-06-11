@@ -31,7 +31,7 @@ export default function LoginPage({ onNavigateToCadastro, onNavigateToRecuperarS
         
         setCarregando(true);
         try {
-            // Chamei a sua função do arquivo api.js aqui
+            // função do arquivo api.js aqui
             const dados = await loginUsuario(formData.authMethod, formData.senha);
             
             // Se a API retornar um token, salvamos no localStorage
