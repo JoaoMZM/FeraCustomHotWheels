@@ -1,35 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import LoginPage from './pages/usuarios/login.page';
-import CadastroPage from './pages/usuarios/cadastro.page';
-import ConfirmarContaPage from './pages/usuarios/confirmarConta.page';
+import React, { useState } from 'react';
+
+import LoginPage from './pages/usuarios/login.page.jsx';
+import CadastroPage from './pages/usuarios/cadastro.page.jsx';
+import RecuperarSenhaPage from './pages/usuarios/recuperacao.page.jsx';
 
 export default function App() {
-    // Começa na tela de login por padrão
-    const [telaAtual, setTelaAtual] = useState('login'); 
 
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('confirmar') === 'true') {
-            setTelaAtual('confirmar-conta');
-        }
-    }, []);
+    const [pagina, setPagina] = useState('login');
 
     return (
-        <div className="app-container">
-            {/* Tela de Login */}
-            {telaAtual === 'login' && (
-                <LoginPage onNavigateToCadastro={() => setTelaAtual('cadastro')} />
-            )}
-            
-            {/* Tela de Cadastro */}
-            {telaAtual === 'cadastro' && (
-                <CadastroPage onNavigateToLogin={() => setTelaAtual('login')} />
+        <div>
+
+            {pagina === 'login' && (
+                <LoginPage
+                    onNavigateToCadastro={() => setPagina('cadastro')}
+                    onNavigateToRecuperarSenha={() => setPagina('recuperar')}
+                />
             )}
 
-            {/* Tela de Confirmação de Conta */}
-            {telaAtual === 'confirmar-conta' && (
-                <ConfirmarContaPage onNavigateToLogin={() => setTelaAtual('login')} />
+            {pagina === 'cadastro' && (
+                <CadastroPage />
             )}
+
+            {pagina === 'recuperar' && (
+                <RecuperarSenhaPage
+                    onVoltarLogin={() => setPagina('login')}
+                />
+            )}
+
         </div>
     );
 }
