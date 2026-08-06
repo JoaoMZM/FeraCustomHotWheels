@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import LoginPage from './pages/usuarios/login.page.js';
-import CadastroPage from './pages/usuarios/cadastro.page.js';
-import RecuperarSenhaPage from './pages/usuarios/recuperacao.page.js';
+import LoginPage from './pages/usuarios/login.page.jsx';
+import CadastroPage from './pages/usuarios/cadastro.page.jsx';
+import RecuperarSenhaPage from './pages/usuarios/recuperacao.page.jsx';
 
 export default function App() {
 
