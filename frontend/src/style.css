@@ -1,24 +1,29 @@
 @import url('https://fonts.google.com/share?selection.family=Roboto:ital,wght@0,100..900;1,100..900');
 
 :root {
-    --red:      #E8000D;
-    --red-dk:   #B0000A;
-    --red-hi:   #FF2233;
-    --white:    #ffffff;
-    --dark:     #141414;
-    --surface:  #1C1C1C;
-    --border:   #000000;
-    --text:     #000000;
-    --accent:   #ff0000;
+    --red: #E8000D;
+    --red-dk: #B0000A;
+    --red-hi: #FF2233;
+    --white: #ffffff;
+    --dark: #141414;
+    --surface: #1C1C1C;
+    --border: #000000;
+    --text: #000000;
+    --accent: #ff0000;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html, body { height: 100%; }
+html,
+body {
+    height: 100%;
+}
 
 body {
     font-family: 'Barlow', sans-serif;
@@ -41,13 +46,11 @@ body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 60px,
-        rgba(232, 0, 13, 0.025) 60px,
-        rgba(232, 0, 13, 0.025) 62px
-    );
+    background-image: repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 60px,
+            rgba(232, 0, 13, 0.025) 60px,
+            rgba(232, 0, 13, 0.025) 62px);
     pointer-events: none;
     z-index: 0;
 }
@@ -112,35 +115,53 @@ body::after {
 }
 
 /* ── Card ─────────────────────────────────── */
+
 .cadastro-container {
-    width: 100%;
-    max-width: 420px;
+    width: 100vw;
+    max-width: 500px;
+    box-sizing: border-box;
     background: var(--white);
-    border-radius: 4px;
+    border-radius: 12px;
     padding: 36px 36px 32px;
     position: relative;
     border: 1px solid var(--border);
     animation: fc-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
     overflow: hidden;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Red top accent bar */
-.cadastro-container::before {
+.login-container {
+    width: 100vw;
+    max-width: 420px;
+    box-sizing: border-box;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 36px 36px 32px;
+    position: relative;
+    border: 1px solid var(--border);
+    animation: fc-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    overflow: hidden;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Faixa decorativa superior em ambos os containers */
+.cadastro-container::before::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 3px;
     background: linear-gradient(90deg,
-        var(--red) 0%,
-        var(--red) 75%,
-        var(--accent) 75%,
-        var(--accent) 85%,
-        var(--red) 85%
-    );
+            var(--red) 0%,
+            var(--red) 75%,
+            var(--accent) 75%,
+            var(--accent) 85%,
+            var(--red) 85%);
 }
 
-/* Corner decal */
-.cadastro-container::after {
+/* Detalhe decorativo no canto em ambos */
+.cadastro-container::after::after {
     content: '';
     position: absolute;
     bottom: -30px;
@@ -153,8 +174,15 @@ body::after {
 }
 
 @keyframes fc-fade-in {
-    from { opacity: 0; transform: translateY(20px) scale(0.98); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* ── Header ───────────────────────────────── */
@@ -178,7 +206,8 @@ body::after {
     margin-bottom: 14px;
 }
 
-.cadastro-container h2 {
+.cadastro-container h2,
+.login-container h2 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 34px;
     font-weight: 400;
@@ -269,9 +298,13 @@ body::after {
     transition: color 0.2s;
 }
 
-.btn-toggle-senha:hover { color: var(--text); }
+.btn-toggle-senha:hover {
+    color: var(--text);
+}
 
-.input-wrap:focus-within .input-icon { color: var(--red); }
+.input-wrap:focus-within .input-icon {
+    color: var(--red);
+}
 
 /* ── Inputs ──────────────────────────────── */
 .form-group input {
@@ -288,7 +321,9 @@ body::after {
     transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 
-.form-group input::placeholder { color: #444; }
+.form-group input::placeholder {
+    color: #444;
+}
 
 .form-group input:hover {
     border-color: #444;
@@ -301,7 +336,9 @@ body::after {
     box-shadow: 0 0 0 3px rgba(232, 0, 13, 0.12);
 }
 
-.input-erro { border-color: var(--red) !important; }
+.input-erro {
+    border-color: var(--red) !important;
+}
 
 /* ── Password row ────────────────────────── */
 .senha-row {
@@ -311,20 +348,28 @@ body::after {
     margin-bottom: 8px;
 }
 
-.senha-row label { margin-bottom: 0; }
-
-.link-esqueceu {
-    font-size: 10px;
-    color: var(--dark);
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    font-family: 'Barlow Condensed', sans-serif;
-    text-transform: uppercase;
-    transition: color 0.2s;
+.senha-row label {
+    margin-bottom: 0;
 }
 
-.link-esqueceu:hover { color: var(--red); }
+.link-esqueceu {
+    background: none;        /* Remove o fundo padrão de botão */
+    border: none;            /* Remove a caixa/borda em volta */
+    padding: 0;
+    font-size: 11px;
+    color: var(--red);       /* Usa a cor vermelha igual a "Criar conta gratuita" */
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-family: 'Barlow Condensed', sans-serif;
+    cursor: pointer;
+    transition: color 0.2s, opacity 0.2s;
+}
+
+.link-esqueceu:hover {
+    color: var(--red-hi);
+    opacity: 0.85;
+}
 
 /* ── Submit button ───────────────────────── */
 .btn-submit {
@@ -352,7 +397,7 @@ body::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
     pointer-events: none;
 }
 
@@ -368,19 +413,26 @@ body::after {
     box-shadow: none;
 }
 
-.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 
 /* ── Spinner ─────────────────────────────── */
 .spinner {
     width: 16px;
     height: 16px;
-    border: 2px solid rgba(255,255,255,0.25);
+    border: 2px solid rgba(255, 255, 255, 0.25);
     border-top-color: #fff;
     border-radius: 50%;
     animation: spin 0.65s linear infinite;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 /* ── Alerts ──────────────────────────────── */
 .alert {
@@ -408,9 +460,19 @@ body::after {
 }
 
 @keyframes fc-shake {
-    0%,100% { transform: translateX(0); }
-    20%      { transform: translateX(-5px); }
-    60%      { transform: translateX(5px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    60% {
+        transform: translateX(5px);
+    }
 }
 
 /* ── Footer ──────────────────────────────── */
@@ -431,7 +493,24 @@ body::after {
     transition: color 0.2s;
 }
 
-.cadastro-footer a:hover { color: var(--red-hi); }
+.cadastro-footer a:hover {
+    color: var(--red-hi);
+}
+
+.cadastro-footer button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--red);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.cadastro-footer button:hover {
+    color: var(--red-hi);
+}
 
 /* ── Divider text ────────────────────────── */
 .divider-or {
@@ -446,7 +525,8 @@ body::after {
     text-transform: uppercase;
 }
 
-.divider-or::before, .divider-or::after {
+.divider-or::before,
+.divider-or::after {
     content: '';
     flex: 1;
     height: 1px;
@@ -470,6 +550,7 @@ body::after {
 
 /* ── Mobile ──────────────────────────────── */
 @media (max-width: 460px) {
+
     .cadastro-container {
         border-radius: 0;
         border-left: none;

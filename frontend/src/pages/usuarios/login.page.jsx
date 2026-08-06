@@ -74,7 +74,7 @@ export default function LoginPage({
   };
 
   return (
-    <div className="cadastro-container">
+    <div className="login-container">
       {/* Logo */}
       <div className="brand-logo">
         <img
@@ -294,7 +294,7 @@ export default function LoginPage({
             onNavigateToCadastro();
           }}
         >
-          Criar conta gratuita
+          Criar conta
         </a>
       </div>
     </div>

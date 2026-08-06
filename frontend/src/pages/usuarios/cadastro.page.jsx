@@ -193,11 +193,11 @@ export default function CadastroPage({ onNavigateToLogin }) {
         <div className="cadastro-container">
             {/* Ícone de topo */}
             <div className="brand-logo">
-                    <img
-                        src="/FeraCustomLogo.jpg"
-                        alt="Fera Custom Hot Wheels"
-                        className="logo-img"
-                    />
+                <img
+                    src="/FeraCustomLogo.jpg"
+                    alt="Fera Custom Hot Wheels"
+                    className="logo-img"
+                />
                 <span className="brand-logo-text">Fera Custom Hot Wheels</span>
             </div>
 
