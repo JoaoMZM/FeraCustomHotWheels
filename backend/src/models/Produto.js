@@ -4,18 +4,22 @@ export class Produto {
     #nome
     #descricao
     #valor
+    #estoque
     #cor
     #limitado 
     #modelo
     #caminhoImagem
 
-    constructor(pNome, pValor, pCaminhoImagem, pIdCategoria, pId) {
+    constructor(pNome, pDescricao, pValor, pEstoque, pIdCategoria, pCor, pLimitado, pModelo, pCaminhoImagem, pId) {
         this.nome = pNome;
-        this.valor = pValor;
-        this.caminhoImagem = pCaminhoImagem;
-        this.idCategoria = pIdCategoria;
         this.descricao = pDescricao;
-        
+        this.valor = pValor;
+        this.estoque = pEstoque;
+        this.idCategoria = pIdCategoria;
+        this.cor = pCor;
+        this.limitado = pLimitado;
+        this.modelo = pModelo;
+        this.caminhoImagem = pCaminhoImagem;
         this.id = pId;
     }
 
@@ -28,6 +32,15 @@ export class Produto {
         this.#nome = value;
     }
 
+    get descricao() {
+        return this.#descricao;
+    }
+
+    set descricao(value) {
+        this.#validarDescricao(value);
+        this.#descricao = value;
+    }
+
     get valor() {
         return this.#valor;
     }
@@ -35,6 +48,15 @@ export class Produto {
     set valor(value) {
         this.#validarValor(value);
         this.#valor = Number(value);
+    }
+
+    get estoque() {
+        return this.#estoque;
+    }
+
+    set estoque(value) {
+        this.#validarEstoque(value);
+        this.#estoque = Number(value);
     }
 
     get caminhoImagem() {
@@ -55,6 +77,33 @@ export class Produto {
         this.#idCategoria = value;
     }
 
+    get cor() {
+        return this.#cor;
+    }
+
+    set cor(value) {
+        this.#validarCor(value);
+        this.#cor = value;
+    }
+
+    get limitado() {
+        return this.#limitado;
+    }
+
+    set limitado(value) {
+        this.#validarLimitado(value);
+        this.#limitado = value;
+    }
+
+    get modelo() {
+        return this.#modelo;
+    }
+
+    set modelo(value) {
+        this.#validarModelo(value);
+        this.#modelo = value;
+    }
+
     get id() {
         return this.#id;
     }
@@ -65,14 +114,26 @@ export class Produto {
     }
 
     #validarNome(value) {
-        if (!value || value.trim().length < 3 || value.trim().length > 45) {
-            throw new Error("Nome deve ter entre 3 e 45 caracteres");
+        if (!value || value.trim().length < 3 || value.trim().length > 100) {
+            throw new Error("Nome deve ter entre 3 e 100 caracteres");
+        }
+    }
+
+    #validarDescricao(value) {
+        if (!value || value.trim().length < 3 || value.trim().length > 100) {
+            throw new Error("Descrição deve ter entre 3 e 100 caracteres");
         }
     }
 
     #validarValor(value) {
         if (value === undefined || value === null || isNaN(value) || Number(value) <= 0) {
             throw new Error("Valor deve ser numérico e maior que zero");
+        }
+    }
+
+    #validarEstoque(value) {
+        if (value === undefined || value === null || isNaN(value) || Number(value) < 0) {
+            throw new Error("Estoque deve ser numérico e maior ou igual a zero");
         }
     }
 
@@ -88,6 +149,24 @@ export class Produto {
         }
     }
 
+    #validarCor(value) {
+        if (value && value.trim().length > 30) {
+            throw new Error("Cor deve ter no máximo 30 caracteres");
+        }
+    }
+
+    #validarLimitado(value) {
+        if (value !== undefined && value !== null && typeof value !== "boolean") {
+            throw new Error("Campo limitado deve ser booleano (true/false)");
+        }
+    }
+
+    #validarModelo(value) {
+        if (value && value.trim().length > 50) {
+            throw new Error("Modelo deve ter no máximo 50 caracteres");
+        }
+    }
+
     #validarId(value) {
         if (value && value <= 0) {
             throw new Error("ID inválido");
@@ -97,18 +176,28 @@ export class Produto {
     static criar(dados) {
         return new Produto(
             dados.nome,
+            dados.descricao,
             dados.valor,
-            dados.caminhoImagem,
-            dados.idCategoria
+            dados.estoque,
+            dados.idCategoria,
+            dados.cor,
+            dados.limitado,
+            dados.modelo,
+            dados.caminhoImagem
         );
     }
 
     static editar(dados, produtoAtual) {
         return new Produto(
             dados.nome ?? produtoAtual.nome,
+            dados.descricao ?? produtoAtual.descricao,
             dados.valor ?? produtoAtual.valor,
-            dados.caminhoImagem ?? produtoAtual.caminhoImagem,
+            dados.estoque ?? produtoAtual.estoque,
             dados.idCategoria ?? produtoAtual.idCategoria,
+            dados.cor ?? produtoAtual.cor,
+            dados.limitado ?? produtoAtual.limitado,
+            dados.modelo ?? produtoAtual.modelo,
+            dados.caminhoImagem ?? produtoAtual.caminhoImagem,
             produtoAtual.id
         );
     }
