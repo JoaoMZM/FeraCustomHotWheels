@@ -10,17 +10,25 @@ import {
 } from 'react-native';
 import 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Checkbox from 'expo-checkbox';
 
 export default function SignUpScreen({ navigation }) {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [aceitouTermos, setAceitouTermos] = useState(false);
 
   function handleCriarConta() {
     if (!nome || !email || !senha) {
       alert('Preencha todos os campos');
       return;
     }
+
+    if (!aceitouTermos) {
+      alert('Você precisa aceitar os Termos de Uso e a Política de Privacidade');
+      return;
+    }
+
     console.log('Cadastro:', nome, email, senha);
 
     Alert.alert('Sucesso', 'Conta cadastrada com sucesso!', [
@@ -60,6 +68,18 @@ export default function SignUpScreen({ navigation }) {
         onChangeText={setSenha}
         secureTextEntry
       />
+
+      <View style={styles.checkboxContainer}>
+        <Checkbox
+          value={aceitouTermos}
+          onValueChange={setAceitouTermos}
+          color={aceitouTermos ? '#D50000' : undefined}
+          style={styles.checkbox}
+        />
+        <Text style={styles.checkboxTexto}>
+          Eu concordo com os Termos de Uso e Política de Privacidade
+        </Text>
+      </View>
 
       <TouchableOpacity style={styles.botao} onPress={handleCriarConta} activeOpacity={0.8}>
         <Text style={styles.textoBotao}>Criar conta</Text>
@@ -102,6 +122,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#111111',
     backgroundColor: '#fff',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  checkbox: {
+    marginRight: 8,
+    marginTop: 2,
+  },
+  checkboxTexto: {
+    flex: 1,
+    fontFamily: 'Inter-Regular',
+    fontSize: 13,
+    color: '#111111',
   },
   botao: {
     backgroundColor: '#D50000',

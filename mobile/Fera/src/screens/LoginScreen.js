@@ -8,22 +8,16 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import Checkbox from 'expo-checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [aceitouTermos, setAceitouTermos] = useState(false);
   const [contasCadastradas, setContasCadastradas] = useState([]);
 
   function handleLogin() {
     if (!email || !senha) {
       alert('Preencha e-mail e senha');
-      return;
-    }
-    if (!aceitouTermos) {
-      alert('Você precisa aceitar os termos para continuar');
       return;
     }
 
@@ -35,7 +29,6 @@ export default function LoginScreen({ navigation }) {
       console.log('Login:', email, senha);
     }
 
-    // Sempre que o login for validado, vai direto para a tela de Vendas
     navigation.replace('Sales');
   }
 
@@ -63,17 +56,6 @@ export default function LoginScreen({ navigation }) {
         onChangeText={setSenha}
         secureTextEntry
       />
-
-      <View style={styles.linhaCheckbox}>
-        <Checkbox
-          value={aceitouTermos}
-          onValueChange={setAceitouTermos}
-          color={aceitouTermos ? '#D50000' : undefined}
-        />
-        <Text style={styles.textoCheckbox}>
-          Eu concordo com os Termos de Uso e Política de Privacidade
-        </Text>
-      </View>
 
       <TouchableOpacity style={styles.botao} onPress={handleLogin} activeOpacity={0.8}>
         <Text style={styles.textoBotao}>Entrar</Text>
@@ -124,23 +106,12 @@ const styles = StyleSheet.create({
     color: '#111111',
     backgroundColor: '#fff',
   },
-  linhaCheckbox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  textoCheckbox: {
-    marginLeft: 8,
-    flex: 1,
-    fontSize: 14,
-    fontFamily: 'Inter-Regular',
-    color: '#6E6E6E',
-  },
   botao: {
     backgroundColor: '#D50000',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
