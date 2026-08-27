@@ -1,37 +1,9 @@
 import React, { useState, useMemo } from "react";
-import {View,Text,TextInput,FlatList,TouchableOpacity,Image,StyleSheet,SafeAreaView,} from "react-native";
-
-// Dados de exemplo — substitua depois por dados vindos da sua API/banco
-const PRODUTOS_MOCK = [
-  {
-    id: "1",
-    nome: "Camiseta Básica",
-    preco: 49.9,
-    imagem: "https://via.placeholder.com/150",
-  },
-  {
-    id: "2",
-    nome: "Calça Jeans",
-    preco: 129.9,
-    imagem: "https://via.placeholder.com/150",
-  },
-  {
-    id: "3",
-    nome: "Tênis Esportivo",
-    preco: 199.9,
-    imagem: "https://via.placeholder.com/150",
-  },
-  {
-    id: "4",
-    nome: "Boné Aba Reta",
-    preco: 39.9,
-    imagem: "https://via.placeholder.com/150",
-  },
-];
+import {View,Text,TextInput,FlatList,TouchableOpacity,  Image,StyleSheet,SafeAreaView,} from "react-native";
 
 export default function SalesScreen({ navigation }) {
   const [busca, setBusca] = useState("");
-  const [carrinho, setCarrinho] = useState({}); // { [produtoId]: quantidade }
+  const [carrinho, setCarrinho] = useState({});
 
   const produtosFiltrados = useMemo(() => {
     if (!busca.trim()) return PRODUTOS_MOCK;
@@ -82,6 +54,7 @@ export default function SalesScreen({ navigation }) {
         {quantidade === 0 ? (
           <TouchableOpacity
             style={styles.botaoAdicionar}
+            activeOpacity={0.85}
             onPress={() => adicionarAoCarrinho(item.id)}
           >
             <Text style={styles.botaoAdicionarTexto}>+</Text>
@@ -90,6 +63,7 @@ export default function SalesScreen({ navigation }) {
           <View style={styles.quantidadeContainer}>
             <TouchableOpacity
               style={styles.botaoQuantidade}
+              activeOpacity={0.7}
               onPress={() => removerDoCarrinho(item.id)}
             >
               <Text style={styles.botaoQuantidadeTexto}>-</Text>
@@ -99,6 +73,7 @@ export default function SalesScreen({ navigation }) {
 
             <TouchableOpacity
               style={styles.botaoQuantidade}
+              activeOpacity={0.7}
               onPress={() => adicionarAoCarrinho(item.id)}
             >
               <Text style={styles.botaoQuantidadeTexto}>+</Text>
@@ -118,7 +93,7 @@ export default function SalesScreen({ navigation }) {
       <TextInput
         style={styles.inputBusca}
         placeholder="Buscar produto..."
-        placeholderTextColor="#999"
+        placeholderTextColor={COLORS.neutral}
         value={busca}
         onChangeText={setBusca}
       />
@@ -136,14 +111,17 @@ export default function SalesScreen({ navigation }) {
       {totalItens > 0 && (
         <TouchableOpacity
           style={styles.rodapeCarrinho}
+          activeOpacity={0.9}
           onPress={() => navigation?.navigate("Checkout", { carrinho })}
         >
-          <Text style={styles.rodapeTexto}>
-            {totalItens} {totalItens === 1 ? "item" : "itens"}
-          </Text>
-          <Text style={styles.rodapeTexto}>
-            R$ {totalValor.toFixed(2).replace(".", ",")}
-          </Text>
+          <View>
+            <Text style={styles.rodapeTexto}>
+              {totalItens} {totalItens === 1 ? "item" : "itens"}
+            </Text>
+            <Text style={styles.rodapeValor}>
+              R$ {totalValor.toFixed(2).replace(".", ",")}
+            </Text>
+          </View>
           <Text style={styles.rodapeFinalizar}>Finalizar venda →</Text>
         </TouchableOpacity>
       )}
@@ -151,80 +129,151 @@ export default function SalesScreen({ navigation }) {
   );
 }
 
+const PRODUTOS_MOCK = [
+  {
+    id: "1",
+    nome: "Camiseta Básica",
+    preco: 49.9,
+    imagem: "https://via.placeholder.com/150",
+  },
+  {
+    id: "2",
+    nome: "Calça Jeans",
+    preco: 129.9,
+    imagem: "https://via.placeholder.com/150",
+  },
+  {
+    id: "3",
+    nome: "Tênis Esportivo",
+    preco: 199.9,
+    imagem: "https://via.placeholder.com/150",
+  },
+  {
+    id: "4",
+    nome: "Boné Aba Reta",
+    preco: 39.9,
+    imagem: "https://via.placeholder.com/150",
+  },
+];
+
+const COLORS = {
+  primary: "#D50000",
+  secondary: "#111111",
+  neutral: "#6E6E6E",
+  background: "#F5F5F5",
+  white: "#FFFFFF",
+  border: "#E0E0E0",
+  success: "#2E7D32",
+};
+
+const FONTS = {
+  primary: "Poppins",
+  secondary: "Inter",
+};
+
+const TYPOGRAPHY = {
+  h1: { fontFamily: FONTS.primary, fontSize: 48, fontWeight: "700" },
+  h2: { fontFamily: FONTS.primary, fontSize: 36, fontWeight: "600" },
+  h3: { fontFamily: FONTS.primary, fontSize: 28, fontWeight: "500" },
+  body: { fontFamily: FONTS.secondary, fontSize: 16, fontWeight: "400" },
+  small: { fontFamily: FONTS.secondary, fontSize: 14, fontWeight: "400" },
+};
+
+const SPACING = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  xxl: 48,
+};
+
+const RADIUS = {
+  sm: 8,
+  md: 12,
+  lg: 17,
+  pill: 999,
+};
+
+const SHADOW_SMALL = {
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.08,
+  shadowRadius: 8,
+  elevation: 2,
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: COLORS.background,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 8,
+    paddingHorizontal: SPACING.md,
+    paddingTop: SPACING.md,
+    paddingBottom: SPACING.sm,
   },
   titulo: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#1a1a1a",
+    ...TYPOGRAPHY.h3,
+    color: COLORS.secondary,
   },
   inputBusca: {
-    marginHorizontal: 16,
-    marginBottom: 8,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    marginHorizontal: SPACING.md,
+    marginBottom: SPACING.sm,
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.sm,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm + 2,
+    fontFamily: FONTS.secondary,
     fontSize: 15,
+    color: COLORS.secondary,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
+    borderColor: COLORS.border,
   },
   listaContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: SPACING.md,
     paddingBottom: 100,
   },
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.md,
+    padding: SPACING.sm + 2,
+    marginBottom: SPACING.sm + 2,
+    ...SHADOW_SMALL,
   },
   imagem: {
     width: 60,
     height: 60,
-    borderRadius: 8,
-    backgroundColor: "#eee",
+    borderRadius: RADIUS.sm,
+    backgroundColor: COLORS.background,
   },
   infoContainer: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: SPACING.md - 4,
   },
   nomeProduto: {
-    fontSize: 15,
+    ...TYPOGRAPHY.body,
     fontWeight: "600",
-    color: "#1a1a1a",
+    color: COLORS.secondary,
   },
   precoProduto: {
-    fontSize: 14,
-    color: "#4caf50",
-    marginTop: 4,
+    ...TYPOGRAPHY.small,
+    color: COLORS.success,
+    marginTop: SPACING.xs,
     fontWeight: "600",
   },
   botaoAdicionar: {
     width: 34,
     height: 34,
-    borderRadius: 17,
-    backgroundColor: "#1a1a1a",
+    borderRadius: RADIUS.lg,
+    backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   botaoAdicionarTexto: {
-    color: "#fff",
+    color: COLORS.white,
     fontSize: 20,
     fontWeight: "bold",
     marginTop: -2,
@@ -232,9 +281,9 @@ const styles = StyleSheet.create({
   quantidadeContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f0f0f0",
-    borderRadius: 17,
-    paddingHorizontal: 4,
+    backgroundColor: COLORS.background,
+    borderRadius: RADIUS.lg,
+    paddingHorizontal: SPACING.xs,
   },
   botaoQuantidade: {
     width: 28,
@@ -245,29 +294,31 @@ const styles = StyleSheet.create({
   botaoQuantidadeTexto: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#1a1a1a",
+    color: COLORS.primary,
   },
   quantidadeTexto: {
     minWidth: 22,
     textAlign: "center",
+    ...TYPOGRAPHY.body,
     fontSize: 15,
     fontWeight: "600",
+    color: COLORS.secondary,
   },
   vazioTexto: {
     textAlign: "center",
-    marginTop: 40,
-    color: "#999",
-    fontSize: 15,
+    marginTop: SPACING.xxl - 8,
+    color: COLORS.neutral,
+    ...TYPOGRAPHY.body,
   },
   rodapeCarrinho: {
     position: "absolute",
-    bottom: 16,
-    left: 16,
-    right: 16,
-    backgroundColor: "#1a1a1a",
-    borderRadius: 14,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
+    bottom: SPACING.md,
+    left: SPACING.md,
+    right: SPACING.md,
+    backgroundColor: COLORS.secondary,
+    borderRadius: RADIUS.md + 2,
+    paddingVertical: SPACING.md - 2,
+    paddingHorizontal: SPACING.lg - 6,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -278,13 +329,19 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   rodapeTexto: {
-    color: "#fff",
-    fontSize: 14,
+    color: COLORS.white,
+    ...TYPOGRAPHY.small,
     fontWeight: "600",
   },
+  rodapeValor: {
+    color: COLORS.white,
+    ...TYPOGRAPHY.body,
+    fontWeight: "700",
+    marginTop: 2,
+  },
   rodapeFinalizar: {
-    color: "#fff",
-    fontSize: 14,
+    color: COLORS.primary,
+    ...TYPOGRAPHY.small,
     fontWeight: "bold",
   },
 });
