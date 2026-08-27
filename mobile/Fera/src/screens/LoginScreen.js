@@ -31,10 +31,12 @@ export default function LoginScreen({ navigation }) {
 
     if (!jaExiste) {
       setContasCadastradas((prev) => [...prev, email]);
-      Alert.alert('Sucesso', 'Conta cadastrada com sucesso!');
     } else {
       console.log('Login:', email, senha);
     }
+
+    // Sempre que o login for validado, vai direto para a tela de Vendas
+    navigation.replace('Sales');
   }
 
   return (
