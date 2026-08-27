@@ -34,7 +34,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require('../screens/assets/png.jpg')} style={styles.logo} resizeMode="contain" />
+      <Image source={require('../screens/assets/pjj.png')} style={styles.logo} resizeMode="contain" />
 
       <Text style={styles.titulo}>FeraCustom</Text>
 
@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 350,
+    height: 350,
     alignSelf: 'center',
     marginBottom: 24,
   },
