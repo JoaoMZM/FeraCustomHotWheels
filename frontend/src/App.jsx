@@ -1,33 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 import LoginPage from './pages/usuarios/login.page.jsx';
 import CadastroPage from './pages/usuarios/cadastro.page.jsx';
 import RecuperarSenhaPage from './pages/usuarios/recuperacao.page.jsx';
+import ProdutosPage from './pages/produtos/produtos.Page.jsx';
+import CarrinhoPage from './pages/carrinho/carrinho.page.jsx';
 
 export default function App() {
-
-    const [pagina, setPagina] = useState('login');
-
-    return (
-        <div>
-
-            {pagina === 'login' && (
-                <LoginPage
-                    onNavigateToCadastro={() => setPagina('cadastro')}
-                    onNavigateToRecuperarSenha={() => setPagina('recuperar')}
-                />
-            )}
-
-            {pagina === 'cadastro' && (
-                <CadastroPage />
-            )}
-
-            {pagina === 'recuperar' && (
-                <RecuperarSenhaPage
-                    onVoltarLogin={() => setPagina('login')}
-                />
-            )}
-
-        </div>
-    );
+  return (
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/cadastro" element={<CadastroPage />} />
+      <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
+      <Route path="/produtos" element={<ProdutosPage />} />
+      <Route path="/carrinho" element={<CarrinhoPage />} />
+    </Routes>
+  );
 }

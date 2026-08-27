@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function RecuperarSenhaPage({ onVoltarLogin }) {
+export default function RecuperarSenhaPage() {
+  // ⚠️ Hooks sempre dentro do corpo do componente, junto com os useState.
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
@@ -133,7 +137,7 @@ export default function RecuperarSenhaPage({ onVoltarLogin }) {
         <button
           type="button"
           className="btn-link"
-          onClick={onVoltarLogin}
+          onClick={() => navigate("/")}
         >
           Voltar para login
         </button>

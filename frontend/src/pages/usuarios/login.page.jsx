@@ -1,14 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 export default function LoginPage({
   onNavigateToCadastro,
   onNavigateToRecuperarSenha,
 }) {
-  const [formData, setFormData] = useState({
-    email: "",
-    senha: "",
-  });
-
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "", senha: "" });
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
   const [senhaVisivel, setSenhaVisivel] = useState(false);
@@ -26,7 +25,6 @@ export default function LoginPage({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setErro("");
 
     if (!formData.email || !formData.senha) {
@@ -35,37 +33,28 @@ export default function LoginPage({
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!emailRegex.test(formData.email)) {
       setErro("Digite um e-mail válido.");
       return;
     }
 
     setCarregando(true);
-
     try {
       const response = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.mensagem || "E-mail ou senha incorretos."
-        );
+        throw new Error(errorData.mensagem || "E-mail ou senha incorretos.");
       }
 
       const dados = await response.json();
+      if (dados.token) localStorage.setItem("fera_token", dados.token);
 
-      if (dados.token) {
-        localStorage.setItem("fera_token", dados.token);
-      }
-
-      window.location.href = "/";
+      navigate("/produtos"); // <-- em vez de window.location.href
     } catch (err) {
       setErro(err.message || "Falha ao conectar com o servidor.");
     } finally {
@@ -151,9 +140,8 @@ export default function LoginPage({
               onChange={handleChange}
               placeholder="seuemail@exemplo.com"
               autoComplete="email"
-              className={`input-com-icone${
-                erro && !formData.email ? " input-erro" : ""
-              }`}
+              className={`input-com-icone${erro && !formData.email ? " input-erro" : ""
+                }`}
             />
           </div>
         </div>
@@ -170,7 +158,7 @@ export default function LoginPage({
             <button
               type="button"
               className="link-esqueceu"
-              onClick={onNavigateToRecuperarSenha}
+              onClick={() => navigate("/recuperar-senha")}
             >
               Esqueceu a senha?
             </button>
@@ -291,7 +279,7 @@ export default function LoginPage({
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            onNavigateToCadastro();
+            navigate("/cadastro");
           }}
         >
           Criar conta
