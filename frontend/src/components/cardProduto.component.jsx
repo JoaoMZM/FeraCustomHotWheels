@@ -22,9 +22,9 @@ export default function CardProduto({ produto, onAdicionarCarrinho, onClickCard 
   const precoFormatado =
     typeof preco_produto === "number"
       ? preco_produto.toLocaleString("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        })
+        style: "currency",
+        currency: "BRL",
+      })
       : null;
 
   const handleAdicionar = async (e) => {
