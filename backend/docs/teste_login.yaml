@@ -1,0 +1,238 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: feraCustomTestes
+meta:
+  id: wrk_def11893aaff44e4ab1c017afcb063c5
+  created: 1779970532827
+  modified: 1779970532827
+  description: ""
+collection:
+  - name: clientes
+    meta:
+      id: fld_432be02739b2410d8357a3decd7d85d2
+      created: 1779970543621
+      modified: 1779970543621
+      sortKey: -1779970543621
+      description: ""
+    children:
+      - url: http://localhost:443/clientes
+        name: GET
+        meta:
+          id: req_1b3ee684c0b443dfb59e887333d326cb
+          created: 1779970545947
+          modified: 1779984580430
+          isPrivate: false
+          description: ""
+          sortKey: -1779970545947
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://localhost:443/clientes
+        name: CREATE
+        meta:
+          id: req_b23d4f99187f42bdaf4bd21a4588217c
+          created: 1779970555506
+          modified: 1779982859201
+          isPrivate: false
+          description: ""
+          sortKey: -1779970555506
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "Ramom Vinycius Ferreira",
+            	"cpf": "210.751.028-80",
+            	"email": "sabrinaramom09@gmail.com",
+            	"senha": "senhaSuperPoderosa",
+            	"telefone": "77960301119"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:443/clientes
+        name: DELETE
+        meta:
+          id: req_1a6ee6e0786c4922b67dd05d3060982c
+          created: 1779970567614
+          modified: 1779984595905
+          isPrivate: false
+          description: ""
+          sortKey: -1779970567614
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:443/clientes
+        name: PUT
+        meta:
+          id: req_df124a304a5a4343a6463d4a07e10a8b
+          created: 1779970579324
+          modified: 1779984598739
+          isPrivate: false
+          description: ""
+          sortKey: -1779970579324
+        method: PUT
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://127.0.0.1:443/clientes/login
+        name: LOGIN
+        meta:
+          id: req_dc74e85a0c644f0c860773085b81727d
+          created: 1779970593767
+          modified: 1779991967816
+          isPrivate: false
+          description: ""
+          sortKey: -1779970550726.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"authMethod": "abc123@gmail.com",
+            	"senha": "senha123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://127.0.0.1:443/clientes/login/teste
+        name: GETLogin
+        meta:
+          id: req_004dccdd5c0a4d3fb01f4c2bb9da1e60
+          created: 1779984245675
+          modified: 1779986379187
+          isPrivate: false
+          description: ""
+          sortKey: -1779970579424
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://127.0.0.1:443/clientes/logout
+        name: LOGOUT
+        meta:
+          id: req_4b6f0617c311498daecb22955daae53e
+          created: 1779991973059
+          modified: 1779991978900
+          isPrivate: false
+          description: ""
+          sortKey: -1779970548336.75
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"authMethod": "abc123@gmail.com",
+            	"senha": "senha123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_be48a925e2f46a48408f28a3f6de1462d430dfe4
+    created: 1779970532848
+    modified: 1779992006995
+  cookies:
+    - id: 1d0a175b-70b8-4f49-9f4f-5575def4d54f
+      key: token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9jbGllbnRlIjo2LCJpYXQiOjE3Nzk5ODYzODMsImV4cCI6MTc3OTk4NjQ0M30.W_TcoI1TUZR9UTP9xYa4wlO6sJz5htSCjTgo1fzFe4s
+      domain: localhost
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+    - id: a2142b79-0005-4a8d-a3cc-2209fc6f083e
+      key: token
+      value: ""
+      domain: 127.0.0.1
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_be48a925e2f46a48408f28a3f6de1462d430dfe4
+    created: 1779970532838
+    modified: 1779970532838
+    isPrivate: false
