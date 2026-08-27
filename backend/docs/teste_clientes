@@ -1,0 +1,165 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: feraCustom testes
+meta:
+  id: wrk_6486b3432c994073bd5a10a1f3d986ea
+  created: 1779966358139
+  modified: 1779966358139
+  description: ""
+collection:
+  - name: clientes
+    meta:
+      id: fld_b57a51955823410c9a3852011fd5c22c
+      created: 1779966390799
+      modified: 1779966390799
+      sortKey: -1779966390799
+      description: ""
+    children:
+      - url: http://localhost:8080/clientes
+        name: GET
+        meta:
+          id: req_f8526005a0d64a1892baf94c613e704b
+          created: 1779966392795
+          modified: 1779966661155
+          isPrivate: false
+          description: ""
+          sortKey: -1779966392795
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/clientes/2
+        name: GET ID
+        meta:
+          id: req_a6c143b3bc41438d8a9880b23352df13
+          created: 1779966738112
+          modified: 1779967117639
+          isPrivate: false
+          description: ""
+          sortKey: -1779966392895
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/clientes
+        name: INSERT
+        meta:
+          id: req_3a393353ea65418cba79cc72b0618bd0
+          created: 1779966760750
+          modified: 1779967101984
+          isPrivate: false
+          description: ""
+          sortKey: -1779966392995
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome":"João Maziero",
+            	"cpf":"49196614870",
+            	"email":"lucas@gmail.com",
+            	"senha":"123445",
+            	"telefone":"19998162708"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/clientes/2
+        name: PUT
+        meta:
+          id: req_ed7003c9022f4d78951f1a18600c8abb
+          created: 1779966784388
+          modified: 1779967154435
+          isPrivate: false
+          description: ""
+          sortKey: -1779966393095
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome":"Alessandro"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/clientes/2
+        name: DELETE
+        meta:
+          id: req_fe954e7697a44670aa7ff34d4c08f43d
+          created: 1779966799775
+          modified: 1779967181859
+          isPrivate: false
+          description: ""
+          sortKey: -1779966393195
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e0cfb76fc34a59beaecbb1199d2c50d378bbd49f
+    created: 1779966358161
+    modified: 1779966358161
+environments:
+  name: Base Environment
+  meta:
+    id: env_e0cfb76fc34a59beaecbb1199d2c50d378bbd49f
+    created: 1779966358152
+    modified: 1779966358152
+    isPrivate: false
