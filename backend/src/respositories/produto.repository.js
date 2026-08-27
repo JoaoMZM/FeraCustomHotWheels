@@ -1,6 +1,6 @@
-import { db } from "../configs/database";
+import { db } from "../configs/database.js";
 
-const clienteRepository = {
+const produtoRepository = {
     selecionar: async () => {
         const sql = 'SELECT * FROM produtos;';
         const [rows] = await db.execute(sql);
@@ -18,5 +18,14 @@ const clienteRepository = {
         const values = [produto.nome, produto.descricao, produto.preco, produto.estoque, produto.cor, produto.limitado, produto.modelo, produto.id_categoria, produto.id_produto];
         const [rows] = await db.execute(sql, values);
         return rows;
-    }   
+    },
+
+    desativar: async (ativo, idProduto) => {
+        const sql = 'UPDATE produtos SET ativo = ? WHERE id_produto = ?;';
+        const values = [ativo, idProduto];
+        const [rows] = await db.execute(sql, values);
+        return rows;
+    },
 }
+
+export default produtoRepository;
