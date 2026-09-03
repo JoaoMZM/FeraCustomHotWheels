@@ -1,5 +1,10 @@
 node_modules/
 .env
 package-lock.json
+<<<<<<< HEAD
 localhost-key.pem
 localhost.pem
+=======
+localhost+2-key.pem
+localhost+2.pem
+>>>>>>> 87c1139651f18638dbd2f33dc31e347623e0e2c5
