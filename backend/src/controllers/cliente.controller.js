@@ -144,7 +144,16 @@ const clienteController = {
                 return res.status(404).json({ message: "Cliente não encontrado" });
             }
 
-            const clienteEditado = Cliente.editar({ nome, cpf: cpfLimpo, email, senha, telefone: telefoneLimpo }, clienteAtual);
+            let senhaFinal = clienteAtual.senha;
+            if (senha && senha.trim() !== "") {
+                const salt = await bcrypt.genSalt(10);
+                senhaFinal = await bcrypt.hash(senha, salt);
+            }
+
+            const clienteEditado = Cliente.editar(
+                { nome, cpf: cpfLimpo, email, senha: senhaFinal, telefone: telefoneLimpo },
+                clienteAtual
+            );
             const resultado = await clienteRepository.editar(clienteEditado);
 
             return res.status(200).json({ message: "Cliente atualizado com sucesso", result: resultado });
@@ -175,7 +184,9 @@ const clienteController = {
 
     loginCliente: async (req, res) => {
         try {
-            const { authMethod, senha } = req.body;
+            const { authMethod, email, senha } = req.body;
+            const identificador = authMethod || email;
+
             const cookieOptions = {
                 path: '/',
                 httpOnly: true,
@@ -183,9 +194,11 @@ const clienteController = {
                 sameSite: 'lax'
             };
 
-            if (!authMethod || !senha) return res.status(400).json({ message: "Informe todos os campos" });
+            if (!identificador || !senha) {
+                return res.status(400).json({ message: "Informe todos os campos" });
+            }
 
-            const usuarioResult = await clienteRepository.buscarPorEmail(authMethod);
+            const usuarioResult = await clienteRepository.buscarPorEmail(identificador);
             const usuario = usuarioResult && usuarioResult[0];
 
             if (!usuario) {
@@ -201,12 +214,15 @@ const clienteController = {
 
             res.clearCookie('token', cookieOptions);
 
-            // Ajustado para 8 horas para manter a sessão ativa durante o uso
             const token = jwt.sign({ id_cliente: usuario.id_cliente }, process.env.TOKEN_SECRET, { expiresIn: '8h' });
 
             res.cookie('token', token, { ...cookieOptions, maxAge: 8 * 3600000 });
 
-            return res.status(200).json({ message: "Login realizado com sucesso!" });
+            return res.status(200).json({
+                message: "Login realizado com sucesso!",
+                token
+            });
+
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: 'Erro no servidor', errorMessage: error.message });
@@ -244,15 +260,11 @@ const clienteController = {
         try {
             const { token } = req.query;
 
-            console.log("👉 TOKEN RECEBIDO:", token);
-
             if (!token) {
                 return res.redirect('http://localhost:5173/?erro=token-ausente');
             }
 
             const usuarioResult = await clienteRepository.buscarPorTokenConfirmacao(token);
-
-            console.log("👉 USUÁRIO ENCONTRADO NO BANCO:", usuarioResult); // Log 2
 
             const usuario = usuarioResult && usuarioResult[0];
 

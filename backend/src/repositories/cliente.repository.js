@@ -1,4 +1,4 @@
-import { db } from "../configs/database.js"
+import { db } from "../configs/database.js";
 
 const clienteRepository = {
 
@@ -24,38 +24,36 @@ const clienteRepository = {
         return rows[0];
     },
 
-    // ── ALTERADO: AGORA INSERE OS CAMPOS DE CONFIRMAÇÃO ─────────────────────
     criar: async (cliente) => {
-    console.log("👉 OBJETO CLIENTE CHEGANDO NO REPOSITORY:", cliente);
 
-    const sqlCliente = `
-        INSERT INTO clientes (nome, cpf, email, senha, confirmado, token_confirmacao) 
-        VALUES (?, ?, ?, ?, ?, ?)
-    `;
-    const valuesCliente = [
-        cliente.nome,
-        cliente.cpf,
-        cliente.email,
-        cliente.senha,
-        cliente.confirmado || 0,
-        cliente.token_confirmacao || cliente.tokenConfirmacao || null 
-    ];
+        const sqlCliente = `
+            INSERT INTO clientes (nome, cpf, email, senha, confirmado, token_confirmacao) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        const valuesCliente = [
+            cliente.nome,
+            cliente.cpf,
+            cliente.email,
+            cliente.senha,
+            cliente.confirmado || 0,
+            cliente.token_confirmacao || cliente.tokenConfirmacao || null
+        ];
 
-    const [resultadoCliente] = await db.execute(sqlCliente, valuesCliente);
-    const idCliente = resultadoCliente.insertId;
+        const [resultadoCliente] = await db.execute(sqlCliente, valuesCliente);
+        const idCliente = resultadoCliente.insertId;
 
-    const sqlTelefone = `INSERT INTO telefones (numero, id_cliente) VALUES (?,?)`;
-    const valuesTelefone = [cliente.telefone, idCliente];
-    await db.execute(sqlTelefone, valuesTelefone);
+        const sqlTelefone = `INSERT INTO telefones (numero, id_cliente) VALUES (?,?)`;
+        const valuesTelefone = [cliente.telefone, idCliente];
+        await db.execute(sqlTelefone, valuesTelefone);
 
-    return {
-        id_cliente: idCliente,
-        nome: cliente.nome,
-        cpf: cliente.cpf,
-        email: cliente.email,
-        telefone: cliente.telefone
-    };
-},
+        return {
+            id_cliente: idCliente,
+            nome: cliente.nome,
+            cpf: cliente.cpf,
+            email: cliente.email,
+            telefone: cliente.telefone
+        };
+    },
 
     editar: async (cliente) => {
         const sqlCliente = 'UPDATE clientes SET nome=?, cpf=?, email=?, senha=? WHERE id_cliente=?';
@@ -114,12 +112,6 @@ const clienteRepository = {
         return rows[0];
     },
 
-    atualizarSenha: async (idCliente, novaSenhaHash) => {
-        const query = 'UPDATE clientes SET senha = ? WHERE id_cliente = ?';
-        const [rows] = await db.execute(query, [novaSenhaHash, idCliente]);
-        return rows;
-    },
-
     buscarPorTokenConfirmacao: async (token) => {
         const sql = 'SELECT * FROM clientes WHERE token_confirmacao = ?';
         const values = [token];
@@ -132,7 +124,29 @@ const clienteRepository = {
         const values = [idCliente];
         const [rows] = await db.execute(sql, values);
         return rows;
+    },
+
+    salvarTokenRedefinicao: async (idCliente, token, expiracao) => {
+        const sql = `UPDATE clientes SET token_redefinicao = ?, expiracao_redefinicao = ? WHERE id_cliente = ?`;
+        const [resultado] = await db.execute(sql, [token, expiracao, idCliente]);
+        return resultado;
+    },
+
+    buscarPorTokenRedefinicao: async (token) => {
+        const sql = `SELECT * FROM clientes WHERE token_redefinicao = ?`;
+        const [rows] = await db.execute(sql, [token]);
+        return rows;
+    },
+
+    atualizarSenha: async (idCliente, novaSenhaHash) => {
+        const sql = `
+            UPDATE clientes 
+            SET senha = ?, reset_token_hash = NULL, reset_token_expires = NULL, confirmado = 1 
+            WHERE id_cliente = ?
+        `;
+        const [resultado] = await db.execute(sql, [novaSenhaHash, idCliente]);
+        return resultado;
     }
-}
+};
 
 export default clienteRepository;

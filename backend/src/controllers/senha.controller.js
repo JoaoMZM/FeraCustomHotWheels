@@ -9,40 +9,38 @@ export const senhaController = {
             const { email } = req.body;
             if (!email) return res.status(400).json({ message: "Você não informou o e-mail." });
 
-            // Trata o retorno do repositório garantindo o objeto do usuário
             const usuarioResult = await clienteRepository.buscarPorEmail(email);
             const usuario = Array.isArray(usuarioResult) ? usuarioResult[0] : usuarioResult;
-            
-            // Retorno genérico por segurança (evita enumeração de usuários)
+
             if (!usuario) {
                 return res.status(200).json({ message: "Se o e-mail estiver cadastrado, um link de recuperação foi enviado." });
             }
 
-            // Secret dinâmico: se a senha mudar no banco, o token expira automaticamente
             const secretUnico = process.env.TOKEN_SECRET + usuario.senha;
 
             const token = jwt.sign(
-                { id_cliente: usuario.id_cliente }, 
-                secretUnico, 
+                { id_cliente: usuario.id_cliente },
+                secretUnico,
                 { expiresIn: '15m' }
             );
 
-            // Ajustado para http:// para testes locais (altere para https em produção)
             const porta = process.env.SERVER_PORT || 443;
-            const linkBackend = `http://localhost:${porta}/senha/validar-token-recuperacao?id_cliente=${usuario.id_cliente}&token=${token}`;
+            const linkBackend = `https://localhost:${porta}/senha/validar-token-recuperacao?id_cliente=${usuario.id_cliente}&token=${token}`;
 
             const mailOptions = {
-                from: process.env.EMAIL_USER,
+                from: `"Fera Custom Hot Wheels" <${process.env.EMAIL_USER}>`,
                 to: usuario.email,
                 subject: 'Fera Custom - Recuperação de Senha',
                 html: `
                     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 8px;">
-                        <h2>Você solicitou a alteração de sua senha</h2>
-                        <p>Clique no link abaixo para cadastrar uma nova senha. Este link é válido por 15 minutos.</p>
-                        <div style="text-align: center; margin: 30px 0;">
-                            <a href="${linkBackend}" target="_blank" style="background:#ff5500; color:#fff; padding:12px 25px; text-decoration:none; border-radius:5px; font-weight:bold; display:inline-block;">Redefinir Senha</a>
-                        </div>
-                        <p style="font-size: 12px; color: #666;">Se não foi você quem solicitou, ignore este e-mail.</p>
+                        <h2 style="color: #e60000;">Olá, ${usuario.nome || 'Cliente'}!</h2>
+                            <p>Você solicitou a alteração da sua senha na Fera Custom Hot Wheels.</p>
+                            <p>Para cadastrar uma nova senha e recuperar seu acesso, clique no botão vermelho abaixo (este link é válido por 15 minutos):</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                            <a href="${linkBackend}" style="background: #e60000; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Redefinir Minha Senha</a>
+                    </div>
+                            <p style="font-size: 12px; color: #666;">Se o botão não funcionar, copie e cole este link no seu navegador:<br>${linkBackend}</p>
+                            <p style="font-size: 12px; color: #666;">Se não foi você quem solicitou a redefinição, apenas ignore este e-mail.</p>
                     </div>
                 `
             };
@@ -57,10 +55,10 @@ export const senhaController = {
     },
 
     validarLink: async (req, res) => {
-        const linkFrontend = 'http://localhost:5173'; 
+        const linkFrontend = 'http://localhost:5173';
 
         try {
-            const { id_cliente, token } = req.query; 
+            const { id_cliente, token } = req.query;
 
             if (!id_cliente || !token) {
                 return res.redirect(`${linkFrontend}/login?erro=link_invalido`);
@@ -75,10 +73,8 @@ export const senhaController = {
 
             const tokenUnico = process.env.TOKEN_SECRET + usuario.senha;
 
-            // Valida a integridade e expiração do JWT
             jwt.verify(token, tokenUnico);
 
-            // Redireciona para a tela de redefinição no React com as credenciais na URL
             return res.redirect(`${linkFrontend}/redefinir-senha?id_cliente=${id_cliente}&token=${token}`);
 
         } catch (error) {

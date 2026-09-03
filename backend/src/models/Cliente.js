@@ -7,7 +7,6 @@ export class Cliente {
     #telefone;
     #dataCad;
 
-    // Atualizado para receber o pTelefone
     constructor(pNome, pCpf, pEmail, pSenha, pTelefone, pId) {
         this.nome = pNome;
         this.cpf = pCpf;
@@ -38,7 +37,7 @@ export class Cliente {
     get email() {
         return this.#email;
     }
-    
+
     set email(value) {
         this.#validarEmail(value);
         this.#email = value;
@@ -53,7 +52,6 @@ export class Cliente {
         this.#senha = value;
     }
 
-    // Novos Getter e Setter para o Telefone
     get telefone() {
         return this.#telefone;
     }
@@ -111,7 +109,6 @@ export class Cliente {
 
 
     static criar(dados) {
-        // Atualizado para repassar o telefone
         return new Cliente(dados.nome, dados.cpf, dados.email, dados.senha, dados.telefone, dados.id_cliente);
     }
 
@@ -122,7 +119,7 @@ export class Cliente {
             dados.cpf ?? clienteAtual.cpf,
             dados.email ?? clienteAtual.email,
             dados.senha ?? clienteAtual.senha,
-            dados.telefone ?? clienteAtual.telefone, 
+            dados.telefone ?? clienteAtual.telefone,
             clienteAtual.id_cliente
         );
     }

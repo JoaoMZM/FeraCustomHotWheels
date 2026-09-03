@@ -41,7 +41,6 @@ body {
     overflow-y: auto;
 }
 
-/* Diagonal racing stripes background */
 body::before {
     content: '';
     position: fixed;
@@ -55,7 +54,6 @@ body::before {
     z-index: 0;
 }
 
-/* Radial vignette */
 body::after {
     content: '';
     position: fixed;
@@ -76,7 +74,6 @@ body::after {
     z-index: 1;
 }
 
-/* ── Brand Logo ───────────────────────────── */
 
 .brand-logo {
     display: flex;
@@ -114,8 +111,6 @@ body::after {
     height: 28px;
 }
 
-/* ── Card ─────────────────────────────────── */
-
 .cadastro-container {
     width: 100vw;
     max-width: 500px;
@@ -144,7 +139,6 @@ body::after {
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Faixa decorativa superior em ambos os containers */
 .cadastro-container::before::before {
     content: '';
     position: absolute;
@@ -160,7 +154,6 @@ body::after {
             var(--red) 85%);
 }
 
-/* Detalhe decorativo no canto em ambos */
 .cadastro-container::after::after {
     content: '';
     position: absolute;
@@ -185,7 +178,6 @@ body::after {
     }
 }
 
-/* ── Header ───────────────────────────────── */
 .card-header {
     margin-bottom: 28px;
 }
@@ -243,7 +235,6 @@ body::after {
     background: var(--red);
 }
 
-/* ── Form groups ─────────────────────────── */
 .form-group {
     margin-bottom: 16px;
     display: flex;
@@ -260,7 +251,6 @@ body::after {
     font-family: 'Barlow Condensed', sans-serif;
 }
 
-/* ── Input wrapper ───────────────────────── */
 .input-wrap {
     position: relative;
     display: flex;
@@ -306,7 +296,6 @@ body::after {
     color: var(--red);
 }
 
-/* ── Inputs ──────────────────────────────── */
 .form-group input {
     width: 100%;
     font-size: 14px;
@@ -340,7 +329,6 @@ body::after {
     border-color: var(--red) !important;
 }
 
-/* ── Password row ────────────────────────── */
 .senha-row {
     display: flex;
     justify-content: space-between;
@@ -353,11 +341,11 @@ body::after {
 }
 
 .link-esqueceu {
-    background: none;        /* Remove o fundo padrão de botão */
-    border: none;            /* Remove a caixa/borda em volta */
+    background: none;
+    border: none;
     padding: 0;
     font-size: 11px;
-    color: var(--red);       /* Usa a cor vermelha igual a "Criar conta gratuita" */
+    color: var(--red);
     text-decoration: none;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -371,7 +359,6 @@ body::after {
     opacity: 0.85;
 }
 
-/* ── Submit button ───────────────────────── */
 .btn-submit {
     width: 100%;
     padding: 14px;
@@ -418,7 +405,6 @@ body::after {
     cursor: not-allowed;
 }
 
-/* ── Spinner ─────────────────────────────── */
 .spinner {
     width: 16px;
     height: 16px;
@@ -434,7 +420,6 @@ body::after {
     }
 }
 
-/* ── Alerts ──────────────────────────────── */
 .alert {
     display: flex;
     align-items: flex-start;
@@ -454,9 +439,11 @@ body::after {
 }
 
 .alert-success {
-    background: rgba(255, 215, 0, 0.08);
-    color: #FFD700;
+    background: rgba(148, 255, 123, 0.08);
+    color: #28a745;
     border-left: 3px solid var(--accent);
+    border-left: 4px solid #28a745 !important;
+    border-left-color: #28a745 !important;
 }
 
 @keyframes fc-shake {
@@ -475,7 +462,6 @@ body::after {
     }
 }
 
-/* ── Footer ──────────────────────────────── */
 .cadastro-footer {
     margin-top: 22px;
     text-align: center;
@@ -512,7 +498,6 @@ body::after {
     color: var(--red-hi);
 }
 
-/* ── Divider text ────────────────────────── */
 .divider-or {
     display: flex;
     align-items: center;
@@ -533,7 +518,6 @@ body::after {
     background: var(--border);
 }
 
-/* ── Strength meter ──────────────────────── */
 .strength-wrap {
     margin-top: 6px;
     height: 3px;
@@ -548,7 +532,6 @@ body::after {
     transition: width 0.3s ease, background 0.3s ease;
 }
 
-/* ── Mobile ──────────────────────────────── */
 @media (max-width: 460px) {
 
     .cadastro-container {

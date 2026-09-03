@@ -1,38 +1,43 @@
-import { useState } from "react";
+import React, { useState } from 'react';
+import { solicitarRecuperacao } from '../../services/api.js';
+import Alert from '../../components/common/Alert.jsx';
+import CampoTexto from '../../components/common/CampoTexto.jsx';
+import { IconeEmail } from '../../components/icons/Icones.jsx';
 
-export default function RecuperarSenhaPage({ onVoltarLogin }) {
-  const [email, setEmail] = useState("");
-  const [erro, setErro] = useState("");
-  const [sucesso, setSucesso] = useState("");
+export default function RecuperarSenhaPage({ onVoltarLogin, onNavigateToLogin }) {
+  const handleVoltar = onVoltarLogin || onNavigateToLogin;
+
+  const [email, setEmail] = useState('');
+  const [erro, setErro] = useState('');
+  const [sucesso, setSucesso] = useState('');
   const [carregando, setCarregando] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErro('');
+    setSucesso('');
 
-    setErro("");
-    setSucesso("");
-
-    if (!email) {
-      setErro("Digite seu e-mail.");
+    if (!email.trim()) {
+      setErro('Digite seu e-mail.');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(email)) {
-      setErro("Digite um e-mail válido.");
+    if (!emailRegex.test(email.trim())) {
+      setErro('Digite um e-mail válido.');
       return;
     }
 
     setCarregando(true);
 
     try {
-      // BACK-END
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      setSucesso("Enviamos um link de recuperação para seu e-mail.");
+      const data = await solicitarRecuperacao(email.trim());
+      setSucesso(
+        data.message || data.mensagem || 'Enviamos um link de recuperação para seu e-mail.'
+      );
+      setEmail('');
     } catch (err) {
-      setErro("Erro ao enviar recuperação.");
+      setErro(err.message || 'Erro ao solicitar recuperação.');
     } finally {
       setCarregando(false);
     }
@@ -40,7 +45,6 @@ export default function RecuperarSenhaPage({ onVoltarLogin }) {
 
   return (
     <div className="cadastro-container">
-      {/* Logo */}
       <div className="brand-logo">
         <img
           src="/FeraCustomLogo.jpg"
@@ -50,7 +54,6 @@ export default function RecuperarSenhaPage({ onVoltarLogin }) {
         <span className="brand-logo-text">Fera Custom Hot Wheels</span>
       </div>
 
-      {/* Header */}
       <div className="card-header">
         <h2>Recuperar Senha</h2>
         <p className="cadastro-subtitle">
@@ -58,53 +61,30 @@ export default function RecuperarSenhaPage({ onVoltarLogin }) {
         </p>
       </div>
 
-      <div className="cadastro-divider"></div>
+      <div className="cadastro-divider" />
 
-      {/* Alertas */}
-      {erro && <div className="alert alert-error">{erro}</div>}
+      <Alert tipo="error" mensagem={erro} />
+      <Alert tipo="success" mensagem={sucesso} />
 
-      {sucesso && <div className="alert alert-success">{sucesso}</div>}
+      <form onSubmit={handleSubmit} noValidate>
+        <CampoTexto
+          id="email-recuperacao"
+          label="E-mail"
+          tipo="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (erro) setErro('');
+          }}
+          placeholder="seuemail@exemplo.com"
+          autoComplete="email"
+          icone={<IconeEmail />}
+        />
 
-      {/* Formulário */}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">E-mail</label>
-
-          <div className="input-wrap">
-            <svg
-              className="input-icon"
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <polyline points="22,6 12,13 2,6" />
-            </svg>
-
-            <input
-              type="email"
-              id="email"
-              placeholder="seuemail@exemplo.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-com-icone"
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          disabled={carregando}
-          className="btn-submit"
-        >
+        <button type="submit" disabled={carregando} className="btn-submit">
           {carregando ? (
             <>
-              <span className="spinner" aria-hidden="true"></span>
+              <span className="spinner" aria-hidden="true" />
               Enviando...
             </>
           ) : (
@@ -128,13 +108,8 @@ export default function RecuperarSenhaPage({ onVoltarLogin }) {
         </button>
       </form>
 
-      {/* Footer */}
       <div className="cadastro-footer">
-        <button
-          type="button"
-          className="btn-link"
-          onClick={onVoltarLogin}
-        >
+        <button type="button" className="btn-link" onClick={handleVoltar}>
           Voltar para login
         </button>
       </div>
