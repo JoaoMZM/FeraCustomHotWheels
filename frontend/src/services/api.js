@@ -1,119 +1,111 @@
 const API_URL = 'https://localhost:443';
 
-async function request(endpoint, options = {}) {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    ...options,
-  });
+const getHeaders = (requerAutenticacao = true) => {
+  const headers = {
+    "Content-Type": "application/json",
+  };
 
-  if (!response.ok) {
-    let mensagemErro = 'Erro ao processar requisição.';
-    try {
-      const errorData = await response.json();
-      mensagemErro = errorData.mensagem || errorData.message || mensagemErro;
-    } catch {
-      // Caso a resposta de erro não venha em formato JSON
+  if (requerAutenticacao) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
     }
+  }
+
+  return headers;
+};
+
+// Auxiliar para tratar respostas da API
+const tratarResposta = async (resposta) => {
+  const dados = await resposta.json().catch(() => ({}));
+
+  if (!resposta.ok) {
+    const mensagemErro =
+      dados.mensagem || dados.message || "Ocorreu um erro ao processar a requisição.";
     throw new Error(mensagemErro);
   }
 
-  if (response.status === 204) {
-    return { sucesso: true };
-  }
+  return dados;
+};
 
-  return await response.json();
-}
-
-/**
- * Busca todas as categorias cadastradas.
- */
 export const listarCategorias = async () => {
-  return await request('/categorias');
-};
-
-/**
- * Busca produtos aplicando os filtros de busca e categoria via Query Params.
- * @param {{ busca?: string, categoria?: string }} filtros
- */
-export const listarProdutos = async (filtros = {}) => {
-  const params = new URLSearchParams();
-
-  if (filtros.busca) {
-    params.append('busca', filtros.busca);
-  }
-
-  if (filtros.categoria && filtros.categoria !== 'todas') {
-    params.append('categoria', filtros.categoria);
-  }
-
-  const query = params.toString();
-  return await request(`/produtos${query ? `?${query}` : ''}`);
-};
-
-/**
- * Busca os detalhes de um produto pelo ID.
- * @param {string|number} id
- */
-export const buscarProduto = async (id) => {
-  return await request(`/produtos/${id}`);
-};
-
-/**
- * Lista os itens que estão no carrinho do usuário.
- */
-export const listarCarrinho = async () => {
-  return await request('/carrinho');
-};
-
-/**
- * Adiciona um produto ao carrinho.
- * @param {{ produtoId: string|number, quantidade: number }} item
- */
-export const adicionarAoCarrinho = async ({ produtoId, quantidade }) => {
-  return await request('/carrinho', {
-    method: 'POST',
-    body: JSON.stringify({ produtoId, quantidade }),
+  const res = await fetch(`${API_URL}/categorias`, {
+    headers: getHeaders(false),
   });
+  return tratarResposta(res);
 };
 
-/**
- * Atualiza a quantidade de um item do carrinho.
- * @param {string|number} id - ID do item no carrinho
- * @param {number} quantidade
- */
-export const atualizarQuantidadeCarrinho = async (id, quantidade) => {
-  return await request(`/carrinho/${id}`, {
-    method: 'PATCH',
+export const listarProdutos = async (filtros = {}) => {
+  const params = new URLSearchParams(filtros).toString();
+  const res = await fetch(`${API_URL}/produtos?${params}`, {
+    headers: getHeaders(false),
+  });
+  return tratarResposta(res);
+};
+
+export const listarCarrinho = async () => {
+  const res = await fetch(`${API_URL}/carrinho`, {
+    headers: getHeaders(true),
+  });
+  return tratarResposta(res);
+};
+
+export const atualizarQuantidadeCarrinho = async (itemId, quantidade) => {
+  const res = await fetch(`${API_URL}/carrinho/${itemId}`, {
+    method: "PUT",
+    headers: getHeaders(true),
     body: JSON.stringify({ quantidade }),
   });
+  return tratarResposta(res);
 };
 
-/**
- * Remove um item do carrinho pelo ID.
- * @param {string|number} id
- */
-export const removerDoCarrinho = async (id) => {
-  return await request(`/carrinho/${id}`, {
-    method: 'DELETE',
+export const removerDoCarrinho = async (itemId) => {
+  const res = await fetch(`${API_URL}/carrinho/${itemId}`, {
+    method: "DELETE",
+    headers: getHeaders(true),
   });
+  return tratarResposta(res);
 };
 
-export const finalizarCompra = async () => {
-  return await request('/pedidos', {
-    method: 'POST',
+export const listarProdutosAdmin = async () => {
+  const res = await fetch(`${API_URL}/admin/produtos`, {
+    headers: getHeaders(true),
   });
+  return tratarResposta(res);
 };
 
-/**
- * Realiza o cadastro de um novo usuário.
- * @param {Object} dadosUsuario
- */
-export const cadastrarUsuario = async (dadosUsuario) => {
-  return await request('/usuarios', {
-    method: 'POST',
-    body: JSON.stringify(dadosUsuario),
+export const criarProduto = async (dadosProduto) => {
+  const res = await fetch(`${API_URL}/admin/produtos`, {
+    method: "POST",
+    headers: getHeaders(true),
+    body: JSON.stringify(dadosProduto),
   });
+  return tratarResposta(res);
+};
+
+export const atualizarProduto = async (id, dadosProduto) => {
+  const res = await fetch(`${API_URL}/admin/produtos/${id}`, {
+    method: "PUT",
+    headers: getHeaders(true),
+    body: JSON.stringify(dadosProduto),
+  });
+  return tratarResposta(res);
+};
+
+export const alternarStatusProduto = async (id, ativo) => {
+  const res = await fetch(`${API_URL}/admin/produtos/${id}/status`, {
+    method: "PATCH",
+    headers: getHeaders(true),
+    body: JSON.stringify({ ativo }),
+  });
+  return tratarResposta(res);
+};
+
+export const loginUsuario = async (credenciais) => {
+  const res = await fetch(`${API_URL}/auth/login`, {
+    method: "POST",
+    headers: getHeaders(false),
+    body: JSON.stringify(credenciais),
+  });
+  return tratarResposta(res);
 };
