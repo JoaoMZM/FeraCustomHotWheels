@@ -54,6 +54,10 @@ export default function SalesScreen({ navigation }) {
     });
   }
 
+  function irParaUsuario() {
+    navigation?.navigate("ConifgUsuario");
+  }
+
   function renderProduto({ item }) {
     const quantidade = carrinho[item.id] || 0;
 
@@ -113,13 +117,24 @@ export default function SalesScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.titulo}>Vendas</Text>
-        <TouchableOpacity
-          style={styles.botaoNovoProduto}
-          activeOpacity={0.85}
-          onPress={() => navigation?.navigate("ManageProducts")}
-        >
-          <Text style={styles.botaoNovoProdutoTexto}>Gerenciar produtos</Text>
-        </TouchableOpacity>
+
+        <View style={styles.headerAcoes}>
+          <TouchableOpacity
+            style={styles.botaoNovoProduto}
+            activeOpacity={0.85}
+            onPress={() => navigation?.navigate("ManageProducts")}
+          >
+            <Text style={styles.botaoNovoProdutoTexto}>Gerenciar produtos</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.botaoUsuario}
+            activeOpacity={0.7}
+            onPress={irParaUsuario}
+          >
+            <Text style={styles.botaoUsuarioTexto}>👤</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <TextInput
@@ -248,6 +263,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  headerAcoes: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   botaoNovoProduto: {
     backgroundColor: COLORS.primary,
     borderRadius: RADIUS.pill,
@@ -258,6 +277,21 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     ...TYPOGRAPHY.small,
     fontWeight: "700",
+  },
+  botaoUsuario: {
+    width: 36,
+    height: 36,
+    borderRadius: RADIUS.pill,
+    backgroundColor: COLORS.white,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: SPACING.sm,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    ...SHADOW_SMALL,
+  },
+  botaoUsuarioTexto: {
+    fontSize: 18,
   },
   titulo: {
     ...TYPOGRAPHY.h3,
