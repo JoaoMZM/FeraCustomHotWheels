@@ -1,4 +1,5 @@
 @import url('https://fonts.google.com/share?selection.family=Roboto:ital,wght@0,100..900;1,100..900');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
     --red: #E8000D;
@@ -559,7 +560,6 @@ body::after {
     }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* ==========================================
    RESET GLOBAL - FORÇA FUNDO BRANCO EM TUDO
@@ -1228,9 +1228,8 @@ body,
   background: #e30613;
 }
 
-/* ==========================================
-   RESPONSIVIDADE
-   ========================================== */
+
+/* footer*/
 @media (max-width: 1024px) {
   .produtos-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
@@ -1261,4 +1260,85 @@ body,
   .produtos-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── Footer ──────────────────────────────── */
+.footer-fera {
+  background: #ffffff;
+  border-top: 1px solid #e8e6e6;
+  padding: 20px 24px;
+  width: 100%;
+}
+
+.footer-fera-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-fera-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-fera-linha p {
+  font-size: 12px;
+  color: #ff0000;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.footer-fera-pais {
+  font-size: 12px;
+  color: #ff0000;
+  white-space: nowrap;
+}
+
+.footer-fera-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.footer-fera-links a {
+  color: #000000;
+  text-decoration: none;
+}
+
+.footer-fera-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-fera-links span {
+  color: #5a5a5a;
+}
+
+@media (max-width: 640px) {
+  .footer-fera-linha {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.app-shell {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-conteudo {
+  flex: 1;
+}
+
+#root:has(.app-shell) {
+  display: block;
+  padding: 0;
 }

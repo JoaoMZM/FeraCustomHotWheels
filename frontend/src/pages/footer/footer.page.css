@@ -1,0 +1,199 @@
+
+.footer-fera {
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 60px;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  position: relative;
+  width: 100%;
+}
+
+.footer-fera-faixa {
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--red) 0%,
+    var(--red) 75%,
+    var(--red-hi) 75%,
+    var(--red-hi) 85%,
+    var(--red) 85%
+  );
+}
+
+.footer-fera-inner {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px 24px 32px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1.2fr;
+  gap: 32px;
+}
+
+.footer-fera-col h3 {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f172a;
+  margin-bottom: 16px;
+}
+
+.footer-fera-col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-fera-col a {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 13.5px;
+  transition: color 0.2s ease;
+}
+
+.footer-fera-col a:hover {
+  color: var(--red);
+}
+
+/* Marca */
+.footer-fera-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.footer-fera-logo img {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.footer-fera-logo span {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.08em;
+  color: #0f172a;
+}
+
+.footer-fera-marca p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #64748b;
+  max-width: 280px;
+  margin-bottom: 18px;
+}
+
+.footer-fera-social {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-fera-social a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  transition: all 0.2s ease;
+}
+
+.footer-fera-social a:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: rgba(232, 0, 13, 0.06);
+}
+
+/* Newsletter */
+.footer-fera-newsletter p {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.footer-fera-newsletter-form {
+  display: flex;
+  gap: 8px;
+}
+
+.footer-fera-newsletter-form input {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #0f172a;
+  transition: all 0.2s ease;
+}
+
+.footer-fera-newsletter-form input:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(232, 0, 13, 0.1);
+}
+
+.footer-fera-newsletter-form button {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--red);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.footer-fera-newsletter-form button:hover {
+  background: var(--red-hi);
+}
+
+/* Barra inferior */
+.footer-fera-bottom {
+  background: var(--dark);
+  color: rgba(255, 255, 255, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px 24px;
+  font-size: 12px;
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .footer-fera-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-fera-marca {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer-fera-inner {
+    grid-template-columns: 1fr;
+    padding: 36px 20px 24px;
+    gap: 28px;
+  }
+
+  .footer-fera-bottom {
+    justify-content: center;
+    text-align: center;
+  }
+}
