@@ -39,7 +39,7 @@ export const ProdutosHeader = ({
         </form>
 
         <div className="produtos-header-actions">
-          <div className="produtos-account">
+          <button className="produtos-account" onClick={() => {navigate('/login')}}>
             <div className="produtos-account-avatar">
               <IconesProdutos name="user" size={18} />
             </div>
@@ -47,7 +47,7 @@ export const ProdutosHeader = ({
               Minha Conta
               <strong>Meus Pedidos</strong>
             </span>
-          </div>
+          </button>
 
           <button
             type="button"
@@ -77,9 +77,8 @@ export const ProdutosHeader = ({
             <button
               key={cat.valor}
               type="button"
-              className={`produtos-nav-button${
-                categoria === cat.valor ? " ativo" : ""
-              }`}
+              className={`produtos-nav-button${categoria === cat.valor ? " ativo" : ""
+                }`}
               onClick={() => setCategoria(cat.valor)}
             >
               {cat.rotulo}
