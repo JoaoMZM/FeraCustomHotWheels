@@ -134,6 +134,7 @@ export default function AdminProdutosPage() {
       <header className="admin-header">
         <div className="admin-header-inner">
           <div className="admin-logo" onClick={() => navigate("/produtos")}>
+            <img src="..\..\public\FeraCustomLogo.jpg" alt="Fera Custom Logo" />
             <strong>FERA CUSTOM</strong>
             <span className="badge-admin">Painel Admin</span>
           </div>

@@ -1,111 +1,60 @@
-const API_URL = 'https://localhost:443';
+import axios from "axios";
 
-const getHeaders = (requerAutenticacao = true) => {
-  const headers = {
+const API_URL = "https://localhost:443";
+
+// Instância base do Axios
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
     "Content-Type": "application/json",
-  };
+  },
+});
 
-  if (requerAutenticacao) {
-    const token = localStorage.getItem("token");
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
+// Interceptor de requisição: injeta o Token JWT automaticamente se existir no localStorage
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
+  return config;
+});
 
-  return headers;
-};
-
-// Auxiliar para tratar respostas da API
-const tratarResposta = async (resposta) => {
-  const dados = await resposta.json().catch(() => ({}));
-
-  if (!resposta.ok) {
+// Interceptor de resposta: extrai os dados diretamente e padroniza a mensagem de erro
+api.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
     const mensagemErro =
-      dados.mensagem || dados.message || "Ocorreu um erro ao processar a requisição.";
-    throw new Error(mensagemErro);
+      error.response?.data?.mensagem ||
+      error.response?.data?.message ||
+      "Ocorreu um erro ao processar a requisição.";
+    return Promise.reject(new Error(mensagemErro));
   }
+);
 
-  return dados;
-};
+// Funções da API
+export const listarCategorias = () => api.get("/categorias");
 
-export const listarCategorias = async () => {
-  const res = await fetch(`${API_URL}/categorias`, {
-    headers: getHeaders(false),
-  });
-  return tratarResposta(res);
-};
+export const listarProdutos = (filtros = {}) =>
+  api.get("/produtos", { params: filtros });
 
-export const listarProdutos = async (filtros = {}) => {
-  const params = new URLSearchParams(filtros).toString();
-  const res = await fetch(`${API_URL}/produtos?${params}`, {
-    headers: getHeaders(false),
-  });
-  return tratarResposta(res);
-};
+export const listarCarrinho = () => api.get("/carrinho");
 
-export const listarCarrinho = async () => {
-  const res = await fetch(`${API_URL}/carrinho`, {
-    headers: getHeaders(true),
-  });
-  return tratarResposta(res);
-};
+export const atualizarQuantidadeCarrinho = (itemId, quantidade) =>
+  api.put(`/carrinho/${itemId}`, { quantidade });
 
-export const atualizarQuantidadeCarrinho = async (itemId, quantidade) => {
-  const res = await fetch(`${API_URL}/carrinho/${itemId}`, {
-    method: "PUT",
-    headers: getHeaders(true),
-    body: JSON.stringify({ quantidade }),
-  });
-  return tratarResposta(res);
-};
+export const removerDoCarrinho = (itemId) =>
+  api.delete(`/carrinho/${itemId}`);
 
-export const removerDoCarrinho = async (itemId) => {
-  const res = await fetch(`${API_URL}/carrinho/${itemId}`, {
-    method: "DELETE",
-    headers: getHeaders(true),
-  });
-  return tratarResposta(res);
-};
+export const listarProdutosAdmin = () => api.get("/admin/produtos");
 
-export const listarProdutosAdmin = async () => {
-  const res = await fetch(`${API_URL}/admin/produtos`, {
-    headers: getHeaders(true),
-  });
-  return tratarResposta(res);
-};
+export const criarProduto = (dadosProduto) =>
+  api.post("/admin/produtos", dadosProduto);
 
-export const criarProduto = async (dadosProduto) => {
-  const res = await fetch(`${API_URL}/admin/produtos`, {
-    method: "POST",
-    headers: getHeaders(true),
-    body: JSON.stringify(dadosProduto),
-  });
-  return tratarResposta(res);
-};
+export const atualizarProduto = (id, dadosProduto) =>
+  api.put(`/admin/produtos/${id}`, dadosProduto);
 
-export const atualizarProduto = async (id, dadosProduto) => {
-  const res = await fetch(`${API_URL}/admin/produtos/${id}`, {
-    method: "PUT",
-    headers: getHeaders(true),
-    body: JSON.stringify(dadosProduto),
-  });
-  return tratarResposta(res);
-};
+export const alternarStatusProduto = (id, ativo) =>
+  api.patch(`/admin/produtos/${id}/status`, { ativo });
 
-export const alternarStatusProduto = async (id, ativo) => {
-  const res = await fetch(`${API_URL}/admin/produtos/${id}/status`, {
-    method: "PATCH",
-    headers: getHeaders(true),
-    body: JSON.stringify({ ativo }),
-  });
-  return tratarResposta(res);
-};
-
-export const loginUsuario = async (credenciais) => {
-  const res = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: getHeaders(false),
-    body: JSON.stringify(credenciais),
-  });
-  return tratarResposta(res);
-};
+export const loginUsuario = (credenciais) =>
+  api.post("/auth/login", credenciais);
