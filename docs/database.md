@@ -2,7 +2,7 @@
 Este documento representa o modelo de dados do sistema de maneira mais detalhada, focando em especificar seus relacionamentos e descre ver entidades.
 
 ## 👤 Entidade: Clientes
-![Entidade cliente](../assets/clienteEntidade.png)
+![Entidade cliente](./assets/clienteEntidade.png)
 
 ### 📌 Descrição
 Representa os clientes da loja que estão cadastrados no sistema.
@@ -25,8 +25,12 @@ Representa os clientes da loja que estão cadastrados no sistema.
 ## 🛒 Entidade: Produtos
 =======
 ## 📍 Entidade: Enderecos
+<<<<<<< HEAD
 >>>>>>> main
 ![Entidade produtos](../assets/EnderecosEntidade.png)
+=======
+![Entidade produtos](./assets/EnderecosEntidade.png)
+>>>>>>> feat/cadastroProdutos
 
 ### 📌 Descrição
 Representa o endereço dos clientes cadastrados na loja.
@@ -56,7 +60,7 @@ Representa o endereço dos clientes cadastrados na loja.
 >>>>>>> main
 
 ## 📞 Entidade: Telefones
-![Entidade telefones](../assets/TelefonesEntidade.png)
+![Entidade telefones](./assets/TelefonesEntidade.png)
 
 ### 📌 Descrição
 Representa o telefone dos clientes cadastrados na loja.
@@ -70,7 +74,7 @@ Representa o telefone dos clientes cadastrados na loja.
 - Telefones X Clientes;
 
 ## 📝 Entidade: Pedidos
-![Entidade pedidos](../assets/PedidosEntidade.png)
+![Entidade pedidos](./assets/PedidosEntidade.png)
 
 ### 📌 Descrição
 Representa os pedidos realizados pelos clientes da loja, mais especificamente seus status e data de realização.
@@ -97,7 +101,7 @@ Representa os pedidos realizados pelos clientes da loja, mais especificamente se
 Representa os cartões de crédito/débit
 =======
 ## 💳 Entidade: Cartao
-![Entidade cartão](../assets/CartaoEntidade.png)
+![Entidade cartão](./assets/CartaoEntidade.png)
 
 ### 📌 Descrição
 Representa os cartões de crédito/débito dos clientes.
@@ -117,7 +121,7 @@ Representa os cartões de crédito/débito dos clientes.
 - Pedidos X itens_pedidos.
 
 ## 💲 Entidade: Pagamentos
-![Entidade pagamentos](../assets/pagamentosEntidade.png)
+![Entidade pagamentos](./assets/pagamentosEntidade.png)
 
 ### 📌 Descrição
 Representa os pagamentos realizados pelos clientes.
@@ -138,7 +142,7 @@ Representa os pagamentos realizados pelos clientes.
 - Pedidos X itens_pedidos.
 
 ## 📦 Entidade: itens_pedidos
-![Entidade itens pedidos](../assets/itensPedidosEntidade.png)
+![Entidade itens pedidos](./assets/itensPedidosEntidade.png)
 
 ### 📌 Descrição
 Representa os itens pedidos pelo cliente.
@@ -155,7 +159,7 @@ Representa os itens pedidos pelo cliente.
 - itens_pedidos X Pedidos.
 
 ## 🛒 Entidade: Produtos
-![Entidade entidade produtos](../assets/produtosEntidade.png)
+![Entidade entidade produtos](./assets/produtosEntidade.png)
 
 ### 📌 Descrição
 Representa os produtos disponíveis na loja.
@@ -176,7 +180,7 @@ Representa os produtos disponíveis na loja.
 - Produtos X Categorias.
 
 ## 🏷️ Entidade: Categorias
-![Entidade entidade categorias](../assets/categoriasEntidade.png)
+![Entidade entidade categorias](./assets/categoriasEntidade.png)
 
 ### 📌 Descrição
 Representa as possíveis categorias que um produto pode ter na loja.
