@@ -216,11 +216,19 @@ const clienteController = {
 
             const token = jwt.sign({ id_cliente: usuario.id_cliente }, process.env.TOKEN_SECRET, { expiresIn: '8h' });
 
+            const payload = {
+                sub: usuario.id_cliente,
+                name: usuario.nome_cliente,
+                email: usuario.email,
+                tel: usuario.telefone
+            }
+
             res.cookie('token', token, { ...cookieOptions, maxAge: 8 * 3600000 });
 
             return res.status(200).json({
                 message: "Login realizado com sucesso!",
-                token
+                token: token,
+                payload: payload,
             });
 
         } catch (error) {

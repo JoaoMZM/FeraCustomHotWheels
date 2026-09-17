@@ -24,14 +24,11 @@ const clienteRepository = {
     },
 
     criar: async (cliente) => {
-        const idCliente = randomUUID();
-
         const sqlCliente = `
-            INSERT INTO clientes (id_cliente, nome, cpf, email, senha, confirmado, token_confirmacao) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO clientes (nome, cpf, email, senha, confirmado, token_confirmacao) 
+            VALUES (?, ?, ?, ?, ?, ?)
         `;
         const valuesCliente = [
-            idCliente,
             cliente.nome,
             cliente.cpf,
             cliente.email,
@@ -40,10 +37,18 @@ const clienteRepository = {
             cliente.token_confirmacao || cliente.tokenConfirmacao || null
         ];
 
-        await db.query(sqlCliente, valuesCliente);
+        const [resultado] = await db.query(sqlCliente, valuesCliente);
 
-        const sqlTelefone = `INSERT INTO telefones (id_telefone, numero, id_cliente) VALUES (?, ?, ?)`;
-        const valuesTelefone = [randomUUID(), cliente.telefone, idCliente];
+        const [clienteCriado] = await db.query(
+            `SELECT id_cliente FROM clientes WHERE email = ?`,
+            [cliente.email]
+        );
+
+        console.log(clienteCriado);
+        const idCliente = clienteCriado[0].id_cliente;
+
+        const sqlTelefone = `INSERT INTO telefones (numero, id_cliente) VALUES (?, ?)`;
+        const valuesTelefone = [cliente.telefone, idCliente];
         await db.query(sqlTelefone, valuesTelefone);
 
         return {

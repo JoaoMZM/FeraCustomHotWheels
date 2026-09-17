@@ -1,131 +1,90 @@
+import axios from 'axios';
+
 const API_URL = 'https://localhost:443';
+
+// Instância centralizada do Axios
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Auxiliar para extrair mensagens de erro da resposta
+const getErrorMessage = (error, mensagemPadrao) => {
+  return (
+    error.response?.data?.mensagem ||
+    error.response?.data?.message ||
+    mensagemPadrao
+  );
+};
 
 export const cadastrarUsuario = async (dadosUsuario) => {
   try {
-    const response = await fetch(`${API_URL}/clientes`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(dadosUsuario),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.mensagem || errorData.message || 'Erro ao cadastrar usuário.'
-      );
-    }
-
-    return await response.json();
-
+    const response = await api.post('/clientes', dadosUsuario);
+    return response.data;
   } catch (error) {
     console.error('Erro no serviço de cadastro:', error);
-    throw error;
+    throw new Error(getErrorMessage(error, 'Erro ao cadastrar usuário.'));
   }
 };
 
 export const fazerLogin = async (dadosLogin) => {
   try {
-    const response = await fetch(`${API_URL}/clientes/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(dadosLogin),
+    const response = await api.post('/clientes/login', dadosLogin, {
+      withCredentials: true,
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.mensagem || errorData.message || 'Erro ao realizar login.'
-      );
-    }
-
-    return await response.json();
+    localStorage.setItem('payload', JSON.stringify(response.data.payload));
+    console.log(response.data.payload);
+    return response.data;
 
   } catch (error) {
     console.error('Erro no serviço de login:', error);
-    throw error;
+    throw new Error(getErrorMessage(error, 'Erro ao realizar login.'));
   }
 };
 
 export const solicitarRecuperacao = async (email) => {
   try {
-    const response = await fetch(`${API_URL}/senha/recuperar-senha`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.mensagem || errorData.message || 'Erro ao solicitar recuperação.'
-      );
-    }
-
-    return await response.json();
-
+    const response = await api.post('/senha/recuperar-senha', { email });
+    return response.data;
   } catch (error) {
     console.error('Erro no serviço de recuperação:', error);
-    throw error;
+    throw new Error(getErrorMessage(error, 'Erro ao solicitar recuperação.'));
   }
 };
 
 export const redefinirSenha = async ({ id_cliente, token, novaSenha }) => {
   try {
-    const response = await fetch(`${API_URL}/senha/redefinir-senha`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id_cliente, token, novaSenha }),
+    const response = await api.post('/senha/redefinir-senha', {
+      id_cliente,
+      token,
+      novaSenha,
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.mensagem || errorData.message || 'Erro ao redefinir senha.'
-      );
-    }
-
-    return await response.json();
-
+    return response.data;
   } catch (error) {
     console.error('Erro no serviço de redefinição:', error);
-    throw error;
+    throw new Error(getErrorMessage(error, 'Erro ao redefinir senha.'));
   }
 };
 
 async function request(endpoint, options = {}) {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    ...options,
-  });
+  try {
+    const response = await api({
+      url: endpoint,
+      ...options,
+    });
 
-  if (!response.ok) {
-    let mensagemErro = 'Erro ao processar requisição.';
-    try {
-      const errorData = await response.json();
-      mensagemErro = errorData.mensagem || errorData.message || mensagemErro;
-    } catch {
-      // Caso a resposta de erro não venha em formato JSON
+    if (response.status === 204) {
+      return { sucesso: true };
     }
+
+    return response.data;
+  } catch (error) {
+    const mensagemErro = getErrorMessage(error, 'Erro ao processar requisição.');
     throw new Error(mensagemErro);
   }
-
-  if (response.status === 204) {
-    return { sucesso: true };
-  }
-
-  return await response.json();
 }
 
 /**
@@ -140,18 +99,17 @@ export const listarCategorias = async () => {
  * @param {{ busca?: string, categoria?: string }} filtros
  */
 export const listarProdutos = async (filtros = {}) => {
-  const params = new URLSearchParams();
+  const params = {};
 
   if (filtros.busca) {
-    params.append('busca', filtros.busca);
+    params.busca = filtros.busca;
   }
 
   if (filtros.categoria && filtros.categoria !== 'todas') {
-    params.append('categoria', filtros.categoria);
+    params.categoria = filtros.categoria;
   }
 
-  const query = params.toString();
-  return await request(`/produtos${query ? `?${query}` : ''}`);
+  return await request('/produtos', { params });
 };
 
 /**
@@ -176,7 +134,7 @@ export const listarCarrinho = async () => {
 export const adicionarAoCarrinho = async ({ produtoId, quantidade }) => {
   return await request('/carrinho', {
     method: 'POST',
-    body: JSON.stringify({ produtoId, quantidade }),
+    data: { produtoId, quantidade },
   });
 };
 
@@ -188,7 +146,7 @@ export const adicionarAoCarrinho = async ({ produtoId, quantidade }) => {
 export const atualizarQuantidadeCarrinho = async (id, quantidade) => {
   return await request(`/carrinho/${id}`, {
     method: 'PATCH',
-    body: JSON.stringify({ quantidade }),
+    data: { quantidade },
   });
 };
 
