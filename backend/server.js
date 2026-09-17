@@ -2,6 +2,7 @@ import e from 'express';
 import 'dotenv/config';
 import routes from './src/routes/routes.js';
 import https from 'https';
+import http from 'http';
 import fs from 'fs';
 import cors from 'cors';
 import path from 'path';
@@ -25,7 +26,7 @@ app.use(cookieParser());
 
 app.use('/', routes);
 const SERVER_PORT = process.env.SERVER_PORT;
-
+const HTTP_PORT = process.env.HTTP_PORT;
 const sslOptions = {
     key: fs.readFileSync(path.join(__dirname, 'localhost+1-key.pem')),
     cert: fs.readFileSync(path.join(__dirname, 'localhost+1.pem')),

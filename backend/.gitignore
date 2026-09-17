@@ -3,3 +3,4 @@ node_modules/
 package-lock.json
 localhost+1-key.pem
 localhost+1.pem
+uploads/

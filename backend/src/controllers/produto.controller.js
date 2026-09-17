@@ -55,17 +55,15 @@ export const produtoController = {
                 imagem, caminhoImagem: caminhoBody
             } = req.body;
 
-            // Pega o caminho do arquivo (se veio do Multer) ou do Body JSON
             const caminhoImagem = req.file
                 ? `uploads/image/${req.file.filename}`
                 : (imagem || caminhoBody || null);
 
-            // Tratamento do booleano limitado
             let limitadoBool = null;
             if (limitado !== undefined && limitado !== null) {
                 limitadoBool = limitado === 'true' || limitado === true;
             }
-
+            console.log(nome);
             // Instancia a classe Produto
             const produto = Produto.criar({
                 nome: nome || nome_produto,
