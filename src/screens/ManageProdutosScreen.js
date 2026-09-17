@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import {View,Text,FlatList,TouchableOpacity,Image,StyleSheet,Alert,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ManageProductsScreen({ navigation }) {

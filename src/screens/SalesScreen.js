@@ -11,7 +11,7 @@ export default function SalesScreen({ navigation }) {
       p.nome.toLowerCase().includes(busca.toLowerCase())
     );
   }, [busca]);
-
+ 
   function adicionarAoCarrinho(produtoId) {
     setCarrinho((prev) => ({
       ...prev,
@@ -56,6 +56,10 @@ export default function SalesScreen({ navigation }) {
 
   function irParaUsuario() {
     navigation?.navigate("ConifgUsuario");
+  }
+
+  function irParaEstoque() {
+    navigation?.navigate("Estoque");
   }
 
   function renderProduto({ item }) {
@@ -125,6 +129,14 @@ export default function SalesScreen({ navigation }) {
             onPress={() => navigation?.navigate("ManageProducts")}
           >
             <Text style={styles.botaoNovoProdutoTexto}>Gerenciar produtos</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.botaoEstoque}
+            activeOpacity={0.7}
+            onPress={irParaEstoque}
+          >
+            <Text style={styles.botaoEstoqueTexto}>📦</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -277,6 +289,21 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     ...TYPOGRAPHY.small,
     fontWeight: "700",
+  },
+  botaoEstoque: {
+    width: 36,
+    height: 36,
+    borderRadius: RADIUS.pill,
+    backgroundColor: COLORS.white,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: SPACING.sm,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    ...SHADOW_SMALL,
+  },
+  botaoEstoqueTexto: {
+    fontSize: 16,
   },
   botaoUsuario: {
     width: 36,

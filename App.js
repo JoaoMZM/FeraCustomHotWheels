@@ -9,6 +9,7 @@ import SalesScreen from './src/screens/SalesScreen';
 import EditProductScreen from './src/screens/EditarProduto';
 import ManageProductsScreen from './src/screens/ManageProdutosScreen';
 import ConifgUsuario from './src/screens/ConifgUsuario';
+import EstoqueScreen from './src/screens/EstoqueScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ export default function App() {
         <Stack.Screen name="EditProduct" component={EditProductScreen} />
         <Stack.Screen name="ManageProducts" component={ManageProductsScreen} />
         <Stack.Screen name="ConifgUsuario" component={ConifgUsuario} />
+        <Stack.Screen name="Estoque" component={EstoqueScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

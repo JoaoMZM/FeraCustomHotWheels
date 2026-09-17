@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Alert,
-  FlatList,
-} from 'react-native';
+import {View,Text,TextInput,TouchableOpacity,StyleSheet,ScrollView,Alert,FlatList,} from 'react-native';
 
 // Se você usa navegação (React Navigation), receba a prop navigation
 export default function ConifgUsuario({ navigation }) {
@@ -106,9 +97,6 @@ export default function ConifgUsuario({ navigation }) {
   async function salvarESairTela() {
     setSalvando(true);
     try {
-      // TODO: chame aqui suas APIs reais de persistência, por exemplo:
-      // await api.put('/usuario/nome', { nome });
-      // await api.put('/usuario/enderecos', { enderecos });
 
       setHasChanges(false);
       if (navigation) {
