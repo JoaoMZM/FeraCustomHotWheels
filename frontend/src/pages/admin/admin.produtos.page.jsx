@@ -267,7 +267,6 @@ export default function AdminProdutosPage() {
         )}
       </main>
 
-      {/* Modal de Cadastro/Edição */}
       {modalAberto && (
         <div className="modal-overlay">
           <div className="modal-card">

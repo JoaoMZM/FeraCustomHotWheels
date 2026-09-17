@@ -1,55 +1,49 @@
 .admin-produtos-page {
     --primary: #0f172a;
     --primary-hover: #1e293b;
-    --accent: #0051ff;
-    --accent-hover: #1d4ed8;
+    --accent: #fb0000;
+    --accent-hover: #ff0000;
+    --accent-light: rgba(37, 99, 235, 0.08);
     --bg-page: #f8fafc;
     --bg-card: #ffffff;
     --text-main: #0f172a;
     --text-muted: #64748b;
     --border-color: #e2e8f0;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    --border-hover: #cbd5e1;
+
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 20px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     background-color: var(--bg-page);
     min-height: 100vh;
     color: var(--text-main);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Header alinhado ao padrão da loja */
 .admin-header {
     background-color: var(--bg-card);
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 40;
+    backdrop-filter: blur(8px);
 }
 
 .admin-header-inner {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 1rem 1.5rem;
+    padding: 0.875rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
-}
-
-.admin-loading {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--text-muted);
-    font-size: 0.9375rem;
-    font-weight: 500;
-}
-
-.tabela-vazia {
-    text-align: center;
-    padding: 2.5rem 1rem !important;
-    color: var(--text-muted);
-    font-size: 0.875rem;
 }
 
 .admin-logo {
@@ -60,56 +54,60 @@
     border: none;
     cursor: pointer;
     padding: 0;
+    transition: var(--transition);
+}
+
+.admin-logo:hover {
+    opacity: 0.85;
 }
 
 .admin-logo img {
-    height: 40px;
-    width: 40px;
+    height: 36px;
+    width: 36px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
 }
 
 .admin-logo strong {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 800;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
     color: var(--primary);
 }
 
 .badge-admin {
     background-color: #ef4444;
     color: #ffffff;
-    font-size: 0.6875rem;
+    font-size: 0.625rem;
     font-weight: 700;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    border-radius: 9999px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .btn-voltar-loja {
-    background-color: var(--bg-page);
+    background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     color: var(--text-main);
     padding: 0.5rem 0.875rem;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 0.8125rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition);
 }
 
 .btn-voltar-loja:hover {
-    background-color: var(--primary);
-    color: #ffffff;
-    border-color: var(--primary);
+    background-color: var(--bg-page);
+    border-color: var(--border-hover);
+    color: var(--accent);
 }
 
-/* Conteúdo Principal */
 .admin-content {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
 }
 
 .admin-toolbar {
@@ -123,7 +121,7 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary);
-    display: block;
+    letter-spacing: -0.025em;
 }
 
 .admin-toolbar p {
@@ -133,49 +131,55 @@
 }
 
 .btn-novo-produto {
-    background-color: var(--primary);
+    background-color: var(--accent);
     color: #ffffff;
     border: none;
     padding: 0.625rem 1.25rem;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 0.875rem;
     font-weight: 600;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
 }
 
 .btn-novo-produto:hover {
-    background-color: var(--primary-hover);
+    background-color: var(--accent-hover);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    transform: translateY(-1px);
 }
 
-/* Alertas */
+.btn-novo-produto:active {
+    transform: translateY(0);
+}
+
 .alerta-sucesso, .alerta-erro {
     padding: 0.875rem 1rem;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     margin-bottom: 1.25rem;
     font-size: 0.875rem;
     font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.625rem;
+    animation: fadeIn 0.2s ease-out;
 }
 
 .alerta-sucesso {
-    background-color: #dcfce7;
+    background-color: #f0fdf4;
     color: #15803d;
     border: 1px solid #bbf7d0;
 }
 
 .alerta-erro {
-    background-color: #fee2e2;
+    background-color: #fef2f2;
     color: #b91c1c;
     border: 1px solid #fecaca;
 }
 
-/* Filtros e Busca */
 .admin-filtros {
     margin-bottom: 1.25rem;
 }
@@ -183,19 +187,19 @@
 .admin-search-input {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    background-color: var(--bg-page);
+    gap: 0.625rem;
+    background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 9999px;
-    padding: 0.625rem 1rem;
-    max-width: 450px;
-    transition: all 0.2s ease;
+    border-radius: var(--radius-md);
+    padding: 0.5rem 0.875rem;
+    max-width: 400px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
 }
 
 .admin-search-input:focus-within {
-    background-color: #ffffff;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 3px var(--accent-light);
 }
 
 .admin-search-input input {
@@ -211,11 +215,10 @@
     color: var(--text-muted);
 }
 
-/* Tabela de Produtos */
 .admin-tabela-container {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
 }
@@ -228,8 +231,8 @@
 }
 
 .admin-tabela th {
-    background-color: var(--bg-page);
-    padding: 0.875rem 1rem;
+    background-color: #f8fafc;
+    padding: 0.75rem 1rem;
     color: var(--text-muted);
     font-weight: 600;
     font-size: 0.75rem;
@@ -239,7 +242,7 @@
 }
 
 .admin-tabela td {
-    padding: 1rem;
+    padding: 0.875rem 1rem;
     border-bottom: 1px solid var(--border-color);
     vertical-align: middle;
 }
@@ -249,16 +252,16 @@
 }
 
 .admin-tabela tbody tr {
-    transition: background-color 0.2s;
+    transition: var(--transition);
 }
 
 .admin-tabela tbody tr:hover:not(.linha-inativa) {
-    background-color: var(--bg-page);
+    background-color: #f8fafc;
 }
 
 .linha-inativa {
-    opacity: 0.55;
-    background-color: var(--bg-page);
+    opacity: 0.5;
+    background-color: #f8fafc;
 }
 
 .td-produto-info {
@@ -270,108 +273,125 @@
 .td-produto-info img {
     width: 40px;
     height: 40px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     object-fit: cover;
     background-color: var(--bg-page);
     border: 1px solid var(--border-color);
 }
 
 .badge-status {
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.6875rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
     font-weight: 600;
-    display: inline-block;
-    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.badge-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
 }
 
 .badge-status.ativo {
-    background-color: #dcfce7;
-    color: #15803d;
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.badge-status.ativo::before {
+    background-color: #22c55e;
 }
 
 .badge-status.inativo {
-    background-color: #fee2e2;
-    color: #b91c1c;
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
 }
 
-/* Botões de Ação */
+.badge-status.inativo::before {
+    background-color: #ef4444;
+}
+
 .acoes-botoes {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.375rem;
     justify-content: flex-end;
 }
 
 .btn-acao {
     border: 1px solid var(--border-color);
-    padding: 0.375rem 0.75rem;
-    border-radius: 6px;
+    padding: 0.375rem 0.625rem;
+    border-radius: var(--radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition);
 }
 
 .btn-editar {
-    background-color: #ffffff;
-    color: var(--primary);
+    background-color: var(--bg-card);
+    color: var(--text-main);
 }
 
 .btn-editar:hover {
     background-color: var(--bg-page);
-    border-color: var(--text-muted);
+    border-color: var(--border-hover);
+    color: var(--accent);
 }
 
 .btn-inativar {
-    background-color: #fee2e2;
-    color: #b91c1c;
+    background-color: var(--bg-card);
+    color: #dc2626;
     border-color: #fecaca;
 }
 
 .btn-inativar:hover {
-    background-color: #fca5a5;
-    color: #991b1b;
+    background-color: #fef2f2;
+    border-color: #fca5a5;
 }
 
 .btn-ativar {
-    background-color: #dcfce7;
-    color: #15803d;
+    background-color: var(--bg-card);
+    color: #16a34a;
     border-color: #bbf7d0;
 }
 
 .btn-ativar:hover {
-    background-color: #86efac;
-    color: #166534;
+    background-color: #f0fdf4;
+    border-color: #86efac;
 }
 
-/* Modal Form */
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(15, 23, 42, 0.6);
+    background-color: rgba(15, 23, 42, 0.4);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 50;
     padding: 1rem;
+    animation: fadeIn 0.15s ease-out;
 }
 
-/* Limita a altura do modal e ativa layout flexível */
 .modal-card {
     background-color: var(--bg-card);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     width: 100%;
-    max-width: 600px;
-    max-height: 90vh; /* Limita o modal a 90% da altura da tela */
+    max-width: 580px;
+    max-height: 85vh; 
     display: flex;
     flex-direction: column;
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--border-color);
     overflow: hidden;
+    animation: scaleUp 0.15s ease-out;
 }
 
-/* Mantém o cabeçalho fixo no topo */
 .modal-header {
     padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
@@ -380,13 +400,6 @@
     align-items: center;
     background-color: var(--bg-card);
     flex-shrink: 0; 
-}
-
-/* Adiciona rolagem apenas ao conteúdo do formulário */
-.modal-form {
-    padding: 1.5rem;
-    overflow-y: auto; /* Cria a barra de rolagem quando necessário */
-    flex: 1;
 }
 
 .modal-header h2 {
@@ -403,19 +416,22 @@
     color: var(--text-muted);
     cursor: pointer;
     padding: 0.25rem;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s;
+    transition: var(--transition);
 }
 
 .btn-fechar:hover {
+    background-color: var(--bg-page);
     color: var(--primary);
 }
 
 .modal-form {
     padding: 1.5rem;
+    overflow-y: auto; 
+    flex: 1;
 }
 
 .form-grid {
@@ -444,21 +460,20 @@
 
 .form-group input,
 .form-group textarea {
-    padding: 0.625rem;
-    background-color: var(--bg-page);
+    padding: 0.5rem 0.75rem;
+    background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 0.875rem;
     color: var(--text-main);
     outline: none;
-    transition: all 0.2s ease;
+    transition: var(--transition);
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-    background-color: #ffffff;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 3px var(--accent-light);
 }
 
 .modal-acoes {
@@ -474,48 +489,73 @@
     background: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-muted);
-    padding: 0.625rem 1.25rem;
-    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .btn-cancelar:hover {
     color: var(--primary);
     background-color: var(--bg-page);
+    border-color: var(--border-hover);
 }
 
 .btn-salvar {
-    background-color: var(--primary);
+    background-color: var(--accent);
     color: #ffffff;
     border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
 }
 
 .btn-salvar:hover:not(:disabled) {
-    background-color: var(--primary-hover);
+    background-color: var(--accent-hover);
 }
 
 .btn-salvar:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
-/* Animação e Responsividade */
+.admin-loading,
+.tabela-vazia {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.97) translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
 @media (max-width: 768px) {
     .admin-header-inner {
         padding: 0.75rem 1rem;
     }
 
     .admin-content {
-        padding: 1rem;
+        padding: 1.25rem 1rem;
     }
 
     .admin-toolbar {

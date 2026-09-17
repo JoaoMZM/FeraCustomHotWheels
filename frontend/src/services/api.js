@@ -2,7 +2,6 @@ import axios from "axios";
 
 const API_URL = "https://localhost:443";
 
-// Instância base do Axios
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -10,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// Interceptor de requisição: injeta o Token JWT automaticamente se existir no localStorage
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -19,7 +17,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Interceptor de resposta: extrai os dados diretamente e padroniza a mensagem de erro
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
@@ -31,7 +28,6 @@ api.interceptors.response.use(
   }
 );
 
-// Funções da API
 export const listarCategorias = () => api.get("/categorias");
 
 export const listarProdutos = (filtros = {}) =>
