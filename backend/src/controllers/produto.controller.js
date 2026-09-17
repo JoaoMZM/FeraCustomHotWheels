@@ -5,7 +5,7 @@ export const produtoController = {
 
     buscarTodosProdutos: async (req, res) => {
         try {
-            const resultado = await produtoRepository.selecionarTodos();
+            const resultado = await produtoRepository.selecionar();
 
             if (!resultado || resultado.length === 0) {
                 return res.status(200).json({ message: 'A tabela não contém dados', data: [] });
@@ -43,7 +43,7 @@ export const produtoController = {
 
     incluirProduto: async (req, res) => {
         try {
-            const { 
+            const {
                 nome, nome_produto,
                 descricao, descricao_produto,
                 valor, preco, preco_produto,
@@ -56,8 +56,8 @@ export const produtoController = {
             } = req.body;
 
             // Pega o caminho do arquivo (se veio do Multer) ou do Body JSON
-            const caminhoImagem = req.file 
-                ? `uploads/image/${req.file.filename}` 
+            const caminhoImagem = req.file
+                ? `uploads/image/${req.file.filename}`
                 : (imagem || caminhoBody || null);
 
             // Tratamento do booleano limitado
@@ -81,9 +81,9 @@ export const produtoController = {
 
             const resultado = await produtoRepository.inserirProduto(produto);
 
-            return res.status(201).json({ 
-                message: 'Produto criado com sucesso', 
-                id_produto: resultado.insertId 
+            return res.status(201).json({
+                message: 'Produto criado com sucesso',
+                id_produto: resultado.insertId
             });
 
         } catch (error) {
@@ -95,7 +95,43 @@ export const produtoController = {
 
             return res.status(500).json({ message: 'Erro no servidor', errorMessage: error.message });
         }
+    },
+    editar: async (req, res) => {
+        try {
+            const {
+                nome,
+                descricao,
+                preco,
+                estoque,
+                cor,
+                limitado,
+                modelo,
+                id_categoria,
+                id_produto
+            } = req.body;
+
+            const produtoAtual = await produtoRepository.selecionarPorId(id_produto);
+            const produto = Produto.editar({ nome, descricao, preco, estoque, cor, limitado, modelo, id_categoria, id_produto }, produtoAtual);
+
+            const result = await produtoRepository.atualizar(produto);
+            return res.status(204).json({ message: 'Sucesso ao editar produto', result });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ errorMessage: 'Erro interno do servidor' });
+        }
+    },
+    desativar: async (req, res) => {
+        const idProduto = req.params.idProduto;
+        const ativo = req.body;
+
+        if (!idProduto || ativo == null || ativo == undefined || typeof ativo != true) {
+            return res.status(400).json({ message: "Envie todos os tipos de maneira correta" });
+        }
+
+        const result = await produtoRepository.desativar(ativo, idProduto);
+
+
+        return res.status(204).json({ errorMessage: ativo ? 'Produto ativado com sucesso' : 'Produto desativado com sucesso', result })
     }
 };
-
 export default produtoController;

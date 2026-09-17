@@ -1,50 +1,31 @@
 import { db } from "../configs/database.js";
 
 export const produtoRepository = {
-
-    selecionarTodos: async () => {
-        const sql = `
-            SELECT 
-                p.id_produto, 
-                p.nome, 
-                p.descricao, 
-                p.preco, 
-                p.estoque, 
-                p.cor, 
-                p.limitado, 
-                p.modelo, 
-                p.imagem_produto,
-                p.id_categoria, 
-                c.nome AS categorias 
-            FROM produtos p 
-            INNER JOIN categorias c ON p.id_categoria = c.id_categoria
-        `;
+    selecionar: async () => {
+        const sql = 'SELECT * FROM produtos;';
         const [rows] = await db.execute(sql);
         return rows;
     },
 
     selecionarPorId: async (id) => {
-        const sql = `
-            SELECT 
-                p.id_produto, 
-                p.nome, 
-                p.descricao, 
-                p.preco, 
-                p.estoque, 
-                p.cor, 
-                p.limitado, 
-                p.modelo, 
-                p.imagem_produto,
-                p.id_categoria, 
-                c.nome AS categorias 
-            FROM produtos p 
-            INNER JOIN categorias c ON p.id_categoria = c.id_categoria
-            WHERE p.id_produto = ?
-        `;
-        const [rows] = await db.execute(sql, [id]);
-        return rows[0] || null; 
+        const sql = 'SELECT * FROM produtos WHERE id_produto = ?;';
+        const [rows] = await db.execute(sql, id);
+        return rows;
     },
 
+    atualizar: async (produto) => {
+        const sql = 'UPDATE produtos SET nome = ?, descricao = ?, preco = ?, estoque = ?, cor = ?, limitado = ?, modelo = ?, id_categoria = ? WHERE id_produto = ?;';
+        const values = [produto.nome, produto.descricao, produto.preco, produto.estoque, produto.cor, produto.limitado, produto.modelo, produto.id_categoria, produto.id_produto];
+        const [rows] = await db.execute(sql, values);
+        return rows;
+    },
+
+    desativar: async (ativo, idProduto) => {
+        const sql = 'UPDATE produtos SET ativo = ? WHERE id_produto = ?;';
+        const values = [ativo, idProduto];
+        const [rows] = await db.execute(sql, values);
+        return rows;
+    },
     inserirProduto: async (produto) => {
         const sql = `
             INSERT INTO produtos (
