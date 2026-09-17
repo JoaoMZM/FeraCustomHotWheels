@@ -194,7 +194,6 @@
     overflow: visible;
 }
 
-/* ── Botão gatilho do mega menu ───────────── */
 .nav-mega-gatilho {
     display: flex;
     align-items: center;
@@ -227,7 +226,6 @@
     color: #e30613;
 }
 
-/* ── Painel do mega menu ── */
 .nav-mega-painel {
     position: fixed;
     z-index: 9999;
@@ -251,7 +249,6 @@
     }
 }
 
-/* ── Cabeçalho do painel ──────────────────── */
 .nav-mega-header {
     display: flex;
     align-items: center;
@@ -286,7 +283,6 @@
     color: var(--primary);
 }
 
-/* ── Corpo (colunas) ──────────────────────── */
 .nav-mega-corpo {
     display: flex;
     padding: 20px;
@@ -316,7 +312,6 @@
     margin-bottom: 2px;
 }
 
-/* ── Lista de categorias ──────────────────── */
 .nav-mega-lista {
     display: flex;
     flex-direction: column;
@@ -358,7 +353,6 @@
     color: var(--accent);
 }
 
-/* ── Chips de faixa de preço ──────────────── */
 .nav-mega-chips {
     display: flex;
     flex-wrap: wrap;
@@ -389,7 +383,6 @@
     color: #ffffff;
 }
 
-/* ── Faixa de preço customizada ───────────── */
 .nav-mega-label-custom {
     font-size: 0.75rem;
     color: var(--text-muted);
@@ -441,7 +434,6 @@
     flex-shrink: 0;
 }
 
-/* ── Rodapé com ações ─────────────────────── */
 .nav-mega-rodape {
     display: flex;
     align-items: center;
@@ -482,7 +474,6 @@
     background: var(--primary-hover);
 }
 
-/* ── Mobile (mega menu) ───────────────────── */
 @media (max-width: 640px) {
     .nav-mega-painel {
         width: calc(100vw - 24px);

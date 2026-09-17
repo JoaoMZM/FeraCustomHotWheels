@@ -62,7 +62,6 @@
   color: var(--red);
 }
 
-/* Marca */
 .footer-fera-logo {
   display: flex;
   align-items: center;
@@ -115,7 +114,6 @@
   background: rgba(232, 0, 13, 0.06);
 }
 
-/* Newsletter */
 .footer-fera-newsletter p {
   font-size: 13px;
   color: #64748b;
@@ -164,7 +162,6 @@
   background: var(--red-hi);
 }
 
-/* Barra inferior */
 .footer-fera-bottom {
   background: var(--dark);
   color: rgba(255, 255, 255, 0.65);
@@ -177,7 +174,6 @@
   font-size: 12px;
 }
 
-/* Responsivo */
 @media (max-width: 900px) {
   .footer-fera-inner {
     grid-template-columns: repeat(2, 1fr);
