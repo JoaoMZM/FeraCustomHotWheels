@@ -1,3 +1,7 @@
+@import url('https://fonts.google.com/share?selection.family=Roboto:ital,wght@0,100..900;1,100..900');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+
 .produtos-page {
     --primary: #0f172a;
     --primary-hover: #1e293b;
@@ -187,35 +191,312 @@
     padding: 0 1.5rem;
     display: flex;
     gap: 0.5rem;
-    overflow-x: auto;
-    scrollbar-width: none;
+    overflow: visible;
 }
 
-.produtos-nav-inner::-webkit-scrollbar {
-    display: none;
-}
-
-.produtos-nav-button {
+/* ── Botão gatilho do mega menu ───────────── */
+.nav-mega-gatilho {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     background: transparent;
     border: none;
-    border-bottom: 2px solid transparent;
-    padding: 0.75rem 1rem;
+    color: #000000;
     font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0.75rem 1rem;
     cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s ease;
+    transition: color 0.2s;
 }
 
-.produtos-nav-button:hover {
+.nav-mega-gatilho:hover {
+    color: #e30613;
+}
+
+.nav-mega-gatilho svg {
+    transition: transform 0.2s ease;
+    color: #000000;
+}
+
+.nav-mega-gatilho.aberto {
+    color: #e30613;
+}
+
+.nav-mega-gatilho.aberto svg {
+    transform: rotate(180deg);
+    color: #e30613;
+}
+
+/* ── Painel do mega menu ── */
+.nav-mega-painel {
+    position: fixed;
+    z-index: 9999;
+    width: 480px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.02);
+    overflow: hidden;
+    animation: nav-mega-abrir 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes nav-mega-abrir {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── Cabeçalho do painel ──────────────────── */
+.nav-mega-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-page);
+}
+
+.nav-mega-header span {
+    font-size: 0.9375rem;
+    font-weight: 700;
     color: var(--primary);
 }
 
-.produtos-nav-button.ativo {
+.nav-mega-fechar {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-mega-fechar:hover {
+    background: #ffffff;
+    color: var(--primary);
+}
+
+/* ── Corpo (colunas) ──────────────────────── */
+.nav-mega-corpo {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+
+.nav-mega-divisor {
+    width: 1px;
+    background: var(--border-color);
+    flex-shrink: 0;
+}
+
+.nav-mega-coluna {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.nav-mega-coluna strong {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+}
+
+/* ── Lista de categorias ──────────────────── */
+.nav-mega-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.nav-mega-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: none;
+    border: none;
+    padding: 8px 10px;
+    margin: 0 -10px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 0.875rem;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.nav-mega-item:hover {
+    background: var(--bg-page);
+    color: var(--primary);
+}
+
+.nav-mega-item.ativo {
+    background: rgba(37, 99, 235, 0.08);
     color: var(--accent);
-    border-bottom-color: var(--accent);
+    font-weight: 700;
+}
+
+.nav-mega-item svg {
+    flex-shrink: 0;
+    color: var(--accent);
+}
+
+/* ── Chips de faixa de preço ──────────────── */
+.nav-mega-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.nav-mega-chip {
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
     font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.nav-mega-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.nav-mega-chip.ativo {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+
+/* ── Faixa de preço customizada ───────────── */
+.nav-mega-label-custom {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+.nav-mega-preco-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-mega-preco-input {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0 10px;
+    flex: 1;
+    transition: border-color 0.15s;
+}
+
+.nav-mega-preco-input:focus-within {
+    border-color: var(--accent);
+    background: #ffffff;
+}
+
+.nav-mega-preco-input span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.nav-mega-preco-input input {
+    width: 100%;
+    height: 34px;
+    border: none;
+    background: transparent;
+    font-size: 0.8125rem;
+    color: var(--primary);
+    outline: none;
+}
+
+.nav-mega-preco-ate {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+/* ── Rodapé com ações ─────────────────────── */
+.nav-mega-rodape {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-page);
+}
+
+.nav-mega-limpar {
+    background: none;
+    border: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.nav-mega-limpar:hover {
+    color: var(--primary);
+}
+
+.nav-mega-aplicar {
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.nav-mega-aplicar:hover {
+    background: var(--primary-hover);
+}
+
+/* ── Mobile (mega menu) ───────────────────── */
+@media (max-width: 640px) {
+    .nav-mega-painel {
+        width: calc(100vw - 24px);
+        left: 12px !important;
+    }
+
+    .nav-mega-corpo {
+        flex-direction: column;
+    }
+
+    .nav-mega-divisor {
+        width: 100%;
+        height: 1px;
+    }
 }
 
 .produtos-content {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { listarProdutos, listarCarrinho, listarCategorias } from "../../services/api.js";
+import { listarProdutos, listarCarrinho, listarCategorias, adicionarAoCarrinho } from "../../services/api.js";
 import { IconesProdutos } from "../../components/icons/IconesProdutos.jsx";
 import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
 import { ProdutoCard } from "../../components/produtos/ProdutoCard.jsx";
@@ -18,6 +18,8 @@ export default function ProdutosPage() {
 
   const [busca, setBusca] = useState("");
   const [categoria, setCategoria] = useState("todas");
+  const [precoMin, setPrecoMin] = useState("");
+  const [precoMax, setPrecoMax] = useState("");
 
   const [quantidades, setQuantidades] = useState({});
   const [adicionados, setAdicionados] = useState({});
@@ -137,6 +139,21 @@ export default function ProdutosPage() {
     setFavoritos((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const produtosFiltrados = produtos.filter((produto) => {
+    const min = precoMin !== "" ? Number(precoMin) : null;
+    const max = precoMax !== "" ? Number(precoMax) : null;
+    if (min !== null && produto.preco < min) return false;
+    if (max !== null && produto.preco > max) return false;
+    return true;
+  });
+
+  const limparFiltros = () => {
+    setBusca("");
+    setCategoria("todas");
+    setPrecoMin("");
+    setPrecoMax("");
+  };
+
   const categoriaAtual =
     categorias.find((item) => item.valor === categoria)?.rotulo ||
     "Todos os Produtos";
@@ -149,6 +166,11 @@ export default function ProdutosPage() {
         categoria={categoria}
         setCategoria={setCategoria}
         categorias={categorias}
+        precoMin={precoMin}
+        setPrecoMin={setPrecoMin}
+        precoMax={precoMax}
+        setPrecoMax={setPrecoMax}
+        onLimparFiltros={limparFiltros}
         totalCarrinho={totalCarrinho}
         onSubmitBusca={handleSubmitBusca}
       />
@@ -168,8 +190,8 @@ export default function ProdutosPage() {
           <strong>{categoriaAtual}</strong>
           {!carregando && !erro && (
             <span>
-              {produtos.length}{" "}
-              {produtos.length === 1 ? "item" : "itens"}
+              {produtosFiltrados.length}{" "}
+              {produtosFiltrados.length === 1 ? "item" : "itens"}
             </span>
           )}
         </div>
@@ -202,7 +224,7 @@ export default function ProdutosPage() {
             </div>
           )}
 
-          {!carregando && !erro && produtos.length === 0 && (
+          {!carregando && !erro && produtosFiltrados.length === 0 && (
             <div className="produtos-feedback">
               <div className="produtos-feedback-inner">
                 <div className="produtos-feedback-icon">
@@ -210,7 +232,7 @@ export default function ProdutosPage() {
                 </div>
                 <strong>Nenhum produto encontrado</strong>
                 <p>
-                  Tente alterar sua busca ou selecionar outra linha de produtos.
+                  Tente alterar sua busca, categoria ou faixa de preço.
                 </p>
               </div>
             </div>
@@ -218,7 +240,7 @@ export default function ProdutosPage() {
 
           {!carregando &&
             !erro &&
-            produtos.map((produto) => (
+            produtosFiltrados.map((produto) => (
               <ProdutoCard
                 key={produto.id}
                 produto={produto}
