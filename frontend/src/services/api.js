@@ -196,3 +196,7 @@ export const finalizarCompra = async () => {
     method: 'POST',
   });
 };
+
+export const listarPedidos = async () => {
+  return await request('/pedidos');
+};
