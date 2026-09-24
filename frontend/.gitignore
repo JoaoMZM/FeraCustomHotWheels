@@ -29,6 +29,8 @@ pnpm-debug.log*
 # Sistema
 .DS_Store
 Thumbs.db
+localhost+1-key.pem
+localhost+1.pem
 
 # Temporários
 *.tmp

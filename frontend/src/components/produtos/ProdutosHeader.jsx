@@ -65,7 +65,7 @@ export const ProdutosHeader = ({
         <button
           type="button"
           className="produtos-logo"
-          onClick={() => navigate("/produtos")}
+          onClick={() => navigate("/")}
           aria-label="Ir para produtos"
         >
           <img src="/FeraCustomLogo.jpg" alt="Fera Custom" />

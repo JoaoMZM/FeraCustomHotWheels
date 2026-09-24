@@ -10,6 +10,7 @@ clienteRoutes.get('/:id', clienteController.buscarClientePorID);
 clienteRoutes.get('/login/teste', validarToken, clienteController.testeLogin);
 clienteRoutes.post('/', clienteController.incluirCliente);
 clienteRoutes.post('/login', clienteController.loginCliente);
+clienteRoutes.post('/refresh', clienteController.refreshToken);
 clienteRoutes.post('/logout', clienteController.logoutCliente);
 clienteRoutes.put('/:id', clienteController.atualizarCliente);
 clienteRoutes.delete('/:id', clienteController.excluirCliente);

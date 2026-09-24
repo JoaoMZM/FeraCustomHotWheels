@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import ProdutosPage from './pages/produtos/produtos.Page.jsx';
+import ProdutosPage from './pages/produtos/produtos.page.jsx';
 import CarrinhoPage from './pages/carrinho/carrinho.page.jsx';
 import LoginPage from './pages/usuarios/login.page.jsx';
 import CadastroPage from './pages/usuarios/cadastro.page.jsx';
