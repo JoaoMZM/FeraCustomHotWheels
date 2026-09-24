@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import usePedidos from '../../hooks/usePedidos.js'
-import usePedidosFiltro, { infoStatus } from '../../hooks/usePedidosFiltros.js'
+import usePedidos from '../../hooks/pedidos/usePedidos.js'
+import usePedidosFiltro, { infoStatus } from '../../hooks/pedidos/usePedidosFiltros.js'
 import { IconesProdutos } from '../../components/icons/IconesProdutos.jsx';
 import './pedidos.page.css';
 

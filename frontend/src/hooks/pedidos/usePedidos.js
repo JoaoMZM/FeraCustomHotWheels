@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { listarPedidos } from '../../src/services/api.js';
+import { listarPedidos } from '../../services/api.js';
 
 export default function usePedidos() {
   const [pedidos, setPedidos] = useState([]);
