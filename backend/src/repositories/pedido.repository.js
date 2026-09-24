@@ -169,6 +169,30 @@ const pedidoRepository = {
             conn.release();
         }
     },
+
+    listarPedidosAdmin: async () => {
+        const sql = `
+        SELECT 
+            p.id_pedido,
+            p.status_pedido,
+            p.data_pedido,
+            p.valor_total,
+            p.id_cliente,
+            c.nome AS nome_cliente,
+            c.email AS email_cliente
+        FROM pedidos p
+        LEFT JOIN clientes c ON p.id_cliente = c.id_cliente
+        ORDER BY p.data_pedido DESC;
+    `;
+        const [pedidos] = await db.execute(sql);
+        return pedidos;
+    },
+
+    atualizarStatusPedido: async (idPedido, novoStatus) => {
+        const sql = `UPDATE pedidos SET status_pedido = ? WHERE id_pedido = ?;`;
+        const [result] = await db.execute(sql, [novoStatus, idPedido]);
+        return result;
+    }
 };
 
 export default pedidoRepository;

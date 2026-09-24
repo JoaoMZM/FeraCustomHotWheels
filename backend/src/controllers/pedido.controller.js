@@ -31,8 +31,8 @@ const pedidoControllers = {
                 const nomeProduto = produto.nome ?? produto.nome_produto ?? idProduto;
 
                 if (estoqueDisponivel < quantidade) {
-                    return res.status(400).json({ 
-                        message: `Estoque insuficiente para o produto '${nomeProduto}'. Disponível: ${estoqueDisponivel}` 
+                    return res.status(400).json({
+                        message: `Estoque insuficiente para o produto '${nomeProduto}'. Disponível: ${estoqueDisponivel}`
                     });
                 }
 
@@ -42,7 +42,7 @@ const pedidoControllers = {
             }
 
             const valorTotal = ItensPedidos.calcularValorTotal(itensPedidos);
-            
+
             const pedido = Pedido.criar({ statusPedido, valorTotal, idCliente });
 
             const result = await pedidoRepository.criarPedido(pedido, itensPedidos);
@@ -189,6 +189,49 @@ const pedidoControllers = {
             const result = await pedidoRepository.deletarItemPedido(id, itemDeletado, idPedido);
 
             return res.status(200).json({ message: "Item removido com sucesso", result });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Erro interno do servidor", errorMessage: error.message });
+        }
+    },
+
+    listarPedidosAdmin: async (req, res) => {
+        try {
+            const pedidos = await pedidoRepository.listarPedidosAdmin();
+            return res.status(200).json({
+                message: "Lista de pedidos para administração:",
+                total: pedidos.length,
+                result: pedidos
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Erro interno do servidor", errorMessage: error.message });
+        }
+    },
+
+    atualizarStatusPedido: async (req, res) => {
+        try {
+            const idPedido = Number(req.params.id);
+            const { statusPedido } = req.body;
+
+            const statusValidos = ["Pendente", "Em Processamento", "Enviado", "Entregue", "Cancelado"];
+
+            if (!statusPedido || !statusValidos.includes(statusPedido)) {
+                return res.status(400).json({
+                    message: `Status inválido. Envie um dos seguintes valores: ${statusValidos.join(", ")}`
+                });
+            }
+
+            const pedidoExiste = await pedidoRepository.selectPedidosId(idPedido);
+            if (!pedidoExiste || pedidoExiste.length === 0) {
+                return res.status(404).json({ message: "Pedido não encontrado." });
+            }
+
+            await pedidoRepository.atualizarStatusPedido(idPedido, statusPedido);
+
+            return res.status(200).json({
+                message: `Status do pedido #${idPedido} atualizado com sucesso para '${statusPedido}'.`
+            });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Erro interno do servidor", errorMessage: error.message });
