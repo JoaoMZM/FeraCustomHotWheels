@@ -36,7 +36,6 @@ export const ProdutosHeader = ({
     setMenuAberto((prev) => !prev);
   };
 
-  // Corrige o fechamento precoce ao clicar nos botões internos
   useEffect(() => {
     const handleClickFora = (e) => {
       if (!document.body.contains(e.target)) return;
@@ -60,7 +59,7 @@ export const ProdutosHeader = ({
 
   return (
     <header className="produtos-header">
-      {/* TOPO */}
+
       <div className="produtos-header-main">
         <button
           type="button"
@@ -72,7 +71,6 @@ export const ProdutosHeader = ({
           <strong>FERA CUSTOM</strong>
         </button>
 
-        {/* BUSCA */}
         <form className="produtos-search" onSubmit={onSubmitBusca}>
           <input
             type="text"
@@ -87,13 +85,13 @@ export const ProdutosHeader = ({
           </button>
         </form>
 
-        {/* AÇÕES */}
         <div className="produtos-header-actions">
           <button
             type="button"
             className="produtos-account"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/pedidosProdutos")}
           >
+
             <div className="produtos-account-avatar">
               <IconesProdutos name="user" size={18} />
             </div>
@@ -127,29 +125,25 @@ export const ProdutosHeader = ({
         </div>
       </div>
 
-      {/* CATEGORIAS + FILTRO */}
       <nav className="produtos-nav" aria-label="Categorias de produtos">
         <div className="produtos-nav-inner">
           {categorias.map((cat) => (
             <button
               key={cat.valor}
               type="button"
-              className={`produtos-nav-button${
-                categoria === cat.valor ? " ativo" : ""
-              }`}
+              className={`produtos-nav-button${categoria === cat.valor ? " ativo" : ""
+                }`}
               onClick={() => setCategoria(cat.valor)}
             >
               {cat.rotulo}
             </button>
           ))}
 
-          {/* BOTÃO FILTRAR */}
           <button
             type="button"
             ref={botaoFiltroRef}
-            className={`produtos-nav-button filtro${
-              menuAberto ? " ativo" : ""
-            }`}
+            className={`produtos-nav-button filtro${menuAberto ? " ativo" : ""
+              }`}
             onClick={abrirFiltro}
             aria-expanded={menuAberto}
           >
@@ -159,7 +153,6 @@ export const ProdutosHeader = ({
         </div>
       </nav>
 
-      {/* PAINEL DO FILTRO */}
       {menuAberto &&
         createPortal(
           <div
@@ -172,7 +165,7 @@ export const ProdutosHeader = ({
               zIndex: 9999,
             }}
           >
-            {/* CABEÇALHO */}
+
             <div className="nav-mega-header">
               <span>Filtrar produtos</span>
 
@@ -186,9 +179,8 @@ export const ProdutosHeader = ({
               </button>
             </div>
 
-            {/* CORPO */}
             <div className="nav-mega-corpo">
-              {/* CATEGORIA */}
+
               <div className="nav-mega-coluna">
                 <strong>Categoria</strong>
 
@@ -197,9 +189,8 @@ export const ProdutosHeader = ({
                     <button
                       key={cat.valor}
                       type="button"
-                      className={`nav-mega-item${
-                        categoria === cat.valor ? " ativo" : ""
-                      }`}
+                      className={`nav-mega-item${categoria === cat.valor ? " ativo" : ""
+                        }`}
                       onClick={() => setCategoria(cat.valor)}
                     >
                       {cat.rotulo}
@@ -214,16 +205,14 @@ export const ProdutosHeader = ({
 
               <div className="nav-mega-divisor" aria-hidden="true" />
 
-              {/* PREÇO */}
               <div className="nav-mega-coluna">
                 <strong>Faixa de preço</strong>
 
                 <div className="nav-mega-chips">
                   <button
                     type="button"
-                    className={`nav-mega-chip${
-                      precoMin === "" && precoMax === "50" ? " ativo" : ""
-                    }`}
+                    className={`nav-mega-chip${precoMin === "" && precoMax === "50" ? " ativo" : ""
+                      }`}
                     onClick={() => selecionarFaixaPreco("", "50")}
                   >
                     Até R$ 50
@@ -231,9 +220,8 @@ export const ProdutosHeader = ({
 
                   <button
                     type="button"
-                    className={`nav-mega-chip${
-                      precoMin === "50" && precoMax === "100" ? " ativo" : ""
-                    }`}
+                    className={`nav-mega-chip${precoMin === "50" && precoMax === "100" ? " ativo" : ""
+                      }`}
                     onClick={() => selecionarFaixaPreco("50", "100")}
                   >
                     R$ 50 – R$ 100
@@ -241,9 +229,8 @@ export const ProdutosHeader = ({
 
                   <button
                     type="button"
-                    className={`nav-mega-chip${
-                      precoMin === "100" && precoMax === "200" ? " ativo" : ""
-                    }`}
+                    className={`nav-mega-chip${precoMin === "100" && precoMax === "200" ? " ativo" : ""
+                      }`}
                     onClick={() => selecionarFaixaPreco("100", "200")}
                   >
                     R$ 100 – R$ 200
@@ -251,9 +238,8 @@ export const ProdutosHeader = ({
 
                   <button
                     type="button"
-                    className={`nav-mega-chip${
-                      precoMin === "200" && precoMax === "" ? " ativo" : ""
-                    }`}
+                    className={`nav-mega-chip${precoMin === "200" && precoMax === "" ? " ativo" : ""
+                      }`}
                     onClick={() => selecionarFaixaPreco("200", "")}
                   >
                     Acima de R$ 200
@@ -292,7 +278,6 @@ export const ProdutosHeader = ({
               </div>
             </div>
 
-            {/* RODAPÉ */}
             <div className="nav-mega-rodape">
               <button
                 type="button"

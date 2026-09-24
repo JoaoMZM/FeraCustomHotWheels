@@ -1,6 +1,3 @@
-/* ==========================================
-   1. IMPORTS E VARIÁVEIS GLOBAIS
-   ========================================== */
 @import url('https://fonts.google.com/share?selection.family=Roboto:ital,wght@0,100..900;1,100..900');
 
 :root {
@@ -15,7 +12,6 @@
     --accent: #ff0000;
 }
 
-/* Reset Genérico Seguro */
 *,
 *::before,
 *::after {
@@ -39,11 +35,6 @@ body {
     width: 100%;
 }
 
-/* ==========================================
-   2. PÁGINA DE AUTENTICAÇÃO (CADASTRO / LOGIN)
-   ========================================== */
-
-/* Container geral da página de cadastro/login para isolar o layout */
 .auth-page {
     min-height: 100vh;
     width: 100%;
@@ -57,7 +48,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Listras diagonais de fundo (Apenas no Auth) */
 .auth-page::before {
     content: '';
     position: fixed;
@@ -71,7 +61,6 @@ body {
     z-index: 0;
 }
 
-/* Vinheta Radial (Apenas no Auth) */
 .auth-page::after {
     content: '';
     position: fixed;
@@ -119,7 +108,6 @@ body {
     height: 28px;
 }
 
-/* Card Cadastro/Login */
 .cadastro-container,
 .login-container {
     width: 100%;
@@ -140,7 +128,6 @@ body {
     max-width: 420px;
 }
 
-/* Faixa decorativa superior */
 .cadastro-container::before,
 .login-container::before {
     content: '';
@@ -157,7 +144,6 @@ body {
             var(--red) 85%);
 }
 
-/* Detalhe decorativo no canto inferior */
 .cadastro-container::after,
 .login-container::after {
     content: '';
@@ -523,10 +509,6 @@ body {
     }
 }
 
-/* ==========================================
-   3. PÁGINA DE PRODUTOS
-   ========================================== */
-
 .produtos-page {
     width: 100%;
     min-height: 100vh;
@@ -540,7 +522,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Header Produtos */
 .produtos-header {
     background: #ffffff;
     border-bottom: 1px solid #e2e8f0;
@@ -587,7 +568,6 @@ body {
     white-space: nowrap;
 }
 
-/* Busca */
 .produtos-search {
     flex: 1;
     max-width: 500px;
@@ -634,7 +614,6 @@ body {
     color: #e30613;
 }
 
-/* Ações */
 .produtos-header-actions {
     display: flex;
     align-items: center;
@@ -713,7 +692,6 @@ body {
     border: 2px solid #ffffff;
 }
 
-/* Navegação Categorias */
 .produtos-nav {
     background: #ffffff;
     border-bottom: 1px solid #e2e8f0;
@@ -807,7 +785,6 @@ body {
     border-color: #0f172a;
 }
 
-/* Toolbar */
 .produtos-toolbar {
     display: flex;
     align-items: center;
@@ -830,7 +807,6 @@ body {
     font-weight: 600;
 }
 
-/* Grid e Cards */
 .produtos-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -993,7 +969,6 @@ body {
     letter-spacing: -0.02em;
 }
 
-/* Seletor de Quantidade */
 .produto-card-qtd {
     height: 36px;
     display: flex;
@@ -1037,7 +1012,6 @@ body {
     color: #0f172a;
 }
 
-/* Botão Comprar */
 .btn-add-carrinho {
     width: 100%;
     height: 40px;

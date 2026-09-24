@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API_URL = 'https://localhost:443';
 
-// Instância centralizada do Axios
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -10,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// Auxiliar para extrair mensagens de erro da resposta
 const getErrorMessage = (error, mensagemPadrao) => {
   return (
     error.response?.data?.mensagem ||
@@ -164,4 +162,11 @@ export const finalizarCompra = async () => {
   return await request('/pedidos', {
     method: 'POST',
   });
+};
+
+/**
+ * Lista os pedidos do usuário logado.
+ */
+export const listarPedidos = async () => {
+  return await request('/pedidos');
 };
