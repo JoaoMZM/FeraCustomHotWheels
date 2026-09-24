@@ -13,6 +13,7 @@ routes.use(validarToken);
 
 routes.use('/produtos', produtoRoutes);
 routes.use('/categorias', categoriaRoutes);
+routes.use('/pedidos', pedidoRoutes)
 
 
 export default routes;

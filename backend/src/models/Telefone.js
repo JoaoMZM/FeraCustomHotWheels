@@ -35,7 +35,6 @@ export class Telefone {
 
 
     static criar(dados) {
-        // Corrigido: Estava retornando "new Categoria"
         return new Telefone(dados.numero, dados.id_cliente, dados.id_telefone);
     }
 
