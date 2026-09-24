@@ -16,7 +16,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
-      
+
       if (originalRequest.url === '/clientes/refresh') {
         window.location.href = '/login';
         return Promise.reject(error);
@@ -126,12 +126,8 @@ async function request(endpoint, options = {}) {
   }
 }
 
-/**
- * Busca todas as categorias cadastradas.
- */
-export const listarCategorias = async () => {
-  return await request('/categorias');
-};
+export const listarProdutos = (filtros = {}) =>
+  api.get("/produtos", { params: filtros });
 
 /**
  * Busca os detalhes de um produto pelo ID.
@@ -141,12 +137,8 @@ export const buscarProduto = async (id) => {
   return await request(`/produtos/${id}`);
 };
 
-/**
- * Lista os itens que estão no carrinho do usuário.
- */
-export const listarCarrinho = async () => {
-  return await request('/carrinho');
-};
+export const atualizarProduto = (id, dadosProduto) =>
+  api.put(`/admin/produtos/${id}`, dadosProduto);
 
 /**
  * Adiciona um produto ao carrinho.
@@ -159,6 +151,19 @@ export const adicionarAoCarrinho = async ({ produtoId, quantidade }) => {
   });
 };
 
+export const criarProduto = (dadosProduto) =>
+  api.post("/admin/produtos", dadosProduto);
+
+export const listarCarrinho = async () => {
+  return await request('/carrinho');
+};
+
+export const listarCategorias = async () => {
+  return await request('/categorias');
+};
+
+export const listarProdutosAdmin = () => api.get("/admin/produtos");
+
 /**
  * Atualiza a quantidade de um item do carrinho.
  * @param {string|number} id - ID do item no carrinho
@@ -170,6 +175,11 @@ export const atualizarQuantidadeCarrinho = async (id, quantidade) => {
     data: { quantidade },
   });
 };
+
+export const alternarStatusProduto = (id, ativo) =>
+  api.patch(`/admin/produtos/${id}/status`, { ativo });
+
+
 
 /**
  * Remove um item do carrinho pelo ID.

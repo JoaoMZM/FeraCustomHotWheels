@@ -30,8 +30,8 @@ app.use('/', routes);
 const SERVER_PORT = process.env.SERVER_PORT;
 const HTTP_PORT = process.env.HTTP_PORT;
 const sslOptions = {
-    key: fs.readFileSync(path.join(__dirname, 'localhost-key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'localhost.pem')),
+    key: fs.readFileSync(path.join(__dirname, 'localhost+1-key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, 'localhost+1.pem')),
 }
 
 https.createServer(sslOptions, app).listen(SERVER_PORT, () => {

@@ -1225,3 +1225,27 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  border: 2px solid #969696;
+  border-radius: 6px;
+  padding: 0 10px;
+  background-color: #fff;
+}
+
+.input-com-icone {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 0;
+}
+
+.input-wrap:focus-within {
+    border-color: #e30613;
+}
+
+.input-wrap:has(.input-erro) {
+  border-color: #e53e3e;
+}
