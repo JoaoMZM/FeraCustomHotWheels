@@ -214,7 +214,8 @@ const clienteController = {
 
             res.clearCookie('token', cookieOptions);
 
-            const token = jwt.sign({ id_cliente: usuario.id_cliente }, process.env.TOKEN_SECRET, { expiresIn: '8h' });
+            const token = jwt.sign({ id_cliente: usuario.id_cliente }, process.env.TOKEN_SECRET, { expiresIn: '15m' });
+            const refreshToken = jwt.sign({ id_cliente: usuario.id_cliente }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
 
             const payload = {
                 sub: usuario.id_cliente,
@@ -223,7 +224,8 @@ const clienteController = {
                 tel: usuario.telefone
             }
 
-            res.cookie('token', token, { ...cookieOptions, maxAge: 8 * 3600000 });
+            res.cookie('token', token, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
+            res.cookie('refresh_token', refreshToken, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
 
             return res.status(200).json({
                 message: "Login realizado com sucesso!",
@@ -236,7 +238,47 @@ const clienteController = {
             return res.status(500).json({ message: 'Erro no servidor', errorMessage: error.message });
         }
     },
+    refreshToken: async (req, res) => {
 
+        const refreshToken = req.cookies.refresh_token;
+
+        if (!refreshToken) {
+            return res.status(401).json({ message: "Sessão expirada. Faça login novamente." });
+        }
+
+        try {
+
+            const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+            const cookieOptions = {
+                path: '/',
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax'
+            };
+
+            const novoToken = jwt.sign(
+                { id_cliente: decoded.id_cliente },
+                process.env.TOKEN_SECRET,
+                { expiresIn: '15m' }
+            );
+
+            const novoRefreshToken = jwt.sign(
+                { id_cliente: decoded.id_cliente },
+                process.env.REFRESH_TOKEN_SECRET,
+                { expiresIn: '30d' }
+            );
+
+            res.cookie('token', novoToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
+            res.cookie('refresh_token', novoRefreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 });
+
+            return res.status(200).json({ message: "Sessão renovada com sucesso!" });
+        } catch (error) {
+            res.clearCookie('token');
+            res.clearCookie('refresh_token');
+            return res.status(403).json({ message: "Sessão inválida ou expirada." });
+        }
+    },
     logoutCliente: async (req, res) => {
         try {
             const cookieOptions = {

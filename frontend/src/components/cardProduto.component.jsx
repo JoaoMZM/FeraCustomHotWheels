@@ -33,7 +33,6 @@ export default function CardProduto({ produto, onAdicionarCarrinho, onClickCard 
     if (semEstoque || !onAdicionarCarrinho) return;
 
     setCarregando(true);
-
     try {
       await onAdicionarCarrinho(produto);
 
@@ -44,6 +43,7 @@ export default function CardProduto({ produto, onAdicionarCarrinho, onClickCard 
     }
   };
 
+
   return (
     <div
       className={`produto-card${semEstoque ? " produto-card-indisponivel" : ""}`}
@@ -51,7 +51,7 @@ export default function CardProduto({ produto, onAdicionarCarrinho, onClickCard 
     >
       <div className="produto-card-imagem">
         {imagem_produto ? (
-          <img src={imagem_produto} alt={nome_produto} loading="lazy" />
+          <img src={`https://localhost/${imagem_produto}`} alt={nome_produto} loading="lazy" />
         ) : (
           <div className="produto-card-imagem-placeholder">
             <svg

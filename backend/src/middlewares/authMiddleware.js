@@ -4,16 +4,17 @@ import 'dotenv/config';
 
 function validarToken (req, res, next) {
     const token = req.cookies.token;
-
     if (!token) return res.status(400).json({message: "Faça login"});
 
     try {
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+        console.log("teste");
+        console.log(decoded);
         req.id_cliente = decoded.id_cliente;
         next();
     } catch (error) {
         console.error(error);
-        return res.status(403).json({message: "Token inválido"})
+        return res.status(401).json({message: "Token inválido"})
     }
 }
 

@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  listarProdutos, 
-  listarCarrinho, 
-  listarCategorias, 
-  adicionarAoCarrinho 
+import {
+  listarCarrinho,
+  listarCategorias,
+  adicionarAoCarrinho,
+  buscarProdutos,
 } from "../../services/api.js";
 import { IconesProdutos } from "../../components/icons/IconesProdutos.jsx";
 import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
@@ -13,7 +13,6 @@ import "./produtos.page.css";
 
 export default function ProdutosPage() {
   const navigate = useNavigate();
-
   const [produtos, setProdutos] = useState([]);
   const [categorias, setCategorias] = useState([
     { valor: "todas", rotulo: "Todos os Produtos" },
@@ -21,6 +20,7 @@ export default function ProdutosPage() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
+  // Estados dos filtros
   const [busca, setBusca] = useState("");
   const [categoria, setCategoria] = useState("todas");
   const [precoMin, setPrecoMin] = useState("");
@@ -45,23 +45,24 @@ export default function ProdutosPage() {
       ];
       setCategorias(categoriasFormatadas);
     } catch {
-      // tratamento de erro
+      // tratamento de erro silencioso
     }
   }, []);
 
+  // Busca todos os produtos sem passar parâmetros para a API
   const carregarProdutos = useCallback(async () => {
     setCarregando(true);
     setErro("");
 
     try {
-      const dados = await listarProdutos({ busca, categoria });
+      const dados = await buscarProdutos();
       setProdutos(Array.isArray(dados) ? dados : dados.produtos || []);
     } catch (err) {
       setErro(err.message || "Não foi possível carregar os produtos.");
     } finally {
       setCarregando(false);
     }
-  }, [busca, categoria]);
+  }, []);
 
   const sincronizarTotalCarrinho = useCallback(async () => {
     try {
@@ -73,29 +74,15 @@ export default function ProdutosPage() {
       );
       setTotalCarrinho(total);
     } catch {
-      // tratamento de erro
+      
     }
   }, []);
 
   useEffect(() => {
     carregarCategorias();
-  }, [carregarCategorias]);
-
-  useEffect(() => {
     carregarProdutos();
-  }, [categoria]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      carregarProdutos();
-    }, 400);
-
-    return () => clearTimeout(timer);
-  }, [busca]);
-
-  useEffect(() => {
     sincronizarTotalCarrinho();
-  }, [sincronizarTotalCarrinho]);
+  }, [carregarCategorias, carregarProdutos, sincronizarTotalCarrinho]);
 
   const getQuantidade = (id) => quantidades[id] || 1;
 
@@ -139,18 +126,35 @@ export default function ProdutosPage() {
 
   const handleSubmitBusca = (e) => {
     if (e) e.preventDefault();
-    carregarProdutos();
   };
 
   const toggleFavorito = (id) => {
     setFavoritos((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  // Filtragem 100% realizada no Front-end
   const produtosFiltrados = produtos.filter((produto) => {
+    // 1. Filtro de Categoria
+    if (categoria !== "todas") {
+      const catProduto = (produto.categoria || "").toString().toLowerCase();
+      const catFiltro = categoria.toString().toLowerCase();
+      if (catProduto !== catFiltro) return false;
+    }
+
+    // 2. Filtro de Busca (Nome ou SKU)
+    if (busca.trim() !== "") {
+      const termo = busca.toLowerCase();
+      const nomeMatch = produto.nome?.toLowerCase().includes(termo);
+      const skuMatch = String(produto.sku || "").toLowerCase().includes(termo);
+      if (!nomeMatch && !skuMatch) return false;
+    }
+
+    // 3. Filtro de Faixa de Preço
     const min = precoMin !== "" ? Number(precoMin) : null;
     const max = precoMax !== "" ? Number(precoMax) : null;
     if (min !== null && produto.preco < min) return false;
     if (max !== null && produto.preco > max) return false;
+
     return true;
   });
 

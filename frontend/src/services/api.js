@@ -2,13 +2,41 @@ import axios from 'axios';
 
 const API_URL = 'https://localhost:443';
 
-// Instância centralizada do Axios
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+
+      if (originalRequest.url === '/clientes/refresh') {
+        window.location.href = '/login';
+        return Promise.reject(error);
+      }
+
+      originalRequest._retry = true;
+
+      try {
+        await api.post('/clientes/refresh');
+
+        return api(originalRequest);
+      } catch (refreshError) {
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 // Auxiliar para extrair mensagens de erro da resposta
 const getErrorMessage = (error, mensagemPadrao) => {
@@ -29,6 +57,17 @@ export const cadastrarUsuario = async (dadosUsuario) => {
   }
 };
 
+export const buscarProdutos = async () => {
+  try {
+    const response = await api.get('/produtos');
+    return response.data.data;
+  } catch (error) {
+    console.error('Erro no serviço de cadastro:', error);
+    throw new Error(getErrorMessage(error, 'Erro ao cadastrar usuário.'));
+  }
+};
+
+
 export const fazerLogin = async (dadosLogin) => {
   try {
     const response = await api.post('/clientes/login', dadosLogin, {
@@ -36,7 +75,7 @@ export const fazerLogin = async (dadosLogin) => {
     });
 
     localStorage.setItem('payload', JSON.stringify(response.data.payload));
-    console.log(response.data.payload);
+
     return response.data;
 
   } catch (error) {
@@ -87,30 +126,8 @@ async function request(endpoint, options = {}) {
   }
 }
 
-/**
- * Busca todas as categorias cadastradas.
- */
-export const listarCategorias = async () => {
-  return await request('/categorias');
-};
-
-/**
- * Busca produtos aplicando os filtros de busca e categoria via Query Params.
- * @param {{ busca?: string, categoria?: string }} filtros
- */
-export const listarProdutos = async (filtros = {}) => {
-  const params = {};
-
-  if (filtros.busca) {
-    params.busca = filtros.busca;
-  }
-
-  if (filtros.categoria && filtros.categoria !== 'todas') {
-    params.categoria = filtros.categoria;
-  }
-
-  return await request('/produtos', { params });
-};
+export const listarProdutos = (filtros = {}) =>
+  api.get("/produtos", { params: filtros });
 
 /**
  * Busca os detalhes de um produto pelo ID.
@@ -120,12 +137,8 @@ export const buscarProduto = async (id) => {
   return await request(`/produtos/${id}`);
 };
 
-/**
- * Lista os itens que estão no carrinho do usuário.
- */
-export const listarCarrinho = async () => {
-  return await request('/carrinho');
-};
+export const atualizarProduto = (id, dadosProduto) =>
+  api.put(`/admin/produtos/${id}`, dadosProduto);
 
 /**
  * Adiciona um produto ao carrinho.
@@ -138,6 +151,19 @@ export const adicionarAoCarrinho = async ({ produtoId, quantidade }) => {
   });
 };
 
+export const criarProduto = (dadosProduto) =>
+  api.post("/admin/produtos", dadosProduto);
+
+export const listarCarrinho = async () => {
+  return await request('/carrinho');
+};
+
+export const listarCategorias = async () => {
+  return await request('/categorias');
+};
+
+export const listarProdutosAdmin = () => api.get("/admin/produtos");
+
 /**
  * Atualiza a quantidade de um item do carrinho.
  * @param {string|number} id - ID do item no carrinho
@@ -149,6 +175,11 @@ export const atualizarQuantidadeCarrinho = async (id, quantidade) => {
     data: { quantidade },
   });
 };
+
+export const alternarStatusProduto = (id, ativo) =>
+  api.patch(`/admin/produtos/${id}/status`, { ativo });
+
+
 
 /**
  * Remove um item do carrinho pelo ID.
@@ -164,4 +195,8 @@ export const finalizarCompra = async () => {
   return await request('/pedidos', {
     method: 'POST',
   });
+};
+
+export const listarPedidos = async () => {
+  return await request('/pedidos');
 };

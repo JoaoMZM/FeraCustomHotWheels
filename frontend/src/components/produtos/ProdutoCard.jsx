@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { IconesProdutos } from "../icons/IconesProdutos";
 
 const formatarPreco = (valor) =>
@@ -29,24 +30,34 @@ const estoqueInfo = (estoque) => {
 
 export const ProdutoCard = ({
   produto,
-  quantidade,
-  onAlterarQuantidade,
   onAdicionarCarrinho,
   enviando,
   adicionado,
   favorito,
   onToggleFavorito,
 }) => {
+  // Estado isolado para este card específico
+  const [quantidade, setQuantidade] = useState(1);
+
   const estoque = estoqueInfo(produto.estoque);
   const esgotado = produto.estoque <= 0;
   const temDesconto =
     produto.precoOriginal && produto.precoOriginal > produto.preco;
 
+  const alterarQuantidade = (delta) => {
+    setQuantidade((prev) => {
+      const novaQtd = prev + delta;
+      if (novaQtd < 1) return 1;
+      if (novaQtd > produto.estoque) return produto.estoque;
+      return novaQtd;
+    });
+  };
+  
   return (
     <article className="produto-card">
       <div className="produto-card-imagem">
-        {produto.imagemUrl ? (
-          <img src={produto.imagemUrl} alt={produto.nome} />
+        {produto.imagem_produto ? (
+          <img src={`https://localhost/${produto.imagem_produto}`} alt={produto.nome} />
         ) : (
           <div className="produto-card-imagem-placeholder">
             <IconesProdutos name="box" size={38} />
@@ -94,9 +105,7 @@ export const ProdutoCard = ({
           >
             <button
               type="button"
-              onClick={() =>
-                onAlterarQuantidade(produto.id, -1, produto.estoque)
-              }
+              onClick={() => alterarQuantidade(-1)}
               disabled={quantidade <= 1}
             >
               <IconesProdutos name="minus" size={14} />
@@ -106,9 +115,7 @@ export const ProdutoCard = ({
 
             <button
               type="button"
-              onClick={() =>
-                onAlterarQuantidade(produto.id, 1, produto.estoque)
-              }
+              onClick={() => alterarQuantidade(1)}
               disabled={quantidade >= produto.estoque}
             >
               <IconesProdutos name="plus" size={14} />
@@ -120,7 +127,7 @@ export const ProdutoCard = ({
           type="button"
           className={`btn-add-carrinho${adicionado ? " adicionado" : ""}`}
           disabled={esgotado || enviando}
-          onClick={() => onAdicionarCarrinho(produto)}
+          onClick={() => onAdicionarCarrinho(produto, quantidade)}
         >
           {enviando ? (
             <>
