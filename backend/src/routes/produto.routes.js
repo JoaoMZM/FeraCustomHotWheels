@@ -6,6 +6,7 @@ const produtoRoutes = Router();
 
 produtoRoutes.get('/', produtoController.buscarTodosProdutos);
 produtoRoutes.get('/:id', produtoController.buscarProdutoPorID);
+produtoRoutes.get('/categoria/:idCategoria', produtoController.buscarProdutosPorCategoria);
 produtoRoutes.post('/', uploadImage, produtoController.incluirProduto);
 produtoRoutes.put('/atualizar', produtoController.editar);
 produtoRoutes.put('/desativar', produtoController.desativar);

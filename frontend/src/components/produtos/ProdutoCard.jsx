@@ -35,8 +35,10 @@ export const ProdutoCard = ({
   adicionado,
   favorito,
   onToggleFavorito,
+  onClickDetalhes, 
 }) => {
-  // Estado isolado para este card específico
+
+  
   const [quantidade, setQuantidade] = useState(1);
 
   const estoque = estoqueInfo(produto.estoque);
@@ -52,10 +54,19 @@ export const ProdutoCard = ({
       return novaQtd;
     });
   };
-  
+
+  console.log("DADOS DO PRODUTO VINDO DO BANCO:", produto);
+
+  const idValido = produto.id || produto.id_produto || produto._id;
+
   return (
     <article className="produto-card">
-      <div className="produto-card-imagem">
+      {/* Clique na Imagem abre os Detalhes */}
+      <div 
+        className="produto-card-imagem" 
+        onClick={onClickDetalhes}
+        style={{ cursor: "pointer" }}
+      >
         {produto.imagem_produto ? (
           <img src={`https://localhost/${produto.imagem_produto}`} alt={produto.nome} />
         ) : (
@@ -67,7 +78,10 @@ export const ProdutoCard = ({
         <button
           type="button"
           className={`produto-card-favorito${favorito ? " ativo" : ""}`}
-          onClick={() => onToggleFavorito(produto.id)}
+          onClick={(e) => {
+            e.stopPropagation(); 
+            onToggleFavorito(idValido);
+          }}
           aria-label="Adicionar aos favoritos"
         >
           <IconesProdutos name="heart" size={18} />
@@ -85,7 +99,14 @@ export const ProdutoCard = ({
           <span className="produto-card-sku">SKU #{produto.sku}</span>
         )}
 
-        <span className="produto-card-nome">{produto.nome}</span>
+        {/* Clique no Nome abre os Detalhes */}
+        <span 
+          className="produto-card-nome" 
+          onClick={onClickDetalhes}
+          style={{ cursor: "pointer" }}
+        >
+          {produto.nome}
+        </span>
 
         <div className="produto-card-preco-linha">
           {temDesconto && (
@@ -102,6 +123,7 @@ export const ProdutoCard = ({
           <div
             className="produto-card-qtd"
             aria-label={`Quantidade de ${produto.nome}`}
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
@@ -127,7 +149,10 @@ export const ProdutoCard = ({
           type="button"
           className={`btn-add-carrinho${adicionado ? " adicionado" : ""}`}
           disabled={esgotado || enviando}
-          onClick={() => onAdicionarCarrinho(produto, quantidade)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAdicionarCarrinho(produto, quantidade);
+          }}
         >
           {enviando ? (
             <>

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { confirmarContaUsuario } from '../../services/api.js'; // Ajuste o caminho da pasta se necessário
+import { confirmarContaUsuario } from '../../services/api.js';
 
 export default function ConfirmarContaPage({ onNavigateToLogin }) {
-    const [status, setStatus] = useState('processando'); // valores: 'processando', 'sucesso', 'erro'
+    const [status, setStatus] = useState('processando'); 
     const [mensagem, setMensagem] = useState('Verificando seu token de ativação...');
 
     useEffect(() => {
-        // 1. Captura o token diretamente da URL (?token=...)
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
 
@@ -16,7 +15,6 @@ export default function ConfirmarContaPage({ onNavigateToLogin }) {
             return;
         }
 
-        // 2. Envia o token para o seu Backend Node.js
         confirmarContaUsuario(token)
             .then((dados) => {
                 setStatus('sucesso');
@@ -27,8 +25,6 @@ export default function ConfirmarContaPage({ onNavigateToLogin }) {
                 setMensagem(err.message || 'Este link de ativação é inválido ou já expirou.');
             });
     }, []);
-
-    // ── Ícones SVG para os Estados da Tela ──────────────────────────────────
 
     const IconeSucesso = () => (
         <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#28a745" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '20px auto' }}>
@@ -45,11 +41,8 @@ export default function ConfirmarContaPage({ onNavigateToLogin }) {
         </svg>
     );
 
-    // ── Renderização da Página ──────────────────────────────────────────────
-
     return (
         <div className="cadastro-container" style={{ textAlign: 'center', padding: '40px 20px' }}>
-            {/* Brand/Logo */}
             <div className="brand-logo" style={{ justifyContent: 'center' }}>
                 <img
                     src="../../../vite-project/public/FeraCustomLogo.jpg"
@@ -65,7 +58,6 @@ export default function ConfirmarContaPage({ onNavigateToLogin }) {
 
             <div className="cadastro-divider" />
 
-            {/* Renderização conforme o estado da requisição */}
             <div style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 {status === 'processando' && (
                     <>
@@ -84,8 +76,6 @@ export default function ConfirmarContaPage({ onNavigateToLogin }) {
                             type="button" 
                             className="btn-submit"
                             onClick={() => {
-                                // Se você usa rotas manuais por prop, chama a função. 
-                                // Se usa React Router, pode trocar por: window.location.href = '/login'
                                 if (onNavigateToLogin) {
                                     onNavigateToLogin();
                                 } else {

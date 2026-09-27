@@ -1,32 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('../../styles/token.css');
 
 html,
 body {
     margin: 0;
     min-height: 100%;
-    background: #eef1f6;
+    background: var(--color-bg-page);
     overscroll-behavior: none;
 }
 
 .carrinho-page {
-    --pc-text: #0f172a;
-    --pc-muted: #64748b;
-    --pc-border: #e6e9ef;
-    --pc-surface: #ffffff;
-    --pc-primary: #e30613;
-    --pc-primary-gradient: linear-gradient(135deg, #ff2a34 0%, #b80510 100%);
-    --pc-success: #108a48;
-    --pc-shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.05);
-    --pc-shadow-md: 0 20px 40px -12px rgba(15, 23, 42, 0.14);
+    --pc-text: var(--color-ink);
+    --pc-muted: var(--color-muted);
+    --pc-border: var(--color-border);
+    --pc-surface: var(--color-bg-card);
+    --pc-primary: var(--color-brand);
+    --pc-primary-gradient: var(--color-brand-gradient);
+    --pc-success: var(--color-brand);
+    --pc-shadow-sm: var(--shadow-sm);
+    --pc-shadow-md: var(--shadow-md);
 
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     background:
         radial-gradient(1100px 500px at 15% -10%, rgba(227, 6, 19, 0.06), transparent 60%),
-        linear-gradient(180deg, #eef1f6 0%, #f5f6f9 40%, #f5f6f9 100%);
+        linear-gradient(180deg, var(--color-bg-page) 0%, #f5f6f9 40%, #f5f6f9 100%);
     color: var(--pc-text);
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     min-width: 100vw;
 }
@@ -57,7 +57,7 @@ body {
     border: 0;
     background: transparent;
     padding: 0;
-    color: #64748b;
+    color: var(--pc-muted);
     font-weight: 600;
     cursor: pointer;
     transition: color 0.2s ease;
@@ -82,12 +82,12 @@ body {
 }
 
 .carrinho-titulo-badge {
-    background: #0f172a;
+    background: var(--color-ink);
     color: #fff;
     font-size: 12px;
     font-weight: 700;
     padding: 5px 12px;
-    border-radius: 99px;
+    border-radius: var(--radius-pill);
     letter-spacing: 0.01em;
 }
 
@@ -111,7 +111,7 @@ body {
 .carrinho-item {
     background: var(--pc-surface);
     border: 1px solid var(--pc-border);
-    border-radius: 22px;
+    border-radius: var(--radius-xl);
     padding: 18px;
     display: grid;
     grid-template-columns: 96px 1fr auto;
@@ -133,7 +133,6 @@ body {
         opacity: 0;
         transform: translateY(10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -143,7 +142,7 @@ body {
 .carrinho-item-imagem {
     width: 96px;
     height: 96px;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f4f6f9 100%);
     border: 1px solid #f1f5f9;
     display: grid;
@@ -172,7 +171,7 @@ body {
 .carrinho-item-nome {
     font-size: 15px;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--color-ink);
     line-height: 1.35;
 }
 
@@ -200,8 +199,8 @@ body {
     align-items: center;
     gap: 4px;
     background: #f4f6f9;
-    border: 1px solid #e6e9ef;
-    border-radius: 99px;
+    border: 1px solid var(--pc-border);
+    border-radius: var(--radius-pill);
     padding: 3px;
 }
 
@@ -209,7 +208,7 @@ body {
     width: 28px;
     height: 28px;
     border: 0;
-    border-radius: 99px;
+    border-radius: var(--radius-pill);
     background: #fff;
     color: #334155;
     display: grid;
@@ -220,7 +219,7 @@ body {
 }
 
 .carrinho-item-qtd-stepper button:hover:not(:disabled) {
-    background: #0f172a;
+    background: var(--color-ink);
     color: #fff;
 }
 
@@ -253,8 +252,8 @@ body {
 
 .carrinho-item-remover:hover:not(:disabled) {
     color: var(--pc-primary);
-    border-color: rgba(227, 6, 19, 0.3);
-    background: rgba(227, 6, 19, 0.06);
+    border-color: var(--color-brand-tint-border);
+    background: var(--color-brand-tint-bg);
 }
 
 .carrinho-item-remover:disabled {
@@ -265,13 +264,13 @@ body {
 .carrinho-item-preco {
     font-size: 17px;
     font-weight: 800;
-    color: #0f172a;
+    color: var(--color-ink);
 }
 
 .carrinho-resumo {
     background: var(--pc-surface);
     border: 1px solid var(--pc-border);
-    border-radius: 24px;
+    border-radius: var(--radius-2xl);
     padding: 28px;
     box-shadow: var(--pc-shadow-md);
     position: sticky;
@@ -315,7 +314,7 @@ body {
     align-items: baseline;
     font-size: 20px;
     font-weight: 800;
-    color: #0f172a;
+    color: var(--color-ink);
     padding-top: 18px;
     margin-top: 8px;
     border-top: 1px dashed var(--pc-border);
@@ -326,7 +325,7 @@ body {
     height: 54px;
     margin-top: 24px;
     border: 0;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     background: var(--pc-primary-gradient);
     color: white;
     display: flex;
@@ -377,19 +376,17 @@ body {
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
 .carrinho-erro {
     width: min(1120px, calc(100% - 48px));
     margin: 0 auto 16px;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    color: #b91c1c;
+    background: var(--color-danger-bg);
+    border: 1px solid var(--color-danger-border);
+    color: var(--color-danger);
     padding: 12px 16px;
-    border-radius: 14px;
+    border-radius: var(--radius-lg);
     font-size: 13px;
     font-weight: 600;
 }
@@ -403,7 +400,7 @@ body {
     justify-content: center;
     align-items: center;
     background: #ffffff;
-    border-radius: 28px;
+    border-radius: var(--radius-2xl);
     border: 1px dashed #d8dde5;
 }
 
@@ -421,14 +418,14 @@ body {
     height: 68px;
     border-radius: 50%;
     background: #f1f5f9;
-    color: #64748b;
+    color: var(--pc-muted);
     display: grid;
     place-items: center;
 }
 
 .carrinho-feedback strong {
     font-size: 19px;
-    color: #0f172a;
+    color: var(--color-ink);
 }
 
 .carrinho-feedback p {
@@ -440,9 +437,9 @@ body {
 .carrinho-feedback button {
     margin-top: 10px;
     padding: 11px 22px;
-    border-radius: 99px;
+    border-radius: var(--radius-pill);
     border: 0;
-    background: #0f172a;
+    background: var(--color-ink);
     color: #fff;
     font-weight: 700;
     font-size: 13px;
@@ -456,7 +453,7 @@ body {
 }
 
 .carrinho-feedback-icon--sucesso {
-    background: rgba(16, 138, 72, 0.12);
+    background: var(--color-brand-tint-bg);
     color: var(--pc-success);
 }
 

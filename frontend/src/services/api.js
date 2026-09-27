@@ -38,7 +38,6 @@ api.interceptors.response.use(
   }
 );
 
-// Auxiliar para extrair mensagens de erro da resposta
 const getErrorMessage = (error, mensagemPadrao) => {
   return (
     error.response?.data?.mensagem ||
@@ -57,16 +56,35 @@ export const cadastrarUsuario = async (dadosUsuario) => {
   }
 };
 
-export const buscarProdutos = async () => {
+export const buscarProdutos = async (idCategoria = null) => {
   try {
-    const response = await api.get('/produtos');
-    return response.data.data;
+    const endpoint = idCategoria && idCategoria !== 'todas'
+      ? `/produtos/categoria/${idCategoria}`
+      : '/produtos';
+
+    const response = await api.get(endpoint);
+    
+    const dados = response.data;
+    if (Array.isArray(dados)) return dados;
+    if (Array.isArray(dados?.data)) return dados.data;
+    if (Array.isArray(dados?.produtos)) return dados.produtos;
+
+    return [];
   } catch (error) {
-    console.error('Erro no serviço de cadastro:', error);
-    throw new Error(getErrorMessage(error, 'Erro ao cadastrar usuário.'));
+    console.error('Erro ao buscar produtos:', error);
+    throw new Error(getErrorMessage(error, 'Erro ao carregar a lista de produtos.'));
   }
 };
 
+export const obterProdutoPorId = async (id) => {
+  try {
+    const response = await api.get(`/produtos/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao buscar produto com ID ${id}:`, error);
+    throw new Error(getErrorMessage(error, 'Erro ao carregar os detalhes do produto.'));
+  }
+};
 
 export const fazerLogin = async (dadosLogin) => {
   try {
@@ -178,8 +196,6 @@ export const atualizarQuantidadeCarrinho = async (id, quantidade) => {
 
 export const alternarStatusProduto = (id, ativo) =>
   api.patch(`/admin/produtos/${id}/status`, { ativo });
-
-
 
 /**
  * Remove um item do carrinho pelo ID.

@@ -9,6 +9,7 @@ import PedidosPage from './pages/pedidos/pedidos.page.jsx';
 import './style.css'
 import AdminProdutosPage from './pages/admin/admin.produtos.page.jsx';
 import { RotaAdmin } from './components/RotaAdmin.jsx';
+import ProdutosDetalhesPage from './pages/produtos/produtosDetalhes.page';
 
 export default function App() {
   const usuario = JSON.parse(localStorage.getItem('usuario')) || null;
@@ -19,6 +20,7 @@ export default function App() {
       <Route path="/" element={<ProdutosPage />} />
       <Route path="/carrinho" element={<CarrinhoPage />} />
       <Route path="/pedidosProdutos" element={<PedidosPage />}/>
+      <Route path="/produtos/:id" element={<ProdutosDetalhesPage />} />
 
       <Route path="/cadastro" element={<CadastroPage />} />
       <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />

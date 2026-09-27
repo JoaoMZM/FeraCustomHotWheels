@@ -13,6 +13,13 @@ export const produtoRepository = {
         return rows;
     },
 
+    buscarProdutosPorCategoria: async (idOuNome) => {
+        const sql = `SELECT p.* FROM produtos p INNER JOIN categorias c ON p.id_categoria = c.id_categoria WHERE p.id_categoria = ? OR c.nome = ?`;
+        const [rows] = await db.execute(sql, [idOuNome, idOuNome]);
+        return rows;
+    },
+
+
     atualizar: async (produto) => {
         const sql = 'UPDATE produtos SET nome = ?, descricao = ?, preco = ?, estoque = ?, cor = ?, limitado = ?, modelo = ?, id_categoria = ? WHERE id_produto = ?;';
         const values = [produto.nome, produto.descricao, produto.preco, produto.estoque, produto.cor, produto.limitado, produto.modelo, produto.id_categoria, produto.id_produto];

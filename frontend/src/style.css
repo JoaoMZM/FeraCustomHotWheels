@@ -1043,7 +1043,6 @@ body {
     background: #108a48;
 }
 
-/* Spinners Gerais */
 .spinner {
     width: 16px;
     height: 16px;
@@ -1059,7 +1058,6 @@ body {
     }
 }
 
-/* Skeletons */
 .produto-skeleton {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -1105,7 +1103,6 @@ body {
     margin-top: auto;
 }
 
-/* Feedback */
 .produtos-feedback {
     grid-column: 1 / -1;
     padding: 48px 20px;
@@ -1165,7 +1162,6 @@ body {
     background: #e30613;
 }
 
-/* Responsividade de Produtos */
 @media (max-width: 1024px) {
     .produtos-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1207,19 +1203,29 @@ body {
   border-radius: 6px;
   padding: 0 10px;
   background-color: #fff;
+  overflow: hidden; 
 }
 
-.input-com-icone {
+.input-com-icone,
+.input-wrap input {
   flex: 1;
-  border: none;
-  outline: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   padding: 10px 0;
+  background: transparent;
 }
 
 .input-wrap:focus-within {
-    border-color: #e30613;
+  border-color: #e30613;
 }
 
 .input-wrap:has(.input-erro) {
   border-color: #e53e3e;
+}
+
+.input-erro {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }

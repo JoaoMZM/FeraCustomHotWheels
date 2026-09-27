@@ -21,9 +21,9 @@ export const produtoController = {
 
     buscarProdutoPorID: async (req, res) => {
         try {
-            const id = Number(req.params.id);
+            const id = req.params.id;
 
-            if (isNaN(id) || id <= 0) {
+            if (!id || typeof id !== 'string' || id.trim() === '') {
                 return res.status(400).json({ message: 'ID informado é inválido' });
             }
 
@@ -38,6 +38,28 @@ export const produtoController = {
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: 'Erro ao buscar produto', errorMessage: error.message });
+        }
+    },
+
+    buscarProdutosPorCategoria: async (req, res) => {
+        try {
+            const { idCategoria } = req.params;
+            let produtos;
+
+            const categoriaValida = idCategoria && idCategoria !== "null" && idCategoria !== "undefined";
+
+            if (categoriaValida) {
+                produtos = await produtoRepository.buscarProdutosPorCategoria(idCategoria);
+            } else {
+
+                produtos = await produtoRepository.selecionar(); 
+            }
+
+            return res.status(200).json(produtos);
+
+        } catch (error) {
+            console.error("Erro ao listar produtos:", error);
+            return res.status(500).json({ mensagem: "Erro ao buscar produtos" });
         }
     },
 
@@ -63,8 +85,6 @@ export const produtoController = {
             if (limitado !== undefined && limitado !== null) {
                 limitadoBool = limitado === 'true' || limitado === true;
             }
-            console.log(nome);
-            // Instancia a classe Produto
             const produto = Produto.criar({
                 nome: nome || nome_produto,
                 descricao: descricao || descricao_produto,

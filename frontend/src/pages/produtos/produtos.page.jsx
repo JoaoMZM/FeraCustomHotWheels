@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   listarCarrinho,
@@ -9,6 +9,7 @@ import {
 import { IconesProdutos } from "../../components/icons/IconesProdutos.jsx";
 import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
 import { ProdutoCard } from "../../components/produtos/ProdutoCard.jsx";
+import { PainelFiltroModal } from "../../components/produtos/PainelFiltroModal.jsx";
 import "./produtos.page.css";
 
 export default function ProdutosPage() {
@@ -20,7 +21,6 @@ export default function ProdutosPage() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
-  // Estados dos filtros
   const [busca, setBusca] = useState("");
   const [categoria, setCategoria] = useState("todas");
   const [precoMin, setPrecoMin] = useState("");
@@ -32,24 +32,54 @@ export default function ProdutosPage() {
   const [favoritos, setFavoritos] = useState({});
   const [totalCarrinho, setTotalCarrinho] = useState(0);
 
-  const carregarCategorias = useCallback(async () => {
-    try {
-      const dados = await listarCategorias();
-      const lista = Array.isArray(dados) ? dados : dados.categorias || [];
-      const categoriasFormatadas = [
-        { valor: "todas", rotulo: "Todos os Produtos" },
-        ...lista.map((cat) => ({
-          valor: cat.slug || cat.valor || cat.id || cat.nome,
-          rotulo: cat.nome || cat.rotulo || cat.valor,
-        })),
-      ];
-      setCategorias(categoriasFormatadas);
-    } catch {
-      // tratamento de erro silencioso
+  const [menuAberto, setMenuAberto] = useState(false);
+  const [posicao, setPosicao] = useState({ top: 0, left: 0 });
+  const botaoFiltroRef = useRef(null);
+  const painelFiltroRef = useRef(null);
+
+  const abrirFiltro = () => {
+    if (botaoFiltroRef.current) {
+      const rect = botaoFiltroRef.current.getBoundingClientRect();
+      setPosicao({ top: rect.bottom + 4, left: rect.left });
     }
+    setMenuAberto((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickFora = (e) => {
+      if (!document.body.contains(e.target)) return;
+      const clicouNoBotao = botaoFiltroRef.current?.contains(e.target);
+      const clicouNoPainel = painelFiltroRef.current?.contains(e.target);
+      if (!clicouNoBotao && !clicouNoPainel) setMenuAberto(false);
+    };
+
+    document.addEventListener("mousedown", handleClickFora);
+    return () => document.removeEventListener("mousedown", handleClickFora);
   }, []);
 
-  // Busca todos os produtos sem passar parâmetros para a API
+  const selecionarFaixaPreco = (min, max) => {
+    setPrecoMin(min);
+    setPrecoMax(max);
+  };
+
+const carregarCategorias = useCallback(async () => {
+  try {
+    const dados = await listarCategorias();
+    const lista = Array.isArray(dados?.data) ? dados.data : Array.isArray(dados) ? dados : [];
+
+    const categoriasFormatadas = [
+      { valor: "todas", rotulo: "Todos os Produtos" },
+      ...lista.map((cat) => ({
+        valor: cat.id_categoria,
+        rotulo: cat.nome,
+      })),
+    ];
+    setCategorias(categoriasFormatadas);
+  } catch (err) {
+    console.error("Erro ao carregar categorias:", err);
+  }
+}, []);
+
   const carregarProdutos = useCallback(async () => {
     setCarregando(true);
     setErro("");
@@ -74,7 +104,7 @@ export default function ProdutosPage() {
       );
       setTotalCarrinho(total);
     } catch {
-      
+
     }
   }, []);
 
@@ -132,31 +162,21 @@ export default function ProdutosPage() {
     setFavoritos((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Filtragem 100% realizada no Front-end
-  const produtosFiltrados = produtos.filter((produto) => {
-    // 1. Filtro de Categoria
-    if (categoria !== "todas") {
-      const catProduto = (produto.categoria || "").toString().toLowerCase();
-      const catFiltro = categoria.toString().toLowerCase();
-      if (catProduto !== catFiltro) return false;
-    }
+const produtosFiltrados = produtos.filter((produto) => {
+  if (busca.trim() !== "") {
+    const termo = busca.toLowerCase();
+    const nomeMatch = produto.nome?.toLowerCase().includes(termo);
+    const skuMatch = String(produto.sku || "").toLowerCase().includes(termo);
+    if (!nomeMatch && !skuMatch) return false;
+  }
 
-    // 2. Filtro de Busca (Nome ou SKU)
-    if (busca.trim() !== "") {
-      const termo = busca.toLowerCase();
-      const nomeMatch = produto.nome?.toLowerCase().includes(termo);
-      const skuMatch = String(produto.sku || "").toLowerCase().includes(termo);
-      if (!nomeMatch && !skuMatch) return false;
-    }
+  const min = precoMin !== "" ? Number(precoMin) : null;
+  const max = precoMax !== "" ? Number(precoMax) : null;
+  if (min !== null && produto.preco < min) return false;
+  if (max !== null && produto.preco > max) return false;
 
-    // 3. Filtro de Faixa de Preço
-    const min = precoMin !== "" ? Number(precoMin) : null;
-    const max = precoMax !== "" ? Number(precoMax) : null;
-    if (min !== null && produto.preco < min) return false;
-    if (max !== null && produto.preco > max) return false;
-
-    return true;
-  });
+  return true;
+});
 
   const limparFiltros = () => {
     setBusca("");
@@ -174,27 +194,51 @@ export default function ProdutosPage() {
       <ProdutosHeader
         busca={busca}
         setBusca={setBusca}
-        categoria={categoria}
-        setCategoria={setCategoria}
-        categorias={categorias}
-        precoMin={precoMin}
-        setPrecoMin={setPrecoMin}
-        precoMax={precoMax}
-        setPrecoMax={setPrecoMax}
-        onLimparFiltros={limparFiltros}
         totalCarrinho={totalCarrinho}
         onSubmitBusca={handleSubmitBusca}
       />
 
       <main className="produtos-content">
-        <div className="produtos-breadcrumb">
-          <button type="button" onClick={() => navigate("/")}>
-            Início
-          </button>
-          <IconesProdutos name="chevron" size={12} />
-          <span>Catálogo</span>
-          <IconesProdutos name="chevron" size={12} />
-          <span style={{ color: "#0f172a" }}>{categoriaAtual}</span>
+        <div className="produtos-toolbar-topo" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div className="produtos-breadcrumb">
+            <button type="button" onClick={() => navigate("/")}>
+              Início
+            </button>
+            <IconesProdutos name="chevron" size={12} />
+            <span>Catálogo</span>
+            <IconesProdutos name="chevron" size={12} />
+            <span style={{ color: "#0f172a" }}>{categoriaAtual}</span>
+          </div>
+
+          <div className="produtos-filtro-inline">
+            <button
+              type="button"
+              ref={botaoFiltroRef}
+              className={`nav-mega-gatilho${menuAberto ? " aberto" : ""}`}
+              onClick={abrirFiltro}
+              aria-expanded={menuAberto}
+            >
+              Filtrar produtos
+              <IconesProdutos name="chevron" size={12} />
+            </button>
+          </div>
+
+          {menuAberto && (
+            <PainelFiltroModal
+              painelFiltroRef={painelFiltroRef}
+              posicao={posicao}
+              setMenuAberto={setMenuAberto}
+              listaCategorias={categorias}
+              categoria={categoria}
+              setCategoria={setCategoria}
+              precoMin={precoMin}
+              setPrecoMin={setPrecoMin}
+              precoMax={precoMax}
+              setPrecoMax={setPrecoMax}
+              selecionarFaixaPreco={selecionarFaixaPreco}
+              onLimparFiltros={limparFiltros}
+            />
+          )}
         </div>
 
         <div className="produtos-toolbar">
@@ -251,19 +295,24 @@ export default function ProdutosPage() {
 
           {!carregando &&
             !erro &&
-            produtosFiltrados.map((produto) => (
-              <ProdutoCard
-                key={produto.id}
-                produto={produto}
-                quantidade={getQuantidade(produto.id)}
-                onAlterarQuantidade={alterarQuantidade}
-                onAdicionarCarrinho={handleAdicionarCarrinho}
-                enviando={enviandoId === produto.id}
-                adicionado={!!adicionados[produto.id]}
-                favorito={!!favoritos[produto.id]}
-                onToggleFavorito={toggleFavorito}
-              />
-            ))}
+            produtosFiltrados.map((produto) => {
+              const idValido = produto.id_produto || produto.id || produto._id;
+
+              return (
+                <ProdutoCard
+                  key={produto.id}
+                  produto={produto}
+                  quantidade={getQuantidade(produto.id)}
+                  onAlterarQuantidade={alterarQuantidade}
+                  onAdicionarCarrinho={handleAdicionarCarrinho}
+                  enviando={enviandoId === produto.id}
+                  adicionado={!!adicionados[produto.id]}
+                  favorito={!!favoritos[produto.id]}
+                  onToggleFavorito={toggleFavorito}
+                  onClickDetalhes={() => navigate(`/produtos/${idValido}`)}
+                />
+              );
+            })}
         </section>
       </main>
     </div>

@@ -4,7 +4,7 @@ import {
   criarProduto,
   atualizarProduto,
   alternarStatusProduto,
-} from "../services/api.js"; // ajuste o caminho conforme a localização real de services/api.js
+} from "../services/api.js"; 
 
 const formInicial = {
   id: null,
@@ -130,7 +130,6 @@ export function useAdminProdutos() {
   );
 
   return {
-    // estado
     produtos: produtosFiltrados,
     carregando,
     salvando,
@@ -139,16 +138,13 @@ export function useAdminProdutos() {
     modalAberto,
     formData,
     busca,
-    // setters
     setBusca,
-    // ações
     handleAbrirCriar,
     handleAbrirEditar,
     handleFecharModal,
     handleChange,
     handleSalvar,
     handleAlternarStatus,
-    // reload manual, se precisar em algum outro lugar
     carregarProdutos,
   };
 }

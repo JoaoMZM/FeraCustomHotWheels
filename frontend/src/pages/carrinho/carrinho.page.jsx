@@ -9,6 +9,8 @@ import {
 import { IconesCarrinho } from "../../components/icons/IconesCarrinho.jsx";
 import { CarrinhoItem } from "../../components/carrinho/CarrinhoItem.jsx";
 import { CarrinhoResumo } from "../../components/carrinho/CarrinhoResumo";
+import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
+import "../produtos/produtos.page.css"; // classes do header (.produtos-header, .produtos-logo, etc.)
 import "./carrinho.page.css";
 
 export default function CarrinhoPage() {
@@ -22,6 +24,9 @@ export default function CarrinhoPage() {
   const [atualizandoId, setAtualizandoId] = useState(null);
   const [finalizando, setFinalizando] = useState(false);
   const [pedidoConcluido, setPedidoConcluido] = useState(null);
+
+  // Estado da busca do header (mesmo padrão da página de Produtos)
+  const [busca, setBusca] = useState("");
 
   const carregarCarrinho = useCallback(async () => {
     setCarregando(true);
@@ -96,6 +101,14 @@ export default function CarrinhoPage() {
     }
   };
 
+  // Busca do header: no carrinho não filtramos itens, então enviar uma
+  // busca leva o usuário de volta pro catálogo já com o termo aplicado.
+  const handleSubmitBusca = (e) => {
+    if (e) e.preventDefault();
+    const termo = busca.trim();
+    navigate(termo ? `/produtos?busca=${encodeURIComponent(termo)}` : "/produtos");
+  };
+
   const total = itens.reduce(
     (soma, item) => soma + (item.preco || 0) * (item.quantidade || 1),
     0
@@ -108,6 +121,13 @@ export default function CarrinhoPage() {
 
   return (
     <div className="carrinho-page">
+      <ProdutosHeader
+        busca={busca}
+        setBusca={setBusca}
+        totalCarrinho={totalItens}
+        onSubmitBusca={handleSubmitBusca}
+      />
+
       <div className="carrinho-header">
         <div className="carrinho-breadcrumb">
           <button type="button" onClick={() => navigate("/")}>
