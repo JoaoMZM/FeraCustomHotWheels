@@ -2,18 +2,22 @@ export class Produto {
     #id
     #idCategoria
     #nome
+    #sku
     #descricao
     #valor
+    #precoOriginal
     #estoque
     #cor
-    #limitado 
+    #limitado
     #modelo
     #caminhoImagem
 
-    constructor(pNome, pDescricao, pValor, pEstoque, pIdCategoria, pCor, pLimitado, pModelo, pCaminhoImagem, pId) {
+    constructor(pNome, pSku, pDescricao, pValor, pPrecoOriginal, pEstoque, pIdCategoria, pCor, pLimitado, pModelo, pCaminhoImagem, pId) {
         this.nome = pNome;
+        this.sku = pSku;
         this.descricao = pDescricao;
         this.valor = pValor;
+        this.precoOriginal = pPrecoOriginal;
         this.estoque = pEstoque;
         this.idCategoria = pIdCategoria;
         this.cor = pCor;
@@ -32,6 +36,15 @@ export class Produto {
         this.#nome = value;
     }
 
+    get sku() {
+        return this.#sku;
+    }
+
+    set sku(value) {
+        this.#validarSku(value);
+        this.#sku = value;
+    }
+
     get descricao() {
         return this.#descricao;
     }
@@ -48,6 +61,15 @@ export class Produto {
     set valor(value) {
         this.#validarValor(value);
         this.#valor = Number(value);
+    }
+
+    get precoOriginal() {
+        return this.#precoOriginal;
+    }
+
+    set precoOriginal(value) {
+        this.#validarPrecoOriginal(value);
+        this.#precoOriginal = (value === null || value === undefined || value === '') ? null : Number(value);
     }
 
     get estoque() {
@@ -119,6 +141,12 @@ export class Produto {
         }
     }
 
+    #validarSku(value) {
+        if (!value || value.trim().length < 2 || value.trim().length > 50) {
+            throw new Error("SKU deve ter entre 2 e 50 caracteres");
+        }
+    }
+
     #validarDescricao(value) {
         if (!value || value.trim().length < 3 || value.trim().length > 100) {
             throw new Error("Descrição deve ter entre 3 e 100 caracteres");
@@ -128,6 +156,13 @@ export class Produto {
     #validarValor(value) {
         if (value === undefined || value === null || isNaN(value) || Number(value) <= 0) {
             throw new Error("Valor deve ser numérico e maior que zero");
+        }
+    }
+
+    #validarPrecoOriginal(value) {
+        if (value === null || value === undefined || value === '') return;
+        if (isNaN(value) || Number(value) <= 0) {
+            throw new Error("Preço original deve ser numérico e maior que zero");
         }
     }
 
@@ -144,7 +179,7 @@ export class Produto {
     }
 
     #validarIdCategoria(value) {
-        if (!value || value <= 0) {
+        if (!value || typeof value !== 'string' || value.trim().length === 0) {
             throw new Error("idCategoria é obrigatório");
         }
     }
@@ -176,8 +211,10 @@ export class Produto {
     static criar(dados) {
         return new Produto(
             dados.nome,
+            dados.sku,
             dados.descricao,
             dados.valor,
+            dados.precoOriginal,
             dados.estoque,
             dados.idCategoria,
             dados.cor,
@@ -190,15 +227,17 @@ export class Produto {
     static editar(dados, produtoAtual) {
         return new Produto(
             dados.nome ?? produtoAtual.nome,
+            dados.sku ?? produtoAtual.sku,
             dados.descricao ?? produtoAtual.descricao,
-            dados.valor ?? produtoAtual.valor,
+            dados.valor ?? produtoAtual.preco,
+            dados.precoOriginal ?? produtoAtual.preco_original,
             dados.estoque ?? produtoAtual.estoque,
-            dados.idCategoria ?? produtoAtual.idCategoria,
+            dados.idCategoria ?? produtoAtual.id_categoria,
             dados.cor ?? produtoAtual.cor,
             dados.limitado ?? produtoAtual.limitado,
             dados.modelo ?? produtoAtual.modelo,
-            dados.caminhoImagem ?? produtoAtual.caminhoImagem,
-            produtoAtual.id
+            dados.caminhoImagem ?? produtoAtual.imagem_produto,
+            produtoAtual.id_produto
         );
     }
 }

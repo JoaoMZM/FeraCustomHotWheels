@@ -63,7 +63,7 @@ export const buscarProdutos = async (idCategoria = null) => {
       : '/produtos';
 
     const response = await api.get(endpoint);
-    
+
     const dados = response.data;
     if (Array.isArray(dados)) return dados;
     if (Array.isArray(dados?.data)) return dados.data;
@@ -155,9 +155,6 @@ export const buscarProduto = async (id) => {
   return await request(`/produtos/${id}`);
 };
 
-export const atualizarProduto = (id, dadosProduto) =>
-  api.put(`/admin/produtos/${id}`, dadosProduto);
-
 /**
  * Adiciona um produto ao carrinho.
  * @param {{ produtoId: string|number, quantidade: number }} item
@@ -169,9 +166,6 @@ export const adicionarAoCarrinho = async ({ produtoId, quantidade }) => {
   });
 };
 
-export const criarProduto = (dadosProduto) =>
-  api.post("/admin/produtos", dadosProduto);
-
 export const listarCarrinho = async () => {
   return await request('/carrinho');
 };
@@ -179,6 +173,19 @@ export const listarCarrinho = async () => {
 export const listarCategorias = async () => {
   return await request('/categorias');
 };
+
+export const criarProduto = (formData) =>
+  api.post("/admin/produtos", formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+
+export const atualizarProduto = (id, formData) =>
+  api.put(`/admin/produtos/${id}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+
+export const alternarStatusProduto = (id, ativo) =>
+  api.patch(`/admin/produtos/${id}/status`, { ativo });
 
 export const listarProdutosAdmin = () => api.get("/admin/produtos");
 
@@ -193,9 +200,6 @@ export const atualizarQuantidadeCarrinho = async (id, quantidade) => {
     data: { quantidade },
   });
 };
-
-export const alternarStatusProduto = (id, ativo) =>
-  api.patch(`/admin/produtos/${id}/status`, { ativo });
 
 /**
  * Remove um item do carrinho pelo ID.
@@ -215,4 +219,26 @@ export const finalizarCompra = async () => {
 
 export const listarPedidos = async () => {
   return await request('/pedidos');
+};
+
+export const fazerLoginAdmin = async (dadosLogin) => {
+  try {
+    const response = await api.post('/admin/login', dadosLogin, { withCredentials: true });
+    localStorage.setItem('admin_payload', JSON.stringify(response.data.payload));
+    return response.data;
+  } catch (error) {
+    console.error('Erro no serviço de login admin:', error);
+    throw new Error(getErrorMessage(error, 'Erro ao realizar login administrativo.'));
+  }
+};
+
+export const logoutAdmin = async () => {
+  try {
+    const response = await api.post('/admin/logout');
+    localStorage.removeItem('admin_payload');
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao fazer logout admin:', error);
+    throw new Error(getErrorMessage(error, 'Erro ao sair.'));
+  }
 };

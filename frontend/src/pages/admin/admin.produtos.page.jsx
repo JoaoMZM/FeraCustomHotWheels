@@ -8,6 +8,7 @@ export default function AdminProdutosPage() {
 
   const {
     produtos,
+    categorias,
     carregando,
     salvando,
     erro,
@@ -28,7 +29,7 @@ export default function AdminProdutosPage() {
     <div className="admin-produtos-page">
       <header className="admin-header">
         <div className="admin-header-inner">
-          <div className="admin-logo" onClick={() => navigate("/produtos")}>
+          <div className="admin-logo" onClick={() => navigate("/")}>
             <img src="..\..\public\FeraCustomLogo.jpg" alt="Fera Custom Logo" />
             <strong>FERA CUSTOM</strong>
             <span className="badge-admin">Painel Admin</span>
@@ -37,7 +38,7 @@ export default function AdminProdutosPage() {
           <button
             type="button"
             className="btn-voltar-loja"
-            onClick={() => navigate("/produtos")}
+            onClick={() => navigate("/")}
           >
             Ir para a Loja
           </button>
@@ -202,13 +203,19 @@ export default function AdminProdutosPage() {
 
                 <div className="form-group">
                   <label>Categoria *</label>
-                  <input
-                    type="text"
-                    name="categoria"
+                  <select
+                    name="id_categoria"
                     required
-                    value={formData.categoria}
+                    value={formData.id_categoria}
                     onChange={handleChange}
-                  />
+                  >
+                    <option value="">Selecione...</option>
+                    {categorias.map((cat) => (
+                      <option key={cat.id_categoria} value={cat.id_categoria}>
+                        {cat.nome}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="form-group">
@@ -246,14 +253,18 @@ export default function AdminProdutosPage() {
                 </div>
 
                 <div className="form-group span-2">
-                  <label>URL da Imagem</label>
+                  <label>Imagem do Produto</label>
                   <input
-                    type="url"
-                    name="imagemUrl"
-                    placeholder="https://..."
-                    value={formData.imagemUrl}
+                    type="file"
+                    name="imagem_produto"
+                    accept="image/jpeg,image/png"
                     onChange={handleChange}
                   />
+                  {formData.id && !formData.imagemArquivo && (
+                    <small style={{ color: "#666", marginTop: "4px" }}>
+                      Deixe em branco para manter a imagem atual.
+                    </small>
+                  )}
                 </div>
 
                 <div className="form-group span-2">

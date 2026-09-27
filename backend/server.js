@@ -18,7 +18,7 @@ const app = e();
 app.use(cors({
     origin: ['https://localhost:5173', 'http://localhost:5173',],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH','DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use('/uploads', e.static(path.join(__dirname, 'uploads')));

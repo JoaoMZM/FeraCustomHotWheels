@@ -7,10 +7,22 @@ export const produtoRepository = {
         return rows;
     },
 
+    selecionarAtivos: async () => {
+        const sql = 'SELECT * FROM produtos WHERE ativo = 1;';
+        const [rows] = await db.execute(sql);
+        return rows;
+    },
+
     selecionarPorId: async (id) => {
         const sql = "SELECT * FROM produtos WHERE id_produto = ?;";
         const [rows] = await db.execute(sql, [id]);
-        return rows;
+        return rows[0] || null;
+    },
+
+    selecionarPorIdAtivo: async (id) => {
+        const sql = "SELECT * FROM produtos WHERE id_produto = ? AND ativo = 1;";
+        const [rows] = await db.execute(sql, [id]);
+        return rows[0] || null;
     },
 
     buscarProdutosPorCategoria: async (idOuNome) => {
@@ -19,10 +31,25 @@ export const produtoRepository = {
         return rows;
     },
 
+    buscarProdutosPorCategoriaAtivos: async (idOuNome) => {
+        const sql = `SELECT p.* FROM produtos p INNER JOIN categorias c ON p.id_categoria = c.id_categoria WHERE (p.id_categoria = ? OR c.nome = ?) AND p.ativo = 1`;
+        const [rows] = await db.execute(sql, [idOuNome, idOuNome]);
+        return rows;
+    },
 
     atualizar: async (produto) => {
-        const sql = 'UPDATE produtos SET nome = ?, descricao = ?, preco = ?, estoque = ?, cor = ?, limitado = ?, modelo = ?, id_categoria = ? WHERE id_produto = ?;';
-        const values = [produto.nome, produto.descricao, produto.preco, produto.estoque, produto.cor, produto.limitado, produto.modelo, produto.id_categoria, produto.id_produto];
+        const sql = 'UPDATE produtos SET nome = ?, sku = ?, descricao = ?, preco = ?, preco_original = ?, estoque = ?, id_categoria = ?, imagem_produto = ? WHERE id_produto = ?;';
+        const values = [
+            produto.nome,
+            produto.sku,
+            produto.descricao,
+            produto.valor,
+            produto.precoOriginal,
+            produto.estoque,
+            produto.idCategoria,
+            produto.caminhoImagem,
+            produto.id
+        ];
         const [rows] = await db.execute(sql, values);
         return rows;
     },
@@ -33,31 +60,30 @@ export const produtoRepository = {
         const [rows] = await db.execute(sql, values);
         return rows;
     },
+
     inserirProduto: async (produto) => {
         const sql = `
             INSERT INTO produtos (
-                nome, 
-                descricao, 
-                preco, 
-                estoque, 
-                cor, 
-                limitado, 
-                modelo,
+                nome,
+                sku,
+                descricao,
+                preco,
+                preco_original,
+                estoque,
                 imagem_produto,
                 id_categoria
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
-            produto.nome ?? produto.nome_produto,
-            produto.descricao ?? produto.descricao_produto,
-            produto.valor ?? produto.preco ?? produto.preco_produto,
-            produto.estoque ?? produto.estoque_produto,
-            produto.cor ?? null,
-            produto.limitado ?? null,
-            produto.modelo ?? null,
-            produto.caminhoImagem ?? produto.imagem_produto ?? null,
-            produto.idCategoria ?? produto.id_categoria
+            produto.nome,
+            produto.sku,
+            produto.descricao,
+            produto.valor,
+            produto.precoOriginal,
+            produto.estoque,
+            produto.caminhoImagem,
+            produto.idCategoria
         ];
 
         const [result] = await db.execute(sql, values);

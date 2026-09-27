@@ -238,6 +238,7 @@ const clienteController = {
             return res.status(500).json({ message: 'Erro no servidor', errorMessage: error.message });
         }
     },
+    
     refreshToken: async (req, res) => {
 
         const refreshToken = req.cookies.refresh_token;

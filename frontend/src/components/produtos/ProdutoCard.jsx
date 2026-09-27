@@ -55,8 +55,6 @@ export const ProdutoCard = ({
     });
   };
 
-  console.log("DADOS DO PRODUTO VINDO DO BANCO:", produto);
-
   const idValido = produto.id || produto.id_produto || produto._id;
 
   return (

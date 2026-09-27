@@ -1,5 +1,15 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IconesProdutos } from "../icons/IconesProdutos";
+import { logoutAdmin } from "../../services/api.js";
+
+const lerAdminSalvo = () => {
+  try {
+    return JSON.parse(localStorage.getItem("admin_payload")) || null;
+  } catch {
+    return null;
+  }
+};
 
 export const ProdutosHeader = ({
   busca = "",
@@ -8,6 +18,9 @@ export const ProdutosHeader = ({
   onSubmitBusca = (e) => e?.preventDefault(),
 }) => {
   const navigate = useNavigate();
+
+  const [usuarioAdmin, setUsuarioAdmin] = useState(lerAdminSalvo);
+  const ehAdmin = usuarioAdmin?.role === "admin";
 
   const estaAutenticado = () => {
     const token = localStorage.getItem("fera_token");
@@ -23,8 +36,35 @@ export const ProdutosHeader = ({
     }
   };
 
+  const handleSairAdmin = async () => {
+    try {
+      await logoutAdmin();
+    } catch {
+    } finally {
+      localStorage.removeItem("admin_payload");
+      setUsuarioAdmin(null);
+      navigate("/");
+    }
+  };
+
   return (
     <header className="produtos-header">
+      {ehAdmin && (
+        <div className="produtos-admin-faixa">
+          <span>
+            Modo administrador — {usuarioAdmin?.name || usuarioAdmin?.email}
+          </span>
+          <div className="produtos-admin-faixa-acoes">
+            <button type="button" onClick={() => navigate("/admin/produtos")}>
+              Painel Admin
+            </button>
+            <button type="button" onClick={handleSairAdmin}>
+              Sair do admin
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="produtos-header-main">
         <button
           type="button"
@@ -51,6 +91,22 @@ export const ProdutosHeader = ({
         </form>
 
         <div className="produtos-header-actions">
+          {ehAdmin && (
+            <button
+              type="button"
+              className="produtos-account produtos-account--admin"
+              onClick={() => navigate("/admin/produtos")}
+              aria-label="Ir para o Painel Admin"
+            >
+              <div className="produtos-account-avatar">
+                <IconesProdutos name="box" size={18} />
+              </div>
+              <span className="produtos-account-text">
+                <strong>Painel Admin</strong>
+              </span>
+            </button>
+          )}
+
           <button
             type="button"
             className="produtos-account"
@@ -79,7 +135,6 @@ export const ProdutosHeader = ({
             </span>
           </button>
 
-          {/* Favoritos */}
           <button
             type="button"
             className="produtos-account"

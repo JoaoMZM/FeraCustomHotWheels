@@ -1,25 +1,44 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   listarProdutosAdmin,
   criarProduto,
   atualizarProduto,
   alternarStatusProduto,
-} from "../services/api.js"; 
+  listarCategorias,
+} from "../services/api.js";
+
+const API_URL = 'https://localhost:443';
 
 const formInicial = {
   id: null,
   nome: "",
   sku: "",
-  categoria: "",
+  id_categoria: "",
   preco: "",
   precoOriginal: "",
   estoque: "",
-  imagemUrl: "",
+  imagemArquivo: null,
   descricao: "",
 };
 
+const paraBooleano = (valor) => {
+  if (valor === undefined || valor === null) return true;
+  if (typeof valor === "boolean") return valor;
+  if (typeof valor === "number") return valor !== 0;
+  if (typeof valor === "string") {
+    const normalizado = valor.trim().toLowerCase();
+    return normalizado !== "0" && normalizado !== "false" && normalizado !== "";
+  }
+  
+  if (valor?.type === "Buffer" && Array.isArray(valor?.data)) {
+    return valor.data[0] !== 0;
+  }
+  return Boolean(valor);
+};
+
 export function useAdminProdutos() {
-  const [produtos, setProdutos] = useState([]);
+  const [produtosRaw, setProdutosRaw] = useState([]);
+  const [categorias, setCategorias] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
@@ -33,18 +52,63 @@ export function useAdminProdutos() {
     setCarregando(true);
     setErro("");
     try {
-      const dados = await listarProdutosAdmin();
-      setProdutos(Array.isArray(dados) ? dados : dados.produtos || []);
+      const resposta = await listarProdutosAdmin();
+      const lista = resposta.data?.data || [];
+      setProdutosRaw(lista);
     } catch (err) {
-      setErro(err.message || "Erro ao carregar a lista de produtos.");
+      setErro(err.response?.data?.message || err.message || "Erro ao carregar a lista de produtos.");
     } finally {
       setCarregando(false);
     }
   }, []);
 
+  const carregarCategorias = useCallback(async () => {
+    try {
+      const resultado = await listarCategorias();
+      const lista = Array.isArray(resultado) ? resultado : (resultado?.data || []);
+      setCategorias(lista);
+    } catch (err) {
+      console.error("Erro ao carregar categorias:", err);
+    }
+  }, []);
+
   useEffect(() => {
     carregarProdutos();
-  }, [carregarProdutos]);
+    carregarCategorias();
+  }, [carregarProdutos, carregarCategorias]);
+
+  useEffect(() => {
+    if (!sucesso) return;
+    const timer = setTimeout(() => setSucesso(""), 3000);
+    return () => clearTimeout(timer);
+  }, [sucesso]);
+
+  const produtos = useMemo(() => {
+    return produtosRaw.map((p) => ({
+      id: p.id_produto,
+      nome: p.nome,
+      sku: p.sku,
+      descricao: p.descricao,
+      preco: p.preco,
+      precoOriginal: p.preco_original,
+      estoque: p.estoque,
+      id_categoria: p.id_categoria,
+      categoria: categorias.find((c) => c.id_categoria === p.id_categoria)?.nome || "-",
+      ativo: paraBooleano(p.ativo),
+      imagemUrl: p.imagem_produto ? `${API_URL}/${p.imagem_produto}` : null,
+    }));
+  }, [produtosRaw, categorias]);
+
+  const produtosFiltrados = useMemo(() => {
+    if (!busca.trim()) return produtos;
+    const termo = busca.trim().toLowerCase();
+    return produtos.filter(
+      (p) =>
+        p.nome?.toLowerCase().includes(termo) ||
+        p.sku?.toLowerCase().includes(termo) ||
+        p.categoria?.toLowerCase().includes(termo)
+    );
+  }, [produtos, busca]);
 
   const handleAbrirCriar = () => {
     setFormData(formInicial);
@@ -57,11 +121,11 @@ export function useAdminProdutos() {
       id: produto.id,
       nome: produto.nome || "",
       sku: produto.sku || "",
-      categoria: produto.categoria || "",
+      id_categoria: produto.id_categoria || "",
       preco: produto.preco || "",
       precoOriginal: produto.precoOriginal || "",
       estoque: produto.estoque ?? "",
-      imagemUrl: produto.imagemUrl || "",
+      imagemArquivo: null,
       descricao: produto.descricao || "",
     });
     setModalAberto(true);
@@ -74,7 +138,13 @@ export function useAdminProdutos() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, files } = e.target;
+
+    if (type === "file") {
+      setFormData((prev) => ({ ...prev, imagemArquivo: files[0] || null }));
+      return;
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -84,26 +154,32 @@ export function useAdminProdutos() {
     setErro("");
     setSucesso("");
 
-    const payload = {
-      ...formData,
-      preco: Number(formData.preco),
-      precoOriginal: formData.precoOriginal ? Number(formData.precoOriginal) : null,
-      estoque: Number(formData.estoque),
-    };
+    const fd = new FormData();
+    fd.append("nome", formData.nome);
+    fd.append("sku", formData.sku);
+    fd.append("descricao", formData.descricao);
+    fd.append("preco", formData.preco);
+    fd.append("precoOriginal", formData.precoOriginal || "");
+    fd.append("estoque", formData.estoque);
+    fd.append("id_categoria", formData.id_categoria);
+
+    if (formData.imagemArquivo) {
+      fd.append("imagem_produto", formData.imagemArquivo);
+    }
 
     try {
       if (formData.id) {
-        await atualizarProduto(formData.id, payload);
+        await atualizarProduto(formData.id, fd);
         setSucesso("Produto atualizado com sucesso!");
       } else {
-        await criarProduto(payload);
+        await criarProduto(fd);
         setSucesso("Produto cadastrado com sucesso!");
       }
 
       handleFecharModal();
       await carregarProdutos();
     } catch (err) {
-      setErro(err.message || "Erro ao salvar produto.");
+      setErro(err.response?.data?.message || err.message || "Erro ao salvar produto.");
     } finally {
       setSalvando(false);
     }
@@ -118,19 +194,13 @@ export function useAdminProdutos() {
       setSucesso(`Produto ${statusAtual ? "inativado" : "ativado"} com sucesso!`);
       await carregarProdutos();
     } catch (err) {
-      setErro(err.message || `Erro ao ${acao} produto.`);
+      setErro(err.response?.data?.message || err.message || `Erro ao ${acao} produto.`);
     }
   };
 
-  const produtosFiltrados = produtos.filter(
-    (p) =>
-      p.nome?.toLowerCase().includes(busca.toLowerCase()) ||
-      p.sku?.toLowerCase().includes(busca.toLowerCase()) ||
-      p.categoria?.toLowerCase().includes(busca.toLowerCase())
-  );
-
   return {
     produtos: produtosFiltrados,
+    categorias,
     carregando,
     salvando,
     erro,
