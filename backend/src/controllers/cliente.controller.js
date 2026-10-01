@@ -31,7 +31,7 @@ const clienteController = {
         try {
             const id = req.params.id;
             const resultado = await clienteRepository.selecionarPorId(id);
-
+            console.log(resultado);
             if (!resultado) {
                 return res.status(404).json({ message: 'Cliente não encontrado' });
             }
@@ -168,7 +168,7 @@ const clienteController = {
         try {
             const id = req.params.id;
             const cliente = await clienteRepository.selecionarPorId(id);
-
+            
             if (!cliente) {
                 return res.status(404).json({ message: 'Cliente não encontrado' });
             }

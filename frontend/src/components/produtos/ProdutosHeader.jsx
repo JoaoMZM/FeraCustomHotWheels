@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IconesProdutos } from "../icons/IconesProdutos";
 import { logoutAdmin } from "../../services/api.js";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 
 const lerAdminSalvo = () => {
   try {
@@ -21,7 +22,7 @@ export const ProdutosHeader = ({
 
   const [usuarioAdmin, setUsuarioAdmin] = useState(lerAdminSalvo);
   const ehAdmin = usuarioAdmin?.role === "admin";
-
+  const { logado } = useAuth();
   const estaAutenticado = () => {
     const token = localStorage.getItem("fera_token");
     return Boolean(token && token !== "null" && token !== "undefined" && token.trim() !== "");
@@ -107,34 +108,38 @@ export const ProdutosHeader = ({
             </button>
           )}
 
+
           <button
             type="button"
             className="produtos-account"
-            onClick={() => navegarProtegido("/minha-conta")}
-            aria-label="Ir para Minha Conta"
+            onClick={() => navegarProtegido(logado ? "/minha-conta" : "/login")}
+            aria-label={logado ? "Ir para Minha Conta" : "Faça login"}
           >
             <div className="produtos-account-avatar">
               <IconesProdutos name="user" size={18} />
             </div>
             <span className="produtos-account-text">
-              <strong>Minha Conta</strong>
+              <strong>{logado ? "Minha Conta" : "Entrar na sua conta"}</strong>
             </span>
           </button>
 
-          <button
-            type="button"
-            className="produtos-account"
-            onClick={() => navegarProtegido("/pedidosProdutos")}
-            aria-label="Ir para Meus Pedidos"
-          >
-            <div className="produtos-account-avatar">
-              <IconesProdutos name="box" size={18} />
-            </div>
-            <span className="produtos-account-text">
-              <strong>Meus Pedidos</strong>
-            </span>
-          </button>
-
+          {
+            logado ?
+            <button
+              type="button"
+              className="produtos-account"
+              onClick={() => navegarProtegido("/pedidosProdutos")}
+              aria-label="Ir para Meus Pedidos"
+            >
+              <div className="produtos-account-avatar">
+                <IconesProdutos name="box" size={18} />
+              </div>
+              <span className="produtos-account-text">
+                <strong>Meus Pedidos</strong>
+              </span>
+            </button>
+            : ''
+          }
           <button
             type="button"
             className="produtos-account"

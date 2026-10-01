@@ -102,6 +102,20 @@ export const fazerLogin = async (dadosLogin) => {
   }
 };
 
+export const validarLogin = async () => {
+  try {
+    const response = await api.get('/clientes/validate', {
+      withCredentials: true,
+    });
+    if(response.status != 200) {
+      return false;
+    }
+    return response.data.logado;
+  } catch (error) {
+    return false;
+  }
+}
+
 export const solicitarRecuperacao = async (email) => {
   try {
     const response = await api.post('/senha/recuperar-senha', { email });

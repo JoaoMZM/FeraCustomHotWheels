@@ -19,6 +19,7 @@ const clienteRepository = {
             LEFT JOIN telefones t ON c.id_cliente = t.id_cliente 
             WHERE c.id_cliente = ?
         `;
+        console.log(id);
         const [rows] = await db.query(sql, [id]);
         return rows[0];
     },

@@ -7,7 +7,12 @@ const clienteRoutes = Router();
 clienteRoutes.get('/', clienteController.buscarTodosClientes);
 clienteRoutes.get('/confirmar', clienteController.confirmarConta);
 clienteRoutes.get('/:id', clienteController.buscarClientePorID);
-clienteRoutes.get('/login/teste', validarToken, clienteController.testeLogin);
+clienteRoutes.get('/validate', validarToken, (req, res) => {
+    return res.status(200).json({
+        logado: true,
+        message: "true",
+    });
+});
 clienteRoutes.post('/', clienteController.incluirCliente);
 clienteRoutes.post('/login', clienteController.loginCliente);
 clienteRoutes.post('/refresh', clienteController.refreshToken);
