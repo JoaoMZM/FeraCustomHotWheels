@@ -20,7 +20,6 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<LoginPage onLoginAdmin={setUsuarioAdmin} />} />
       <Route path="/" element={<ProdutosPage />} />
-      <Route path="/produtos" element={<ProdutosPage />} />
       <Route path="/carrinho" element={<CarrinhoPage />} />
       <Route path="/pedidosProdutos" element={<PedidosPage />} />
       <Route path="/produtos/:id" element={<ProdutosDetalhesPage />} />
