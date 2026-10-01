@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import {
   listarCarrinho,
   listarCategorias,
@@ -14,6 +15,7 @@ import "./produtos.page.css";
 
 export default function ProdutosPage() {
   const navigate = useNavigate();
+  const { logado } = useAuth();
   const [produtos, setProdutos] = useState([]);
   const [categorias, setCategorias] = useState([
     { valor: "todas", rotulo: "Todos os Produtos" },
@@ -95,8 +97,13 @@ const carregarCategorias = useCallback(async () => {
   }, []);
 
   const sincronizarTotalCarrinho = useCallback(async () => {
+    if (logado !== true) {
+      setTotalCarrinho(0);
+      return;
+    }
+
     try {
-      const carrinho = await listarCarrinho();
+      const carrinho = await listarCarrinho({ _silent: true });
       const listaItens = Array.isArray(carrinho) ? carrinho : carrinho.itens || [];
       const total = listaItens.reduce(
         (soma, item) => soma + (item.quantidade || 1),
@@ -106,13 +113,16 @@ const carregarCategorias = useCallback(async () => {
     } catch {
 
     }
-  }, []);
+  }, [logado]);
 
   useEffect(() => {
     carregarCategorias();
     carregarProdutos();
+  }, [carregarCategorias, carregarProdutos]);
+
+  useEffect(() => {
     sincronizarTotalCarrinho();
-  }, [carregarCategorias, carregarProdutos, sincronizarTotalCarrinho]);
+  }, [sincronizarTotalCarrinho]);
 
   const getQuantidade = (id) => quantidades[id] || 1;
 
@@ -130,6 +140,11 @@ const carregarCategorias = useCallback(async () => {
 
   const handleAdicionarCarrinho = async (produto) => {
     if (produto.estoque <= 0) return;
+
+    if (!logado) {
+      navigate("/login");
+      return;
+    }
 
     setEnviandoId(produto.id);
 
@@ -305,6 +320,7 @@ const produtosFiltrados = produtos.filter((produto) => {
                   quantidade={getQuantidade(produto.id)}
                   onAlterarQuantidade={alterarQuantidade}
                   onAdicionarCarrinho={handleAdicionarCarrinho}
+                  logado={logado}
                   enviando={enviandoId === produto.id}
                   adicionado={!!adicionados[produto.id]}
                   favorito={!!favoritos[produto.id]}
