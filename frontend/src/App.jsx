@@ -8,7 +8,6 @@ import RecuperarSenhaPage from './pages/usuarios/recuperacao.page.jsx';
 import PedidosPage from './pages/pedidos/pedidos.page.jsx';
 import './style.css'
 import AdminProdutosPage from './pages/admin/admin.produtos.page.jsx';
-import AdminLoginPage from './pages/admin/admin.login.page.jsx';
 import { RotaAdmin } from './components/RotaAdmin.jsx';
 import ProdutosDetalhesPage from './pages/produtos/produtosDetalhes.page';
 
@@ -19,19 +18,15 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage onLoginAdmin={setUsuarioAdmin} />} />
       <Route path="/" element={<ProdutosPage />} />
+      <Route path="/produtos" element={<ProdutosPage />} />
       <Route path="/carrinho" element={<CarrinhoPage />} />
       <Route path="/pedidosProdutos" element={<PedidosPage />} />
       <Route path="/produtos/:id" element={<ProdutosDetalhesPage />} />
 
       <Route path="/cadastro" element={<CadastroPage />} />
       <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
-
-      <Route
-        path="/admin/login"
-        element={<AdminLoginPage onLoginSuccess={setUsuarioAdmin} />}
-      />
 
       <Route element={<RotaAdmin usuario={usuarioAdmin} />}>
         <Route path="/admin/produtos" element={<AdminProdutosPage />} />

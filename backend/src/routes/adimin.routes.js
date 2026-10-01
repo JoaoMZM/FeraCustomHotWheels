@@ -4,7 +4,6 @@ import { validarTokenAdmin } from "../middlewares/authMiddleware.js";
 
 const adminRoutes = Router();
 
-adminRoutes.post('/login', adminController.loginAdmin);
 adminRoutes.post('/logout', adminController.logoutAdmin);
 adminRoutes.get('/login/teste', validarTokenAdmin, adminController.testeLoginAdmin);
 

@@ -213,6 +213,9 @@ const clienteController = {
             if (!validPassword) return res.status(400).json({ message: "Senha inválida" });
 
             res.clearCookie('token', cookieOptions);
+            res.clearCookie('admin_token', cookieOptions);
+
+            const ehAdmin = Boolean(usuario.is_admin);
 
             const token = jwt.sign({ id_cliente: usuario.id_cliente }, process.env.TOKEN_SECRET, { expiresIn: '15m' });
             const refreshToken = jwt.sign({ id_cliente: usuario.id_cliente }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
@@ -225,7 +228,18 @@ const clienteController = {
             }
 
             res.cookie('token', token, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
-            res.cookie('refresh_token', refreshToken, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
+            res.cookie('refresh_token', refreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 });
+
+            // Conta de administrador: além do token de cliente, emite o token de admin
+            if (ehAdmin) {
+                const adminToken = jwt.sign(
+                    { id_cliente: usuario.id_cliente, role: 'admin' },
+                    process.env.ADMIN_TOKEN_SECRET,
+                    { expiresIn: '15m' }
+                );
+                res.cookie('admin_token', adminToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
+                payload.role = 'admin';
+            }
 
             return res.status(200).json({
                 message: "Login realizado com sucesso!",
@@ -273,10 +287,24 @@ const clienteController = {
             res.cookie('token', novoToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
             res.cookie('refresh_token', novoRefreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 });
 
+            // Se a conta for administradora, renova também o token de admin
+            const usuario = await clienteRepository.selecionarPorId(decoded.id_cliente);
+            if (usuario && usuario.is_admin) {
+                const novoAdminToken = jwt.sign(
+                    { id_cliente: decoded.id_cliente, role: 'admin' },
+                    process.env.ADMIN_TOKEN_SECRET,
+                    { expiresIn: '15m' }
+                );
+                res.cookie('admin_token', novoAdminToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
+            } else {
+                res.clearCookie('admin_token', cookieOptions);
+            }
+
             return res.status(200).json({ message: "Sessão renovada com sucesso!" });
         } catch (error) {
             res.clearCookie('token');
             res.clearCookie('refresh_token');
+            res.clearCookie('admin_token');
             return res.status(403).json({ message: "Sessão inválida ou expirada." });
         }
     },
@@ -290,6 +318,8 @@ const clienteController = {
             };
 
             res.clearCookie('token', cookieOptions);
+            res.clearCookie('refresh_token', cookieOptions);
+            res.clearCookie('admin_token', cookieOptions);
             return res.status(200).json({ message: "Logout realizado com sucesso!" });
 
         } catch (error) {

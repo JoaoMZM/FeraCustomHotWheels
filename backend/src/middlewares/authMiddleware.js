@@ -4,8 +4,7 @@ import 'dotenv/config';
 
 function validarToken(req, res, next) {
     const token = req.cookies.token;
-    console.log(token);
-    if (!token) return res.status(400).json({ message: "Faça login" });
+    if (!token) return res.status(401).json({ message: "Faça login" });
 
     try {
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
@@ -19,7 +18,7 @@ function validarToken(req, res, next) {
 
 function validarTokenAdmin(req, res, next) {
     const token = req.cookies.admin_token;
-    if (!token) return res.status(400).json({ message: "Faça login como administrador" });
+    if (!token) return res.status(401).json({ message: "Faça login como administrador" });
 
     try {
         const decoded = jwt.verify(token, process.env.ADMIN_TOKEN_SECRET);

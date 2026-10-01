@@ -34,7 +34,7 @@ export default function AdminLoginPage({ onLoginSuccess }) {
         try {
             const dados = await fazerLoginAdmin({ email: email.trim(), senha });
             onLoginSuccess(dados.payload);
-            navigate('/');
+            navigate('/admin/produtos');
 
         } catch (err) {
             setErro(err.message || 'E-mail ou senha incorretos.');

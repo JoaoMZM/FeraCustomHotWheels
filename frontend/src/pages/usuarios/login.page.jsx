@@ -4,10 +4,11 @@ import Alert from '../../components/common/Alert.jsx';
 import CampoTexto from '../../components/common/CampoTexto.jsx';
 import { IconeEmail, IconeCadeado } from '../../components/icons/Icones.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 
-export default function LoginPage({
-}) {
+export default function LoginPage({ onLoginAdmin }) {
   const navigate = useNavigate();
+  const { setLogado } = useAuth();
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -39,7 +40,17 @@ export default function LoginPage({
         localStorage.setItem('fera_token', dados.token);
       }
 
-      navigate('/');
+      setLogado(true);
+
+      if (dados?.payload?.role === 'admin') {
+        localStorage.setItem('admin_payload', JSON.stringify(dados.payload));
+        if (onLoginAdmin) onLoginAdmin(dados.payload);
+        navigate('/admin/produtos');
+      } else {
+        localStorage.removeItem('admin_payload');
+        if (onLoginAdmin) onLoginAdmin(null);
+        navigate('/');
+      }
 
     } catch (err) {
       navigate('/login');

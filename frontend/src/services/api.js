@@ -10,26 +10,43 @@ const api = axios.create({
   withCredentials: true,
 });
 
+const ehRequisicaoAdmin = (url = '') => url.startsWith('/admin');
+
+const irParaLogin = (originalRequest) => {
+  if (originalRequest._silent) return;
+  if (ehRequisicaoAdmin(originalRequest.url)) {
+    localStorage.removeItem('admin_payload');
+  }
+  window.location.href = '/login';
+};
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401) {
 
       if (originalRequest.url === '/clientes/refresh') {
-        window.location.href = '/login';
+        irParaLogin(originalRequest);
+        return Promise.reject(error);
+      }
+
+      // Já tentou renovar a sessão e continua sem autorização
+      if (originalRequest._retry) {
+        irParaLogin(originalRequest);
         return Promise.reject(error);
       }
 
       originalRequest._retry = true;
 
       try {
-        await api.post('/clientes/refresh');
+        // O refresh renova o token de cliente e, para contas admin, o admin_token
+        await api.post('/clientes/refresh', null, { _silent: originalRequest._silent });
 
         return api(originalRequest);
       } catch (refreshError) {
-        window.location.href = '/login';
+        irParaLogin(originalRequest);
         return Promise.reject(refreshError);
       }
     }
@@ -106,6 +123,7 @@ export const validarLogin = async () => {
   try {
     const response = await api.get('/clientes/validate', {
       withCredentials: true,
+      _silent: true,
     });
     if(response.status != 200) {
       return false;
@@ -233,17 +251,6 @@ export const finalizarCompra = async () => {
 
 export const listarPedidos = async () => {
   return await request('/pedidos');
-};
-
-export const fazerLoginAdmin = async (dadosLogin) => {
-  try {
-    const response = await api.post('/admin/login', dadosLogin, { withCredentials: true });
-    localStorage.setItem('admin_payload', JSON.stringify(response.data.payload));
-    return response.data;
-  } catch (error) {
-    console.error('Erro no serviço de login admin:', error);
-    throw new Error(getErrorMessage(error, 'Erro ao realizar login administrativo.'));
-  }
 };
 
 export const logoutAdmin = async () => {

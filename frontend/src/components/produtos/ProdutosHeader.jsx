@@ -125,20 +125,20 @@ export const ProdutosHeader = ({
 
           {
             logado ?
-            <button
-              type="button"
-              className="produtos-account"
-              onClick={() => navegarProtegido("/pedidosProdutos")}
-              aria-label="Ir para Meus Pedidos"
-            >
-              <div className="produtos-account-avatar">
-                <IconesProdutos name="box" size={18} />
-              </div>
-              <span className="produtos-account-text">
-                <strong>Meus Pedidos</strong>
-              </span>
-            </button>
-            : ''
+              <button
+                type="button"
+                className="produtos-account"
+                onClick={() => navegarProtegido("/pedidosProdutos")}
+                aria-label="Ir para Meus Pedidos"
+              >
+                <div className="produtos-account-avatar">
+                  <IconesProdutos name="box" size={18} />
+                </div>
+                <span className="produtos-account-text">
+                  <strong>Meus Pedidos</strong>
+                </span>
+              </button>
+              : ''
           }
           <button
             type="button"
