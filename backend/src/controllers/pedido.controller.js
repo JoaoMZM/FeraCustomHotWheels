@@ -25,7 +25,8 @@ const pedidoControllers = {
                     return res.status(404).json({ message: `Produto ID ${idProduto} não encontrado.` });
                 }
 
-                const produto = produtoResultado[0];
+                const produto = produtoResultado;
+                
                 const estoqueDisponivel = produto.estoque ?? produto.estoque_produto;
                 const precoUnitario = Number(produto.preco ?? produto.preco_produto);
                 const nomeProduto = produto.nome ?? produto.nome_produto ?? idProduto;
@@ -44,7 +45,7 @@ const pedidoControllers = {
             const valorTotal = ItensPedidos.calcularValorTotal(itensPedidos);
 
             const pedido = Pedido.criar({ statusPedido, valorTotal, idCliente });
-
+            
             const result = await pedidoRepository.criarPedido(pedido, itensPedidos);
 
             return res.status(201).json({ message: "Pedido criado com sucesso!", result });

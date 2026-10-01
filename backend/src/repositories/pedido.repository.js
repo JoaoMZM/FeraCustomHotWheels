@@ -11,7 +11,7 @@ const pedidoRepository = {
             INSERT INTO pedidos (valor_total, status_pedido, id_cliente) 
             VALUES (?, ?, ?);
         `;
-
+            console.log(pedido.idCliente);
             const [resultPedido] = await connection.execute(sqlPedido, [
                 pedido.valorTotal,
                 pedido.status,
