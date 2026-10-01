@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import clienteRepository from '../repositories/cliente.repository.js';
 import { transporter } from '../utils/mailer.js';
+import { FRONTEND_URL, BACKEND_URL } from '../configs/urls.js';
 
 export const senhaController = {
     solicitarRecuperacao: async (req, res) => {
@@ -24,8 +25,7 @@ export const senhaController = {
                 { expiresIn: '15m' }
             );
 
-            const porta = process.env.SERVER_PORT || 443;
-            const linkBackend = `https://localhost:${porta}/senha/validar-token-recuperacao?id_cliente=${usuario.id_cliente}&token=${token}`;
+            const linkBackend = `${BACKEND_URL}/senha/validar-token-recuperacao?id_cliente=${usuario.id_cliente}&token=${encodeURIComponent(token)}`;
 
             const mailOptions = {
                 from: `"Fera Custom Hot Wheels" <${process.env.EMAIL_USER}>`,
@@ -55,7 +55,7 @@ export const senhaController = {
     },
 
     validarLink: async (req, res) => {
-        const linkFrontend = 'http://localhost:5173';
+        const linkFrontend = FRONTEND_URL;
 
         try {
             const { id_cliente, token } = req.query;

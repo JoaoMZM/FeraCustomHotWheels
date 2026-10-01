@@ -5,6 +5,7 @@ import CarrinhoPage from './pages/carrinho/carrinho.page.jsx';
 import LoginPage from './pages/usuarios/login.page.jsx';
 import CadastroPage from './pages/usuarios/cadastro.page.jsx';
 import RecuperarSenhaPage from './pages/usuarios/recuperacao.page.jsx';
+import RedefinirSenhaPage from './pages/usuarios/redefinirSenha.page.jsx';
 import PedidosPage from './pages/pedidos/pedidos.page.jsx';
 import './style.css'
 import AdminProdutosPage from './pages/admin/admin.produtos.page.jsx';
@@ -26,6 +27,7 @@ export default function App() {
 
       <Route path="/cadastro" element={<CadastroPage />} />
       <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
+      <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
 
       <Route element={<RotaAdmin usuario={usuarioAdmin} />}>
         <Route path="/admin/produtos" element={<AdminProdutosPage />} />

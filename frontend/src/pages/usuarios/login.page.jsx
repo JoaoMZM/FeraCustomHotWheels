@@ -3,8 +3,17 @@ import { fazerLogin } from '../../services/api.js';
 import Alert from '../../components/common/Alert.jsx';
 import CampoTexto from '../../components/common/CampoTexto.jsx';
 import { IconeEmail, IconeCadeado } from '../../components/icons/Icones.jsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+
+const MENSAGENS_ERRO_LINK = {
+  'token-ausente': 'O link de confirmação está incompleto.',
+  'token-invalido': 'Este link de confirmação é inválido ou já foi utilizado.',
+  'servidor': 'Ocorreu um erro no servidor. Tente novamente em instantes.',
+  'link_invalido': 'O link de recuperação de senha é inválido.',
+  'usuario_nao_encontrado': 'Usuário não encontrado para este link.',
+  'token_expirado_ou_invalido': 'O link de recuperação expirou ou é inválido. Solicite um novo.',
+};
 
 export default function LoginPage({ onLoginAdmin }) {
   const navigate = useNavigate();
@@ -13,12 +22,20 @@ export default function LoginPage({ onLoginAdmin }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [senhaVisivel, setSenhaVisivel] = useState(false);
-  const [erro, setErro] = useState('');
+  const [searchParams] = useSearchParams();
+
+  const [erro, setErro] = useState(() => MENSAGENS_ERRO_LINK[searchParams.get('erro')] || '');
+  const [sucesso, setSucesso] = useState(() =>
+    searchParams.get('confirmado') === 'true'
+      ? 'Conta confirmada com sucesso! Faça login para continuar.'
+      : ''
+  );
   const [carregando, setCarregando] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErro('');
+    setSucesso('');
 
     if (!email.trim() || !senha) {
       setErro('Por favor, preencha todos os campos.');
@@ -80,6 +97,7 @@ export default function LoginPage({ onLoginAdmin }) {
         <div className="cadastro-divider" />
 
         <Alert tipo="error" mensagem={erro} />
+        <Alert tipo="success" mensagem={sucesso} />
 
         <form onSubmit={handleSubmit} noValidate>
           <CampoTexto

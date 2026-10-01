@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { redefinirSenha } from '../../services/api.js';
 import Alert from '../../components/common/Alert.jsx';
 import CampoTexto from '../../components/common/CampoTexto.jsx';
 import { IconeCadeado } from '../../components/icons/Icones.jsx';
 
 export default function RedefinirSenhaPage({ onVoltarLogin, onNavigateToLogin }) {
-  const handleVoltar = onVoltarLogin || onNavigateToLogin;
+  const navigate = useNavigate();
+  const handleVoltar = onVoltarLogin || onNavigateToLogin || (() => navigate('/login'));
 
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
@@ -66,11 +68,7 @@ export default function RedefinirSenhaPage({ onVoltarLogin, onNavigateToLogin })
       setConfirmarSenha('');
 
       setTimeout(() => {
-        if (handleVoltar) {
-          handleVoltar();
-        } else {
-          window.location.href = '/';
-        }
+        handleVoltar();
       }, 3000);
     } catch (err) {
       setErro(err.message || 'Erro ao redefinir a senha.');
@@ -169,7 +167,7 @@ export default function RedefinirSenhaPage({ onVoltarLogin, onNavigateToLogin })
         <button
           type="button"
           className="btn-link"
-          onClick={handleVoltar || (() => (window.location.href = '/'))}
+          onClick={handleVoltar}
         >
           Voltar para login
         </button>

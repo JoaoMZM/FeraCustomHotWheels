@@ -8,6 +8,7 @@ import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { transporter } from "../utils/mailer.js";
+import { FRONTEND_URL, BACKEND_URL } from '../configs/urls.js';
 
 const clienteController = {
 
@@ -93,7 +94,7 @@ const clienteController = {
             });
 
             try {
-                const linkConfirmacao = `https://localhost:443/clientes/confirmar?token=${tokenConfirmacao}`;
+                const linkConfirmacao = `${BACKEND_URL}/clientes/confirmar?token=${encodeURIComponent(tokenConfirmacao)}`;
 
                 await transporter.sendMail({
                     from: `"Fera Custom Hot Wheels" <${process.env.EMAIL_USER}>`,
@@ -342,7 +343,7 @@ const clienteController = {
             const { token } = req.query;
 
             if (!token) {
-                return res.redirect('http://localhost:5173/?erro=token-ausente');
+                return res.redirect(`${FRONTEND_URL}/login?erro=token-ausente`);
             }
 
             const usuarioResult = await clienteRepository.buscarPorTokenConfirmacao(token);
@@ -350,16 +351,16 @@ const clienteController = {
             const usuario = usuarioResult && usuarioResult[0];
 
             if (!usuario) {
-                return res.redirect('http://localhost:5173/?erro=token-invalido');
+                return res.redirect(`${FRONTEND_URL}/login?erro=token-invalido`);
             }
 
             await clienteRepository.atualizarStatusConfirmado(usuario.id_cliente);
 
-            return res.redirect('http://localhost:5173/?confirmado=true');
+            return res.redirect(`${FRONTEND_URL}/login?confirmado=true`);
 
         } catch (error) {
             console.error("Erro na confirmação:", error);
-            return res.redirect('http://localhost:5173/?erro=servidor');
+            return res.redirect(`${FRONTEND_URL}/login?erro=servidor`);
         }
     }
 };
