@@ -191,16 +191,6 @@ export const buscarProduto = async (id) => {
  * Adiciona um produto ao carrinho.
  * @param {{ produtoId: string|number, quantidade: number }} item
  */
-export const adicionarAoCarrinho = async ({ produtoId, quantidade }) => {
-  return await request('/carrinho', {
-    method: 'POST',
-    data: { produtoId, quantidade },
-  });
-};
-
-export const listarCarrinho = async () => {
-  return await request('/carrinho');
-};
 
 export const listarCategorias = async () => {
   return await request('/categorias');
@@ -226,22 +216,10 @@ export const listarProdutosAdmin = () => api.get("/admin/produtos");
  * @param {string|number} id - ID do item no carrinho
  * @param {number} quantidade
  */
-export const atualizarQuantidadeCarrinho = async (id, quantidade) => {
-  return await request(`/carrinho/${id}`, {
-    method: 'PATCH',
-    data: { quantidade },
-  });
-};
-
 /**
  * Remove um item do carrinho pelo ID.
  * @param {string|number} id
  */
-export const removerDoCarrinho = async (id) => {
-  return await request(`/carrinho/${id}`, {
-    method: 'DELETE',
-  });
-};
 
 export const finalizarCompra = async () => {
   return await request('/pedidos', {

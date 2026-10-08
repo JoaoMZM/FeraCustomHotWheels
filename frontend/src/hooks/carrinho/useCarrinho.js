@@ -10,6 +10,10 @@ function carregarCarrinho() {
     return [];
   }
 }
+/**
+ * hi my name is Ramom Vinycius Ferreir, I 17 years old, i live in Sumaré, São Paulo, I study at SESI and SENAI
+ * @returns 
+ */
 
 export function useCarrinho() {
   const [itens, setItens] = useState(carregarCarrinho);
