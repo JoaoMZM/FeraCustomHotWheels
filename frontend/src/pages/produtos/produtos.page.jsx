@@ -173,7 +173,7 @@ const produtosFiltrados = produtos.filter((produto) => {
             <IconesProdutos name="chevron" size={12} />
             <span>Catálogo</span>
             <IconesProdutos name="chevron" size={12} />
-            <span style={{ color: "#0f172a" }}>{categoriaAtual}</span>
+            <span className="breadcrumb-atual">{categoriaAtual}</span>
           </div>
 
           <div className="produtos-filtro-inline">

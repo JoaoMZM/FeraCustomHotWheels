@@ -24,7 +24,7 @@ body {
     flex-direction: column;
     background:
         radial-gradient(1100px 500px at 15% -10%, rgba(227, 6, 19, 0.06), transparent 60%),
-        linear-gradient(180deg, var(--color-bg-page) 0%, #f5f6f9 40%, #f5f6f9 100%);
+        linear-gradient(180deg, var(--color-bg-page) 0%, var(--color-bg-soft) 40%, var(--color-bg-soft) 100%);
     color: var(--pc-text);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -47,7 +47,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #9aa4b2;
+    color: var(--color-text-faint);
     font-size: 13px;
     font-weight: 500;
     margin-bottom: 22px;
@@ -67,6 +67,12 @@ body {
     color: var(--pc-primary);
 }
 
+/* Item atual do breadcrumb: usa a cor de texto do tema (fonte clara no modo escuro) */
+.carrinho-breadcrumb .breadcrumb-atual {
+    color: var(--pc-text);
+    font-weight: 600;
+}
+
 .carrinho-titulo-linha {
     display: flex;
     align-items: center;
@@ -83,7 +89,7 @@ body {
 
 .carrinho-titulo-badge {
     background: var(--color-ink);
-    color: #fff;
+    color: var(--color-on-ink);
     font-size: 12px;
     font-weight: 700;
     padding: 5px 12px;
@@ -125,7 +131,7 @@ body {
 .carrinho-item:hover {
     transform: translateY(-3px);
     box-shadow: var(--pc-shadow-md);
-    border-color: #d8dde5;
+    border-color: var(--color-border-strong);
 }
 
 @keyframes fadeInUp {
@@ -143,8 +149,8 @@ body {
     width: 96px;
     height: 96px;
     border-radius: var(--radius-lg);
-    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f4f6f9 100%);
-    border: 1px solid #f1f5f9;
+    background: radial-gradient(circle at 50% 40%, var(--color-bg-card) 0%, var(--color-bg-soft) 100%);
+    border: 1px solid var(--color-subtle-bg);
     display: grid;
     place-items: center;
     overflow: hidden;
@@ -158,7 +164,7 @@ body {
 }
 
 .carrinho-item-imagem-placeholder {
-    color: #cbd5e1;
+    color: var(--color-border-strong);
 }
 
 .carrinho-item-info {
@@ -198,7 +204,7 @@ body {
     display: flex;
     align-items: center;
     gap: 4px;
-    background: #f4f6f9;
+    background: var(--color-bg-soft);
     border: 1px solid var(--pc-border);
     border-radius: var(--radius-pill);
     padding: 3px;
@@ -209,8 +215,8 @@ body {
     height: 28px;
     border: 0;
     border-radius: var(--radius-pill);
-    background: #fff;
-    color: #334155;
+    background: var(--bg-card);
+    color: var(--color-text-body);
     display: grid;
     place-items: center;
     cursor: pointer;
@@ -220,7 +226,7 @@ body {
 
 .carrinho-item-qtd-stepper button:hover:not(:disabled) {
     background: var(--color-ink);
-    color: #fff;
+    color: var(--color-on-ink);
 }
 
 .carrinho-item-qtd-stepper button:disabled {
@@ -241,8 +247,8 @@ body {
     height: 34px;
     border-radius: 50%;
     border: 1px solid var(--pc-border);
-    background: #fff;
-    color: #b0b8c4;
+    background: var(--bg-card);
+    color: var(--color-text-faint);
     display: grid;
     place-items: center;
     cursor: pointer;
@@ -304,7 +310,7 @@ body {
 }
 
 .carrinho-resumo-linha span:last-child {
-    color: #334155;
+    color: var(--color-text-body);
     font-weight: 600;
 }
 
@@ -349,8 +355,8 @@ body {
 }
 
 .btn-finalizar:disabled {
-    background: #e2e8f0;
-    color: #94a3b8;
+    background: var(--color-disabled-bg);
+    color: var(--color-disabled-text);
     box-shadow: none;
     cursor: not-allowed;
 }
@@ -362,7 +368,7 @@ body {
     gap: 6px;
     margin-top: 16px;
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--color-text-faint);
     font-weight: 600;
 }
 
@@ -399,9 +405,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #ffffff;
+    background: var(--bg-card);
     border-radius: var(--radius-2xl);
-    border: 1px dashed #d8dde5;
+    border: 1px dashed var(--color-border-strong);
 }
 
 .carrinho-feedback-inner {
@@ -417,7 +423,7 @@ body {
     width: 68px;
     height: 68px;
     border-radius: 50%;
-    background: #f1f5f9;
+    background: var(--color-subtle-bg);
     color: var(--pc-muted);
     display: grid;
     place-items: center;
@@ -440,7 +446,7 @@ body {
     border-radius: var(--radius-pill);
     border: 0;
     background: var(--color-ink);
-    color: #fff;
+    color: var(--color-on-ink);
     font-weight: 700;
     font-size: 13px;
     cursor: pointer;

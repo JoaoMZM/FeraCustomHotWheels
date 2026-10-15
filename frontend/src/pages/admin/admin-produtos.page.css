@@ -1,22 +1,21 @@
+@import url('../../styles/token.css');
+
 .admin-produtos-page {
-    --primary: #0f172a;
-    --primary-hover: #1e293b;
-    --accent: #fb0000;
-    --accent-hover: #ff0000;
-    --accent-light: rgba(37, 99, 235, 0.08);
-    --bg-page: #f8fafc;
-    --bg-card: #ffffff;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --border-color: #e2e8f0;
-    --border-hover: #cbd5e1;
+    --primary: var(--color-ink);
+    --primary-hover: var(--color-ink-hover);
+    --accent: var(--color-brand);
+    --accent-hover: var(--color-brand-hover);
+    --accent-light: var(--color-brand-tint-bg);
+    --bg-page: var(--color-bg-page);
+    --bg-card: var(--color-bg-card);
+    --text-main: var(--color-ink);
+    --text-muted: var(--color-muted);
+    --border-color: var(--color-border);
+    --border-hover: var(--color-border-strong);
 
     --radius-sm: 6px;
     --radius-md: 8px;
     --radius-lg: 12px;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
-    --shadow-lg: 0 20px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
 
     --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -148,7 +147,7 @@
 
 .btn-novo-produto:hover {
     background-color: var(--accent-hover);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 4px 12px rgba(227, 6, 19, 0.25);
     transform: translateY(-1px);
 }
 
@@ -169,15 +168,15 @@
 }
 
 .alerta-sucesso {
-    background-color: #f0fdf4;
-    color: #15803d;
-    border: 1px solid #bbf7d0;
+    background-color: var(--color-success-bg);
+    color: var(--color-success-text);
+    border: 1px solid var(--color-success-border);
 }
 
 .alerta-erro {
-    background-color: #fef2f2;
-    color: #b91c1c;
-    border: 1px solid #fecaca;
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger-border);
 }
 
 .admin-filtros {
@@ -231,7 +230,7 @@
 }
 
 .admin-tabela th {
-    background-color: #f8fafc;
+    background-color: var(--color-subtle-bg);
     padding: 0.75rem 1rem;
     color: var(--text-muted);
     font-weight: 600;
@@ -256,12 +255,12 @@
 }
 
 .admin-tabela tbody tr:hover:not(.linha-inativa) {
-    background-color: #f8fafc;
+    background-color: var(--color-subtle-bg);
 }
 
 .linha-inativa {
     opacity: 0.5;
-    background-color: #f8fafc;
+    background-color: var(--color-subtle-bg);
 }
 
 .td-produto-info {
@@ -297,9 +296,9 @@
 }
 
 .badge-status.ativo {
-    background-color: #f0fdf4;
-    color: #166534;
-    border: 1px solid #bbf7d0;
+    background-color: var(--color-success-bg);
+    color: var(--color-success-text);
+    border: 1px solid var(--color-success-border);
 }
 
 .badge-status.ativo::before {
@@ -307,9 +306,9 @@
 }
 
 .badge-status.inativo {
-    background-color: #fef2f2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger-border);
 }
 
 .badge-status.inativo::before {
@@ -345,24 +344,24 @@
 
 .btn-inativar {
     background-color: var(--bg-card);
-    color: #dc2626;
-    border-color: #fecaca;
+    color: var(--color-danger);
+    border-color: var(--color-danger-border);
 }
 
 .btn-inativar:hover {
-    background-color: #fef2f2;
-    border-color: #fca5a5;
+    background-color: var(--color-danger-bg);
+    border-color: var(--color-danger-border);
 }
 
 .btn-ativar {
     background-color: var(--bg-card);
-    color: #16a34a;
-    border-color: #bbf7d0;
+    color: var(--color-success-text);
+    border-color: var(--color-success-border);
 }
 
 .btn-ativar:hover {
-    background-color: #f0fdf4;
-    border-color: #86efac;
+    background-color: var(--color-success-bg);
+    border-color: var(--color-success-border);
 }
 
 .modal-overlay {

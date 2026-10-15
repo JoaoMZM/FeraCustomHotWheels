@@ -261,7 +261,7 @@ export default function AdminProdutosPage() {
                     onChange={handleChange}
                   />
                   {formData.id && !formData.imagemArquivo && (
-                    <small style={{ color: "#666", marginTop: "4px" }}>
+                    <small style={{ color: "var(--text-muted)", marginTop: "4px" }}>
                       Deixe em branco para manter a imagem atual.
                     </small>
                   )}

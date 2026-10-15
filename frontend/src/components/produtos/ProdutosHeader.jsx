@@ -1,72 +1,13 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IconesProdutos } from "../icons/IconesProdutos";
-import { logoutAdmin } from "../../services/api.js";
-import { useAuth } from "../../contexts/AuthContext.jsx";
-import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
+import useTheme from "../../hooks/useTheme";
 
-const lerAdminSalvo = () => {
-  try {
-    return JSON.parse(localStorage.getItem("admin_payload")) || null;
-  } catch {
-    return null;
-  }
-};
-
-export const ProdutosHeader = ({
-  busca = "",
-  setBusca = () => { },
-  onSubmitBusca = (e) => e?.preventDefault(),
-}) => {
+export const ProdutosHeader = ({ busca, setBusca, onSubmitBusca }) => {
   const navigate = useNavigate();
-
-  const [usuarioAdmin, setUsuarioAdmin] = useState(lerAdminSalvo);
-  const ehAdmin = usuarioAdmin?.role === "admin";
-  const { logado } = useAuth();
-  const { totalItens } = useCarrinho();
-  const estaAutenticado = () => {
-    const token = localStorage.getItem("fera_token");
-    return Boolean(token && token !== "null" && token !== "undefined" && token.trim() !== "");
-  };
-
-  const navegarProtegido = (rotaDestino) => {
-    if (estaAutenticado()) {
-      navigate(rotaDestino);
-    } else {
-      localStorage.removeItem("fera_token");
-      navigate("/login");
-    }
-  };
-
-  const handleSairAdmin = async () => {
-    try {
-      await logoutAdmin();
-    } catch {
-    } finally {
-      localStorage.removeItem("admin_payload");
-      setUsuarioAdmin(null);
-      navigate("/");
-    }
-  };
+  const { tema, alternarTema } = useTheme();
 
   return (
     <header className="produtos-header">
-      {ehAdmin && (
-        <div className="produtos-admin-faixa">
-          <span>
-            Modo administrador — {usuarioAdmin?.name || usuarioAdmin?.email}
-          </span>
-          <div className="produtos-admin-faixa-acoes">
-            <button type="button" onClick={() => navigate("/admin/produtos")}>
-              Painel Admin
-            </button>
-            <button type="button" onClick={handleSairAdmin}>
-              Sair do admin
-            </button>
-          </div>
-        </div>
-      )}
-
       <div className="produtos-header-main">
         <button
           type="button"
@@ -93,79 +34,53 @@ export const ProdutosHeader = ({
         </form>
 
         <div className="produtos-header-actions">
-          {ehAdmin && (
-            <button
-              type="button"
-              className="produtos-account produtos-account--admin"
-              onClick={() => navigate("/admin/produtos")}
-              aria-label="Ir para o Painel Admin"
-            >
-              <div className="produtos-account-avatar">
-                <IconesProdutos name="box" size={18} />
-              </div>
-              <span className="produtos-account-text">
-                <strong>Painel Admin</strong>
-              </span>
-            </button>
-          )}
-
-
           <button
             type="button"
             className="produtos-account"
-            onClick={() => navegarProtegido(logado ? "/minha-conta" : "/login")}
-            aria-label={logado ? "Ir para Minha Conta" : "Faça login"}
+            onClick={() => {
+              if (localStorage.getItem("payload")) {
+                navigate("/pedidos");
+              } else {
+                navigate("/login");
+              }
+            }}
           >
             <div className="produtos-account-avatar">
               <IconesProdutos name="user" size={18} />
             </div>
+
             <span className="produtos-account-text">
-              <strong>{logado ? "Minha Conta" : "Entrar na sua conta"}</strong>
+              Minha Conta
+              <strong>Meus Pedidos</strong>
             </span>
           </button>
 
-          {
-            logado ?
-              <button
-                type="button"
-                className="produtos-account"
-                onClick={() => navegarProtegido("/pedidosProdutos")}
-                aria-label="Ir para Meus Pedidos"
-              >
-                <div className="produtos-account-avatar">
-                  <IconesProdutos name="box" size={18} />
-                </div>
-                <span className="produtos-account-text">
-                  <strong>Meus Pedidos</strong>
-                </span>
-              </button>
-              : ''
-          }
+          {/* Botão de modo claro/escuro */}
           <button
             type="button"
-            className="produtos-account"
-            aria-label="Favoritos"
-            onClick={() => navigate("/favoritos")}
+            className="produtos-tema-botao"
+            onClick={alternarTema}
+            aria-label={tema === "escuro" ? "Ativar modo claro" : "Ativar modo escuro"}
+            title={tema === "escuro" ? "Modo claro" : "Modo escuro"}
           >
-            <div className="produtos-account-avatar">
-              <IconesProdutos name="heart" size={18} />
-            </div>
+            {tema === "escuro" ? "☀️" : "🌙"}
           </button>
 
           <button
             type="button"
-            className="produtos-account"
+            className="produtos-icon-button"
+            aria-label="Favoritos"
+          >
+            <IconesProdutos name="heart" size={20} />
+          </button>
+
+          <button
+            type="button"
+            className="produtos-icon-button"
             aria-label="Carrinho"
             onClick={() => navigate("/carrinho")}
           >
-            <div className="produtos-account-avatar" style={{ position: "relative" }}>
-              <IconesProdutos name="cart" size={18} />
-              {totalItens > 0 && (
-                <span className="produtos-cart-badge">
-                  {totalItens > 99 ? "99+" : totalItens}
-                </span>
-              )}
-            </div>
+            <IconesProdutos name="cart" size={20} />
           </button>
         </div>
       </div>

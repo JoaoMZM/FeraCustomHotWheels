@@ -134,7 +134,7 @@ export default function CarrinhoPage() {
             Início
           </button>
           <IconesCarrinho name="chevron" size={12} />
-          <span style={{ color: "#0f172a" }}>Carrinho</span>
+          <span className="breadcrumb-atual">Carrinho</span>
         </div>
 
         <div className="carrinho-titulo-linha">

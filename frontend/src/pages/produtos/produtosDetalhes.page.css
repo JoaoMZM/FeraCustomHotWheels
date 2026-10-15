@@ -11,9 +11,6 @@
   --text-muted: var(--color-muted);
   --border-color: var(--color-border);
   --red: var(--color-brand);
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
 
   max-width: 1280px;
   margin: 0 auto;
@@ -145,7 +142,7 @@
   align-self: flex-start;
   background-color: var(--bg-page);
   border: 1px solid var(--border-color);
-  color: #334155;
+  color: var(--color-text-body);
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.3rem 0.75rem;
@@ -224,7 +221,7 @@
 
 .qtd-selector button:hover:not(:disabled) {
   background-color: var(--primary);
-  color: #ffffff;
+  color: var(--color-on-ink);
 }
 
 .qtd-selector button:disabled {
@@ -274,7 +271,8 @@
 }
 
 .btn-add-carrinho:disabled {
-  background: #cbd5e1;
+  background: var(--color-disabled-bg);
+  color: var(--color-disabled-text);
   box-shadow: none;
   cursor: not-allowed;
 }
@@ -307,7 +305,7 @@
 .detalhes-erro button {
   padding: 0.6rem 1.25rem;
   background-color: var(--primary);
-  color: #ffffff;
+  color: var(--color-on-ink);
   border: none;
   border-radius: var(--radius-md);
   font-size: 0.875rem;

@@ -1,3 +1,9 @@
+/* ==========================================
+   PÁGINA DE PEDIDOS
+   (o header usa as classes .produtos-* do style.css,
+   as cores usam as mesmas variáveis --prod-* do tema)
+   ========================================== */
+
 .pedidos-content {
     max-width: 900px;
     width: 100%;
@@ -8,14 +14,14 @@
 .pedidos-titulo {
     font-size: 26px;
     font-weight: 800;
-    color: #0f172a;
+    color: var(--prod-text);
     margin-bottom: 20px;
 }
 
 .pedidos-abas {
     display: flex;
     gap: 16px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--prod-border);
     margin-bottom: 20px;
     overflow-x: auto;
 }
@@ -27,24 +33,24 @@
     padding: 10px 4px;
     font-size: 13.5px;
     font-weight: 500;
-    color: #64748b;
+    color: var(--prod-text-muted);
     cursor: pointer;
     white-space: nowrap;
 }
 
 .pedidos-aba:hover {
-    color: #0f172a;
+    color: var(--prod-text);
 }
 
 .pedidos-aba.ativo {
-    color: #e30613;
+    color: var(--prod-red);
     font-weight: 700;
-    border-bottom-color: #e30613;
+    border-bottom-color: var(--prod-red);
 }
 
 .pedido-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    background: var(--prod-surface);
+    border: 1px solid var(--prod-border);
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 16px;
@@ -61,7 +67,7 @@
 .pedido-data {
     margin-left: 12px;
     font-size: 12px;
-    color: #64748b;
+    color: var(--prod-text-muted);
 }
 
 .pedido-status {
@@ -72,18 +78,18 @@
 }
 
 .pedido-status--aberto {
-    background: #fef3c7;
-    color: #b45309;
+    background: var(--prod-warn-bg);
+    color: var(--prod-warn-text);
 }
 
 .pedido-status--finalizado {
-    background: #dcfce7;
-    color: #15803d;
+    background: var(--prod-success-bg);
+    color: var(--prod-success-text);
 }
 
 .pedido-status--cancelado {
-    background: #fee2e2;
-    color: #b91c1c;
+    background: var(--prod-cancel-bg);
+    color: var(--prod-cancel-text);
 }
 
 .pedido-resumo {
@@ -92,7 +98,7 @@
     align-items: center;
     gap: 12px;
     font-size: 14px;
-    color: #475569;
+    color: var(--prod-text-body);
 }
 
 .pedido-resumo-direita {
@@ -103,15 +109,15 @@
 
 .pedido-total {
     font-size: 16px;
-    color: #0f172a;
+    color: var(--prod-text);
 }
 
 .pedidos-botao {
     padding: 8px 16px;
     border-radius: 6px;
-    border: 1px solid #e30613;
-    background: #ffffff;
-    color: #e30613;
+    border: 1px solid var(--prod-red);
+    background: var(--prod-surface);
+    color: var(--prod-red);
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
@@ -119,14 +125,14 @@
 }
 
 .pedidos-botao:hover {
-    background: #e30613;
-    color: #ffffff;
+    background: var(--prod-red);
+    color: var(--prod-on-accent);
 }
 
 .pedido-itens {
     margin-top: 14px;
     padding-top: 14px;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--prod-subtle-bg);
 }
 
 .pedido-item {
@@ -140,7 +146,7 @@
     width: 56px;
     height: 56px;
     object-fit: contain;
-    border: 1px solid #f1f5f9;
+    border: 1px solid var(--prod-subtle-bg);
     border-radius: 8px;
 }
 
@@ -149,20 +155,20 @@
     display: flex;
     flex-direction: column;
     font-size: 14px;
-    color: #0f172a;
+    color: var(--prod-text);
 }
 
 .pedido-item-info small {
-    color: #64748b;
+    color: var(--prod-text-muted);
     font-size: 12px;
 }
 
 .pedidos-mensagem {
     text-align: center;
     padding: 48px 20px;
-    color: #64748b;
+    color: var(--prod-text-muted);
     font-size: 14px;
-    border: 1px dashed #e2e8f0;
+    border: 1px dashed var(--prod-border);
     border-radius: 12px;
 }
 

@@ -4,6 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 import { CarrinhoProvider } from './contexts/CarrinhoContext.jsx';
+import { aplicarTema, temaInicial } from './hooks/useTheme.js';
+
+// Aplica o tema salvo (claro/escuro) antes da primeira renderização
+aplicarTema(temaInicial());
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthProvider>
