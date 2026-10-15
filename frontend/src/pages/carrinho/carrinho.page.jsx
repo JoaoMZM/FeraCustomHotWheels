@@ -1,130 +1,130 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  listarCarrinho,
-  removerDoCarrinho,
-  atualizarQuantidadeCarrinho,
-  finalizarCompra,
-} from "../../services/api.js";
+import { finalizarCompra } from "../../services/api.js";
+import { useAuth } from "../../contexts/AuthContext.jsx";
+import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
 import { IconesCarrinho } from "../../components/icons/IconesCarrinho.jsx";
 import { CarrinhoItem } from "../../components/carrinho/CarrinhoItem.jsx";
-import { CarrinhoResumo } from "../../components/carrinho/CarrinhoResumo";
+import { CarrinhoResumo } from "../../components/carrinho/CarrinhoResumo.jsx";
 import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
 import "../produtos/produtos.page.css"; // classes do header (.produtos-header, .produtos-logo, etc.)
 import "./carrinho.page.css";
+import "./carrinho.extras.css";
+
+// O id do cliente (UUID) fica no "payload" salvo no login
+const lerIdCliente = () => {
+  try {
+    return JSON.parse(localStorage.getItem("payload"))?.sub || null;
+  } catch {
+    return null;
+  }
+};
 
 export default function CarrinhoPage() {
   const navigate = useNavigate();
+  const { logado } = useAuth();
+  const {
+    itens,
+    totalItens,
+    totalPreco,
+    alterarQuantidade,
+    removerItem,
+    limparCarrinho,
+    sincronizarCarrinho,
+  } = useCarrinho();
 
-  const [itens, setItens] = useState([]);
-  const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
-
-  const [removendoId, setRemovendoId] = useState(null);
-  const [atualizandoId, setAtualizandoId] = useState(null);
+  const [avisos, setAvisos] = useState([]);
   const [finalizando, setFinalizando] = useState(false);
   const [pedidoConcluido, setPedidoConcluido] = useState(null);
 
   // Estado da busca do header (mesmo padrão da página de Produtos)
   const [busca, setBusca] = useState("");
 
-  const carregarCarrinho = useCallback(async () => {
-    setCarregando(true);
-    setErro("");
-
-    try {
-      const dados = await listarCarrinho();
-      setItens(Array.isArray(dados) ? dados : dados.itens || []);
-    } catch (err) {
-      setErro(err.message || "Não foi possível carregar o carrinho.");
-    } finally {
-      setCarregando(false);
-    }
-  }, []);
-
+  // Ao abrir o carrinho, confere preço/estoque atuais com a API
   useEffect(() => {
-    carregarCarrinho();
-  }, [carregarCarrinho]);
+    let ativo = true;
 
-  const handleRemover = async (item) => {
+    sincronizarCarrinho()
+      .then((novosAvisos) => {
+        if (ativo) setAvisos(novosAvisos);
+      })
+      .catch(() => {
+        // API fora do ar: mantém o carrinho como está
+      });
+
+    return () => {
+      ativo = false;
+    };
+  }, [sincronizarCarrinho]);
+
+  const handleRemover = (item) => {
     setErro("");
-    setRemovendoId(item.id);
-
-    try {
-      await removerDoCarrinho(item.id);
-      setItens((prev) => prev.filter((i) => i.id !== item.id));
-    } catch (err) {
-      setErro(err.message || "Erro ao remover o item do carrinho.");
-    } finally {
-      setRemovendoId(null);
-    }
+    removerItem(item.id);
   };
 
-  const handleAlterarQuantidade = async (item, delta) => {
+  const handleAlterarQuantidade = (item, delta) => {
     const novaQtd = item.quantidade + delta;
 
     if (novaQtd < 1) return;
     if (item.estoque && novaQtd > item.estoque) return;
 
     setErro("");
-    setAtualizandoId(item.id);
+    alterarQuantidade(item.id, novaQtd);
+  };
 
-    const anteriores = itens;
-    setItens((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, quantidade: novaQtd } : i))
-    );
-
-    try {
-      await atualizarQuantidadeCarrinho(item.id, novaQtd);
-    } catch (err) {
-      setItens(anteriores);
-      setErro(err.message || "Erro ao atualizar a quantidade.");
-    } finally {
-      setAtualizandoId(null);
+  const handleLimparCarrinho = () => {
+    if (window.confirm("Remover todos os itens do carrinho?")) {
+      limparCarrinho();
+      setAvisos([]);
     }
   };
 
   const handleFinalizarCompra = async () => {
-    if (itens.length === 0) return;
+    if (itens.length === 0 || finalizando) return;
+    if (logado === null) return; // ainda verificando a sessão
+
+    if (!logado) {
+      navigate("/login");
+      return;
+    }
 
     setErro("");
     setFinalizando(true);
 
     try {
-      const pedido = await finalizarCompra();
-      setPedidoConcluido(pedido);
-      setItens([]);
+      const resposta = await finalizarCompra(itens, lerIdCliente());
+      setPedidoConcluido(resposta);
+      limparCarrinho();
+      setAvisos([]);
     } catch (err) {
       setErro(err.message || "Erro ao finalizar a compra.");
+
+      // Provável causa: estoque/preço mudou. Atualiza o carrinho com o que a API tem agora.
+      try {
+        setAvisos(await sincronizarCarrinho());
+      } catch {
+        // ignora
+      }
     } finally {
       setFinalizando(false);
     }
   };
 
   // Busca do header: no carrinho não filtramos itens, então enviar uma
-  // busca leva o usuário de volta pro catálogo já com o termo aplicado.
+  // busca leva o usuário de volta pro catálogo.
   const handleSubmitBusca = (e) => {
     if (e) e.preventDefault();
-    const termo = busca.trim();
-    navigate(termo ? `/produtos?busca=${encodeURIComponent(termo)}` : "/produtos");
+    navigate("/");
   };
 
-  const total = itens.reduce(
-    (soma, item) => soma + (item.preco || 0) * (item.quantidade || 1),
-    0
-  );
-
-  const totalItens = itens.reduce(
-    (soma, item) => soma + (item.quantidade || 1),
-    0
-  );
+  const idPedido = pedidoConcluido?.result?.idPedido;
 
   return (
     <div className="carrinho-page">
       <ProdutosHeader
         busca={busca}
         setBusca={setBusca}
-        totalCarrinho={totalItens}
         onSubmitBusca={handleSubmitBusca}
       />
 
@@ -139,15 +139,37 @@ export default function CarrinhoPage() {
 
         <div className="carrinho-titulo-linha">
           <h1 className="carrinho-titulo">Meu Carrinho</h1>
-          {!carregando && itens.length > 0 && (
+          {itens.length > 0 && (
             <span className="carrinho-titulo-badge">
               {totalItens} {totalItens === 1 ? "item" : "itens"}
             </span>
+          )}
+          {itens.length > 0 && (
+            <button type="button" className="carrinho-limpar" onClick={handleLimparCarrinho}>
+              Limpar carrinho
+            </button>
           )}
         </div>
       </div>
 
       {erro && <div className="carrinho-erro">{erro}</div>}
+
+      {avisos.length > 0 && (
+        <div className="carrinho-avisos">
+          {avisos.map((aviso, indice) => (
+            <div className="carrinho-aviso" key={`${indice}-${aviso}`}>
+              <span>{aviso}</span>
+              <button
+                type="button"
+                aria-label="Dispensar aviso"
+                onClick={() => setAvisos((prev) => prev.filter((_, i) => i !== indice))}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {pedidoConcluido ? (
         <div className="carrinho-feedback">
@@ -156,25 +178,16 @@ export default function CarrinhoPage() {
               <IconesCarrinho name="check" size={26} />
             </div>
             <strong>Pedido realizado com sucesso!</strong>
-            <p>Obrigado pela compra. Você pode continuar navegando pelo catálogo.</p>
+            <p>
+              {idPedido ? `Seu pedido #${idPedido} foi registrado. ` : ""}
+              Obrigado pela compra.
+            </p>
+            <button type="button" onClick={() => navigate("/pedidosProdutos")}>
+              Ver meus pedidos
+            </button>
             <button type="button" onClick={() => navigate("/")}>
               Voltar aos produtos
             </button>
-          </div>
-        </div>
-      ) : carregando ? (
-        <div className="carrinho-feedback">
-          <div className="carrinho-feedback-inner">
-            <div className="carrinho-feedback-icon">
-              <span
-                className="spinner"
-                style={{
-                  borderTopColor: "#0f172a",
-                  borderColor: "rgba(15,23,42,0.15)",
-                }}
-              />
-            </div>
-            <strong>Carregando carrinho...</strong>
           </div>
         </div>
       ) : itens.length === 0 ? (
@@ -199,18 +212,19 @@ export default function CarrinhoPage() {
                 item={item}
                 onAlterarQuantidade={handleAlterarQuantidade}
                 onRemover={handleRemover}
-                atualizandoId={atualizandoId}
-                removendoId={removendoId}
+                atualizandoId={null}
+                removendoId={null}
               />
             ))}
           </div>
 
           <CarrinhoResumo
             totalItens={totalItens}
-            total={total}
+            total={totalPreco}
             onFinalizar={handleFinalizarCompra}
             finalizando={finalizando}
-            desabilitado={itens.length === 0}
+            desabilitado={itens.length === 0 || logado === null}
+            exigeLogin={logado === false}
           />
         </div>
       )}

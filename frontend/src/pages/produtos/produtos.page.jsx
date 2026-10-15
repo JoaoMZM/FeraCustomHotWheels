@@ -1,12 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext.jsx";
-import {
-  listarCarrinho,
-  listarCategorias,
-  adicionarAoCarrinho,
-  buscarProdutos,
-} from "../../services/api.js";
+import { listarCategorias, buscarProdutos } from "../../services/api.js";
+import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
+import { normalizarProduto, obterIdProduto } from "../../utils/produtos.js";
+import { ToastCarrinho } from "../../components/common/ToastCarrinho.jsx";
 import { IconesProdutos } from "../../components/icons/IconesProdutos.jsx";
 import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
 import { ProdutoCard } from "../../components/produtos/ProdutoCard.jsx";
@@ -15,7 +12,7 @@ import "./produtos.page.css";
 
 export default function ProdutosPage() {
   const navigate = useNavigate();
-  const { logado } = useAuth();
+  const { adicionarItem } = useCarrinho();
   const [produtos, setProdutos] = useState([]);
   const [categorias, setCategorias] = useState([
     { valor: "todas", rotulo: "Todos os Produtos" },
@@ -28,11 +25,9 @@ export default function ProdutosPage() {
   const [precoMin, setPrecoMin] = useState("");
   const [precoMax, setPrecoMax] = useState("");
 
-  const [quantidades, setQuantidades] = useState({});
   const [adicionados, setAdicionados] = useState({});
-  const [enviandoId, setEnviandoId] = useState(null);
   const [favoritos, setFavoritos] = useState({});
-  const [totalCarrinho, setTotalCarrinho] = useState(0);
+  const [aviso, setAviso] = useState(null); // { mensagem, tipo, chave }
 
   const [menuAberto, setMenuAberto] = useState(false);
   const [posicao, setPosicao] = useState({ top: 0, left: 0 });
@@ -88,7 +83,8 @@ const carregarCategorias = useCallback(async () => {
 
     try {
       const dados = await buscarProdutos();
-      setProdutos(Array.isArray(dados) ? dados : dados.produtos || []);
+      const lista = Array.isArray(dados) ? dados : dados.produtos || [];
+      setProdutos(lista.map(normalizarProduto));
     } catch (err) {
       setErro(err.message || "Não foi possível carregar os produtos.");
     } finally {
@@ -96,77 +92,33 @@ const carregarCategorias = useCallback(async () => {
     }
   }, []);
 
-  const sincronizarTotalCarrinho = useCallback(async () => {
-    if (logado !== true) {
-      setTotalCarrinho(0);
-      return;
-    }
-
-    try {
-      const carrinho = await listarCarrinho({ _silent: true });
-      const listaItens = Array.isArray(carrinho) ? carrinho : carrinho.itens || [];
-      const total = listaItens.reduce(
-        (soma, item) => soma + (item.quantidade || 1),
-        0
-      );
-      setTotalCarrinho(total);
-    } catch {
-
-    }
-  }, [logado]);
-
   useEffect(() => {
     carregarCategorias();
     carregarProdutos();
   }, [carregarCategorias, carregarProdutos]);
 
-  useEffect(() => {
-    sincronizarTotalCarrinho();
-  }, [sincronizarTotalCarrinho]);
-
-  const getQuantidade = (id) => quantidades[id] || 1;
-
-  const alterarQuantidade = (id, delta, estoqueMax) => {
-    setQuantidades((prev) => {
-      const atual = prev[id] || 1;
-      const proximo = Math.min(
-        Math.max(atual + delta, 1),
-        estoqueMax > 0 ? estoqueMax : 1
-      );
-
-      return { ...prev, [id]: proximo };
-    });
-  };
-
-  const handleAdicionarCarrinho = async (produto) => {
+  // O carrinho fica no localStorage: adicionar não exige login
+  // (o login só é pedido ao finalizar a compra).
+  const handleAdicionarCarrinho = (produto, quantidade = 1) => {
     if (produto.estoque <= 0) return;
 
-    if (!logado) {
-      navigate("/login");
+    const id = obterIdProduto(produto);
+    const resultado = adicionarItem(produto, quantidade);
+
+    if (!resultado.ok) {
+      setAviso({ mensagem: resultado.mensagem, tipo: "erro", chave: Date.now() });
       return;
     }
 
-    setEnviandoId(produto.id);
-
-    try {
-      const qtd = getQuantidade(produto.id);
-
-      await adicionarAoCarrinho({
-        produtoId: produto.id,
-        quantidade: qtd,
-      });
-
-      setAdicionados((prev) => ({ ...prev, [produto.id]: true }));
-      await sincronizarTotalCarrinho();
-
-      setTimeout(() => {
-        setAdicionados((prev) => ({ ...prev, [produto.id]: false }));
-      }, 1800);
-    } catch (err) {
-      setErro(err.message || "Erro ao adicionar o item ao carrinho.");
-    } finally {
-      setEnviandoId(null);
+    if (resultado.mensagem) {
+      setAviso({ mensagem: resultado.mensagem, tipo: "aviso", chave: Date.now() });
     }
+
+    setAdicionados((prev) => ({ ...prev, [id]: true }));
+
+    setTimeout(() => {
+      setAdicionados((prev) => ({ ...prev, [id]: false }));
+    }, 1800);
   };
 
   const handleSubmitBusca = (e) => {
@@ -209,7 +161,6 @@ const produtosFiltrados = produtos.filter((produto) => {
       <ProdutosHeader
         busca={busca}
         setBusca={setBusca}
-        totalCarrinho={totalCarrinho}
         onSubmitBusca={handleSubmitBusca}
       />
 
@@ -311,19 +262,16 @@ const produtosFiltrados = produtos.filter((produto) => {
           {!carregando &&
             !erro &&
             produtosFiltrados.map((produto) => {
-              const idValido = produto.id_produto || produto.id || produto._id;
+              const idValido = obterIdProduto(produto);
 
               return (
                 <ProdutoCard
-                  key={produto.id}
+                  key={idValido}
                   produto={produto}
-                  quantidade={getQuantidade(produto.id)}
-                  onAlterarQuantidade={alterarQuantidade}
                   onAdicionarCarrinho={handleAdicionarCarrinho}
-                  logado={logado}
-                  enviando={enviandoId === produto.id}
-                  adicionado={!!adicionados[produto.id]}
-                  favorito={!!favoritos[produto.id]}
+                  enviando={false}
+                  adicionado={!!adicionados[idValido]}
+                  favorito={!!favoritos[idValido]}
                   onToggleFavorito={toggleFavorito}
                   onClickDetalhes={() => navigate(`/produtos/${idValido}`)}
                 />
@@ -331,6 +279,13 @@ const produtosFiltrados = produtos.filter((produto) => {
             })}
         </section>
       </main>
+
+      <ToastCarrinho
+        mensagem={aviso?.mensagem}
+        tipo={aviso?.tipo}
+        chave={aviso?.chave}
+        onFechar={() => setAviso(null)}
+      />
     </div>
   );
 }

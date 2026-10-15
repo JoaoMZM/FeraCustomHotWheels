@@ -99,7 +99,10 @@ export const obterProdutoPorId = async (id) => {
     return response.data;
   } catch (error) {
     console.error(`Erro ao buscar produto com ID ${id}:`, error);
-    throw new Error(getErrorMessage(error, 'Erro ao carregar os detalhes do produto.'));
+    const erro = new Error(getErrorMessage(error, 'Erro ao carregar os detalhes do produto.'));
+    // O status permite ao carrinho distinguir "produto removido" (404) de "API fora do ar"
+    erro.status = error.response?.status;
+    throw erro;
   }
 };
 
@@ -172,7 +175,9 @@ async function request(endpoint, options = {}) {
     return response.data;
   } catch (error) {
     const mensagemErro = getErrorMessage(error, 'Erro ao processar requisição.');
-    throw new Error(mensagemErro);
+    const erro = new Error(mensagemErro);
+    erro.status = error.response?.status;
+    throw erro;
   }
 }
 
@@ -186,11 +191,6 @@ export const listarProdutos = (filtros = {}) =>
 export const buscarProduto = async (id) => {
   return await request(`/produtos/${id}`);
 };
-
-/**
- * Adiciona um produto ao carrinho.
- * @param {{ produtoId: string|number, quantidade: number }} item
- */
 
 export const listarCategorias = async () => {
   return await request('/categorias');
@@ -212,18 +212,24 @@ export const alternarStatusProduto = (id, ativo) =>
 export const listarProdutosAdmin = () => api.get("/admin/produtos");
 
 /**
- * Atualiza a quantidade de um item do carrinho.
- * @param {string|number} id - ID do item no carrinho
- * @param {number} quantidade
+ * Cria o pedido a partir dos itens do carrinho (que fica no localStorage).
+ * O backend recalcula preços e confere o estoque a partir do banco.
+ * @param {Array<{ id: string, quantidade: number }>} itens
+ * @param {string|null} idCliente - id (UUID) do cliente logado
  */
-/**
- * Remove um item do carrinho pelo ID.
- * @param {string|number} id
- */
+export const finalizarCompra = async (itens, idCliente = null) => {
+  const corpo = {
+    itens: itens.map((item) => ({
+      idProduto: String(item.id),
+      quantidade: item.quantidade,
+    })),
+  };
 
-export const finalizarCompra = async () => {
+  if (idCliente) corpo.idCliente = idCliente;
+
   return await request('/pedidos', {
     method: 'POST',
+    data: corpo,
   });
 };
 

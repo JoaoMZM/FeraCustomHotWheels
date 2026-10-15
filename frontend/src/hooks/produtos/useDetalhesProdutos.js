@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { obterProdutoPorId, adicionarAoCarrinho } from '../../services/api.js';
+import { obterProdutoPorId } from '../../services/api.js';
+import { useCarrinho } from '../carrinho/useCarrinho.js';
+import { obterIdProduto } from '../../utils/produtos.js';
 
 export function useProdutoDetalhes() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { adicionarItem } = useCarrinho();
 
     const [produto, setProduto] = useState(null);
     const [carregando, setCarregando] = useState(true);
@@ -13,7 +16,7 @@ export function useProdutoDetalhes() {
     const [imagemAtiva, setImagemAtiva] = useState(0);
     const [quantidade, setQuantidade] = useState(1);
     const [adicionado, setAdicionado] = useState(false);
-    const [enviando, setEnviando] = useState(false);
+    const enviando = false; // adicionar ao carrinho agora é instantâneo (localStorage)
 
     useEffect(() => {
         async function carregar() {
@@ -42,6 +45,8 @@ export function useProdutoDetalhes() {
 
                 setProduto({
                     ...item,
+                    id: obterIdProduto(item),
+                    estoque: Number(item.estoque ?? item.estoque_produto) || 0,
                     nome: item.nome || item.nome_produto || 'Produto sem nome',
                     preco: precoNum,
                     imagens,
@@ -57,24 +62,21 @@ export function useProdutoDetalhes() {
         if (id) carregar();
     }, [id]);
 
-    const handleAdicionar = async () => {
+    // O carrinho fica no localStorage: adicionar não exige login.
+    const handleAdicionar = () => {
         if (!produto || produto.estoque <= 0) return;
 
-        const idValido = produto.id_produto || produto.id || produto._id;
+        const resultado = adicionarItem(produto, quantidade);
 
-        setEnviando(true);
-        try {
-            await adicionarAoCarrinho({
-                produtoId: idValido,
-                quantidade,
-            });
-            setAdicionado(true);
-            setTimeout(() => setAdicionado(false), 2000);
-        } catch (err) {
-            alert(err.message || 'Erro ao adicionar ao carrinho.');
-        } finally {
-            setEnviando(false);
+        if (!resultado.ok) {
+            alert(resultado.mensagem || 'Erro ao adicionar ao carrinho.');
+            return;
         }
+
+        if (resultado.mensagem) alert(resultado.mensagem);
+
+        setAdicionado(true);
+        setTimeout(() => setAdicionado(false), 2000);
     };
 
     return {

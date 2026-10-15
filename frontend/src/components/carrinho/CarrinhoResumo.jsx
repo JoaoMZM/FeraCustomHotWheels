@@ -1,7 +1,14 @@
 import { IconesCarrinho } from "../icons/IconesCarrinho";
 import { formatarPreco } from "../../utils/formatters";
 
-export function CarrinhoResumo({ totalItens, total, onFinalizar, finalizando, desabilitado }) {
+export function CarrinhoResumo({
+  totalItens,
+  total,
+  onFinalizar,
+  finalizando,
+  desabilitado,
+  exigeLogin = false,
+}) {
   return (
     <aside className="carrinho-resumo">
       <strong className="carrinho-resumo-titulo">Resumo do pedido</strong>
@@ -34,14 +41,20 @@ export function CarrinhoResumo({ totalItens, total, onFinalizar, finalizando, de
           </>
         ) : (
           <>
-            Finalizar Compra
-            <Icon name="chevron" size={16} />
+            {exigeLogin ? "Entrar para finalizar" : "Finalizar Compra"}
+            <IconesCarrinho name="chevron" size={16} />
           </>
         )}
       </button>
 
+      {exigeLogin && (
+        <p className="carrinho-resumo-nota">
+          Seu carrinho fica salvo. Entre na sua conta para concluir o pedido.
+        </p>
+      )}
+
       <div className="carrinho-resumo-seguro">
-        <Icon name="lock" size={13} />
+        <IconesCarrinho name="lock" size={13} />
         Ambiente de compra seguro
       </div>
     </aside>

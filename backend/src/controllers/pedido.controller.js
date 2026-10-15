@@ -7,29 +7,51 @@ const pedidoControllers = {
 
     adicionarPedido: async (req, res) => {
         try {
-            const { statusPedido, itens, idCliente } = req.body;
+            const { itens } = req.body;
+
+            // O cliente vem do token JWT (validarToken), nunca do corpo da requisição.
+            const idCliente = req.id_cliente;
 
             if (!itens || !Array.isArray(itens) || itens.length === 0) {
                 return res.status(400).json({ message: "O pedido deve conter pelo menos um item." });
             }
 
-            const itensPedidos = [];
+            // Valida cada item e junta duplicados (mesmo produto enviado duas vezes)
+            const quantidadePorProduto = new Map();
 
             for (const item of itens) {
-                const idProduto = item.idProduto;
-                const quantidade = item.quantidade;
+                const idProduto = typeof item?.idProduto === "string" ? item.idProduto.trim() : "";
+                const quantidade = item?.quantidade;
 
-                const produtoResultado = await produtoRepository.selecionarPorId(idProduto);
+                if (!idProduto) {
+                    return res.status(400).json({ message: "Item com produto inválido." });
+                }
 
-                if (!produtoResultado || produtoResultado.length === 0) {
+                if (!Number.isInteger(quantidade) || quantidade < 1) {
+                    return res.status(400).json({ message: "A quantidade de cada item deve ser um número inteiro maior que zero." });
+                }
+
+                quantidadePorProduto.set(idProduto, (quantidadePorProduto.get(idProduto) ?? 0) + quantidade);
+            }
+
+            const itensPedidos = [];
+
+            for (const [idProduto, quantidade] of quantidadePorProduto) {
+                const produto = await produtoRepository.selecionarPorId(idProduto);
+
+                if (!produto) {
                     return res.status(404).json({ message: `Produto ID ${idProduto} não encontrado.` });
                 }
 
-                const produto = produtoResultado;
-                
-                const estoqueDisponivel = produto.estoque ?? produto.estoque_produto;
-                const precoUnitario = Number(produto.preco ?? produto.preco_produto);
                 const nomeProduto = produto.nome ?? produto.nome_produto ?? idProduto;
+
+                if (produto.ativo !== undefined && !produto.ativo) {
+                    return res.status(400).json({ message: `O produto '${nomeProduto}' não está mais disponível.` });
+                }
+
+                const estoqueDisponivel = produto.estoque ?? produto.estoque_produto;
+                // O preço sempre vem do banco: o valor enviado pelo navegador é ignorado.
+                const precoUnitario = Number(produto.preco ?? produto.preco_produto);
 
                 if (estoqueDisponivel < quantidade) {
                     return res.status(400).json({
@@ -44,8 +66,9 @@ const pedidoControllers = {
 
             const valorTotal = ItensPedidos.calcularValorTotal(itensPedidos);
 
-            const pedido = Pedido.criar({ statusPedido, valorTotal, idCliente });
-            
+            // O status inicial é sempre "Pendente" (o cliente não escolhe o status do próprio pedido).
+            const pedido = Pedido.criar({ valorTotal, idCliente });
+
             const result = await pedidoRepository.criarPedido(pedido, itensPedidos);
 
             return res.status(201).json({ message: "Pedido criado com sucesso!", result });

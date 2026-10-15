@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IconesProdutos } from "../icons/IconesProdutos";
 import { logoutAdmin } from "../../services/api.js";
 import { useAuth } from "../../contexts/AuthContext.jsx";
+import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
 
 const lerAdminSalvo = () => {
   try {
@@ -15,7 +16,6 @@ const lerAdminSalvo = () => {
 export const ProdutosHeader = ({
   busca = "",
   setBusca = () => { },
-  totalCarrinho = 0,
   onSubmitBusca = (e) => e?.preventDefault(),
 }) => {
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ export const ProdutosHeader = ({
   const [usuarioAdmin, setUsuarioAdmin] = useState(lerAdminSalvo);
   const ehAdmin = usuarioAdmin?.role === "admin";
   const { logado } = useAuth();
+  const { totalItens } = useCarrinho();
   const estaAutenticado = () => {
     const token = localStorage.getItem("fera_token");
     return Boolean(token && token !== "null" && token !== "undefined" && token.trim() !== "");
@@ -159,8 +160,10 @@ export const ProdutosHeader = ({
           >
             <div className="produtos-account-avatar" style={{ position: "relative" }}>
               <IconesProdutos name="cart" size={18} />
-              {totalCarrinho > 0 && (
-                <span className="produtos-cart-badge">{totalCarrinho}</span>
+              {totalItens > 0 && (
+                <span className="produtos-cart-badge">
+                  {totalItens > 99 ? "99+" : totalItens}
+                </span>
               )}
             </div>
           </button>
