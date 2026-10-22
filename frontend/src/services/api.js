@@ -128,7 +128,7 @@ export const validarLogin = async () => {
       withCredentials: true,
       _silent: true,
     });
-    if(response.status != 200) {
+    if (response.status != 200) {
       return false;
     }
     return response.data.logado;
@@ -245,5 +245,29 @@ export const logoutAdmin = async () => {
   } catch (error) {
     console.error('Erro ao fazer logout admin:', error);
     throw new Error(getErrorMessage(error, 'Erro ao sair.'));
+  }
+};
+
+export const buscarCliente = async (id) => {
+  return await request(`/clientes/${id}`);
+};
+
+export const atualizarCliente = async (id, dados) => {
+  return await request(`/clientes/${id}`, {
+    method: 'PUT',
+    data: dados,
+  });
+};
+
+export const logoutCliente = async () => {
+  try {
+    const response = await api.post('/clientes/logout');
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao fazer logout:', error);
+    throw new Error(getErrorMessage(error, 'Erro ao sair.'));
+  } finally {
+    localStorage.removeItem('payload');
+    localStorage.removeItem('admin_payload');
   }
 };

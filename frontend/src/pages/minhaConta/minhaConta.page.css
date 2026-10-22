@@ -1,0 +1,193 @@
+.conta-content {
+    max-width: 640px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 24px 80px;
+}
+
+.conta-titulo {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 20px;
+}
+
+.conta-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.conta-card-titulo {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 16px;
+}
+
+.conta-card-titulo--secao {
+    margin-top: 24px;
+    padding-top: 20px;
+    margin-bottom: 4px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.conta-ajuda {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 16px;
+}
+
+.conta-resumo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.conta-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #e30613;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.conta-resumo-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    color: #0f172a;
+}
+
+.conta-resumo-info span {
+    font-size: 13px;
+    color: #64748b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.conta-campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.conta-campo label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.conta-campo small {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.conta-input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #0f172a;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.conta-input:hover {
+    border-color: #94a3b8;
+}
+
+.conta-input:focus {
+    border-color: #e30613;
+    box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.12);
+}
+
+.conta-input:disabled {
+    background: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+.conta-input--erro {
+    border-color: #b91c1c;
+}
+
+.conta-botao {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    background: #e30613;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.conta-botao:hover:not(:disabled) {
+    background: #b80510;
+}
+
+.conta-botao:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.conta-sair {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.conta-sair .conta-card-titulo {
+    margin-bottom: 4px;
+}
+
+.conta-sair .conta-ajuda {
+    margin-bottom: 0;
+}
+
+.conta-sair .pedidos-botao:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.conta-mensagem {
+    text-align: center;
+    padding: 48px 20px;
+    color: #64748b;
+    font-size: 14px;
+    border: 1px dashed #e2e8f0;
+    border-radius: 12px;
+}
+
+.conta-mensagem .pedidos-botao {
+    margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+    .conta-content {
+        padding: 16px 16px 60px;
+    }
+
+    .conta-sair {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
