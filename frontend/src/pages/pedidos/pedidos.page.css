@@ -107,20 +107,22 @@
 }
 
 .pedidos-botao {
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: 1px solid #e30613;
-    background: #ffffff;
-    color: #e30613;
-    font-size: 12px;
+    background: linear-gradient(135deg, #ff2a34 0%, #b80510 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    box-shadow: 0 10px 28px rgba(227, 6, 19, 0.35);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, filter 0.2s ease;
+    padding: 10px 22px;
+    font-size: 0.8125rem;
 }
 
 .pedidos-botao:hover {
-    background: #e30613;
-    color: #ffffff;
+    box-shadow: 0 14px 34px rgba(227, 6, 19, 0.45);
+    transform: translateY(-2px);
+    filter: brightness(1.05);
 }
 
 .pedido-itens {
