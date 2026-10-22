@@ -4,6 +4,7 @@ import { BreadcrumbProduto } from '../../components/produtos/BreadcrumbProduto.j
 import { GaleriaProduto } from '../../components/produtos/GaleriaProduto.jsx';
 import { InfoProduto } from '../../components/produtos/InfoProduto.jsx';
 import { ProdutosHeader } from '../../components/produtos/ProdutosHeader.jsx';
+import { Footer } from '../../components/common/Footer.jsx';
 import './produtosDetalhes.page.css';
 
 export default function ProdutosDetalhesPage() {
@@ -71,6 +72,7 @@ export default function ProdutosDetalhesPage() {
   }
 
   return (
+    <>
     <div className="produtos-detalhes-page">
       <ProdutosHeader
         busca={busca}
@@ -106,5 +108,7 @@ export default function ProdutosDetalhesPage() {
         />
       </div>
     </div>
+    <Footer />
+    </>
   );
 }

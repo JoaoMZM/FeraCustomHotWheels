@@ -1,0 +1,101 @@
+@import url('../../styles/token.css');
+
+.sobre-page {
+  background-color: var(--color-bg-page);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+.sobre-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 0;
+  box-sizing: border-box;
+}
+
+.sobre-hero {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-sm);
+  padding: 2.5rem;
+}
+
+.sobre-hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.sobre-hero p {
+  margin: 0;
+  max-width: 640px;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+.sobre-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.sobre-cards article {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+}
+
+.sobre-cards h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.sobre-cards p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+.sobre-acoes {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.sobre-acoes button {
+  background: var(--color-ink);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 0.75rem 1.75rem;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.sobre-acoes button:hover {
+  background: var(--color-ink-hover);
+}
+
+@media (max-width: 860px) {
+  .sobre-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .sobre-hero {
+    padding: 1.5rem;
+  }
+}
