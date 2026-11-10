@@ -37,7 +37,10 @@ const clienteController = {
                 return res.status(404).json({ message: 'Cliente não encontrado' });
             }
 
-            return res.status(200).json(resultado);
+            // Não devolve senha, tokens e flags internas para o front
+            const { senha, token_confirmacao, reset_token_hash, reset_token_expires, is_admin, ...clienteSeguro } = resultado;
+
+            return res.status(200).json(clienteSeguro);
 
         } catch (error) {
             console.error(error);
@@ -136,13 +139,33 @@ const clienteController = {
                 return res.status(400).json({ message: "ID é obrigatório" });
             }
 
-            const { nome, cpf, email, senha, telefone } = req.body;
-            const cpfLimpo = limparNumero(cpf);
-            const telefoneLimpo = limparNumero(telefone);
+            // O cliente só pode alterar a própria conta
+            if (id !== req.id_cliente) {
+                return res.status(403).json({ message: "Você só pode alterar a sua própria conta" });
+            }
+
+            // O CPF não é alterado por aqui, por isso não é lido do body
+            const { nome, email, senha, telefone } = req.body;
+            const telefoneLimpo = telefone ? limparNumero(telefone) : undefined;
             const clienteAtual = await clienteRepository.selecionarPorId(id);
 
             if (!clienteAtual) {
                 return res.status(404).json({ message: "Cliente não encontrado" });
+            }
+
+            if (email && !validarEmail(email)) {
+                return res.status(400).json({ message: "E-mail inválido" });
+            }
+
+            if (telefone && !validarTelefone(telefone)) {
+                return res.status(400).json({ message: "Telefone inválido" });
+            }
+
+            if (email && email !== clienteAtual.email) {
+                const emailEmUso = await clienteRepository.buscarPorEmail(email);
+                if (emailEmUso && emailEmUso.length > 0) {
+                    return res.status(400).json({ message: "E-mail já cadastrado" });
+                }
             }
 
             let senhaFinal = clienteAtual.senha;
@@ -152,7 +175,7 @@ const clienteController = {
             }
 
             const clienteEditado = Cliente.editar(
-                { nome, cpf: cpfLimpo, email, senha: senhaFinal, telefone: telefoneLimpo },
+                { nome, email, senha: senhaFinal, telefone: telefoneLimpo },
                 clienteAtual
             );
             const resultado = await clienteRepository.editar(clienteEditado);

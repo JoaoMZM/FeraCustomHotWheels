@@ -131,25 +131,25 @@
 }
 
 .btn-novo-produto {
-    background-color: var(--accent);
-    color: #ffffff;
-    border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.875rem;
-    font-weight: 600;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    background: linear-gradient(135deg, #ff2a34 0%, #b80510 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
+    box-shadow: 0 10px 28px rgba(227, 6, 19, 0.35);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, filter 0.2s ease;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.875rem;
 }
 
 .btn-novo-produto:hover {
-    background-color: var(--accent-hover);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-    transform: translateY(-1px);
+    box-shadow: 0 14px 34px rgba(227, 6, 19, 0.45);
+    transform: translateY(-2px);
+    filter: brightness(1.05);
 }
 
 .btn-novo-produto:active {
@@ -504,20 +504,22 @@
 }
 
 .btn-salvar {
-    background-color: var(--accent);
+    background: linear-gradient(135deg, #ff2a34 0%, #b80510 100%);
     color: #ffffff;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.875rem;
-    font-weight: 600;
+    border-radius: 9999px;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
+    box-shadow: 0 10px 28px rgba(227, 6, 19, 0.35);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, filter 0.2s ease;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.875rem;
 }
 
 .btn-salvar:hover:not(:disabled) {
-    background-color: var(--accent-hover);
+    box-shadow: 0 14px 34px rgba(227, 6, 19, 0.45);
+    transform: translateY(-2px);
+    filter: brightness(1.05);
 }
 
 .btn-salvar:disabled {

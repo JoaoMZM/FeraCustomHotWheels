@@ -11,6 +11,7 @@ import './style.css'
 import AdminProdutosPage from './pages/admin/admin.produtos.page.jsx';
 import { RotaAdmin } from './components/RotaAdmin.jsx';
 import ProdutosDetalhesPage from './pages/produtos/produtosDetalhes.page';
+import MinhaContaPage from './pages/minhaConta/minhaConta.page.jsx';
 import SobrePage from './pages/sobre/sobre.page.jsx';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
       <Route path="/cadastro" element={<CadastroPage />} />
       <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
       <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
+      <Route path="/minhaconta" element={<MinhaContaPage />} />
 
       <Route element={<RotaAdmin usuario={usuarioAdmin} />}>
         <Route path="/admin/produtos" element={<AdminProdutosPage />} />

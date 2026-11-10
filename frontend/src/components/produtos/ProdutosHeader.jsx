@@ -113,7 +113,7 @@ export const ProdutosHeader = ({
           <button
             type="button"
             className="produtos-account"
-            onClick={() => navegarProtegido(logado ? "/minha-conta" : "/login")}
+            onClick={() => navegarProtegido(logado ? "/minhaconta" : "/login")}
             aria-label={logado ? "Ir para Minha Conta" : "Faça login"}
           >
             <div className="produtos-account-avatar">
