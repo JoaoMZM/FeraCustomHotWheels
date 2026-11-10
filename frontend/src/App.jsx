@@ -12,6 +12,7 @@ import AdminProdutosPage from './pages/admin/admin.produtos.page.jsx';
 import { RotaAdmin } from './components/RotaAdmin.jsx';
 import ProdutosDetalhesPage from './pages/produtos/produtosDetalhes.page';
 import MinhaContaPage from './pages/minhaConta/minhaConta.page.jsx';
+import SobrePage from './pages/sobre/sobre.page.jsx';
 
 export default function App() {
   const [usuarioAdmin, setUsuarioAdmin] = useState(
@@ -23,6 +24,7 @@ export default function App() {
       <Route path="/login" element={<LoginPage onLoginAdmin={setUsuarioAdmin} />} />
       <Route path="/" element={<ProdutosPage />} />
       <Route path="/carrinho" element={<CarrinhoPage />} />
+      <Route path="/sobre" element={<SobrePage />} />
       <Route path="/pedidosProdutos" element={<PedidosPage />} />
       <Route path="/produtos/:id" element={<ProdutosDetalhesPage />} />
 

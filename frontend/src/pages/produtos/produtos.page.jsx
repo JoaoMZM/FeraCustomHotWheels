@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { listarCategorias, buscarProdutos } from "../../services/api.js";
 import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
 import { normalizarProduto, obterIdProduto } from "../../utils/produtos.js";
+import { Footer } from "../../components/common/Footer.jsx";
 import { ToastCarrinho } from "../../components/common/ToastCarrinho.jsx";
 import { IconesProdutos } from "../../components/icons/IconesProdutos.jsx";
 import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
@@ -279,6 +280,8 @@ const produtosFiltrados = produtos.filter((produto) => {
             })}
         </section>
       </main>
+
+      <Footer />
 
       <ToastCarrinho
         mensagem={aviso?.mensagem}
