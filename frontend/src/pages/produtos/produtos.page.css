@@ -10,9 +10,6 @@
     --text-main: var(--color-ink);
     --text-muted: var(--color-muted);
     --border-color: var(--color-border);
-    --shadow-sm: var(--shadow-sm);
-    --shadow-md: var(--shadow-md);
-    --shadow-lg: var(--shadow-lg);
 
     background-color: var(--bg-page);
     min-height: 100vh;
@@ -30,7 +27,7 @@
 
 .produtos-admin-faixa {
     background-color: var(--primary);
-    color: #ffffff;
+    color: var(--color-on-ink);
     font-size: 0.8125rem;
     padding: 0.5rem 1.5rem;
     display: flex;
@@ -47,8 +44,8 @@
 
 .produtos-admin-faixa-acoes button {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    color: #ffffff;
+    border: 1px solid var(--color-on-ink-soft);
+    color: var(--color-on-ink);
     font-size: 0.75rem;
     font-weight: 600;
     padding: 0.3rem 0.75rem;
@@ -58,7 +55,7 @@
 }
 
 .produtos-admin-faixa-acoes button:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--color-on-ink-hover-bg);
 }
 
 .produtos-account--admin .produtos-account-avatar {
@@ -125,7 +122,7 @@
 }
 
 .produtos-search input:focus {
-    background-color: #ffffff;
+    background-color: var(--bg-card);
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--color-brand-tint-border);
 }
@@ -167,7 +164,7 @@
 }
 
 .produtos-account:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--color-hover-bg);
 }
 
 .produtos-account-avatar {
@@ -178,7 +175,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #334155;
+  color: var(--color-icon);
 }
 
 .produtos-account-text {
@@ -225,7 +222,7 @@
 
 .produtos-nav {
     border-top: 1px solid var(--border-color);
-    background-color: #ffffff;
+    background-color: var(--bg-card);
 }
 
 .produtos-nav-inner {
@@ -240,7 +237,7 @@
 .nav-mega-painel {
   position: absolute;
   z-index: 1000;
-  background: #ffffff;
+  background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
@@ -254,7 +251,7 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 12px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--color-subtle-bg);
   margin-bottom: 16px;
 }
 
@@ -265,7 +262,7 @@
 }
 
 .nav-mega-fechar {
-  background: #f8fafc;
+  background: var(--color-hover-bg);
   border: 1px solid var(--border-color);
   border-radius: 50%;
   width: 28px;
@@ -320,7 +317,7 @@
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   font-size: 0.875rem;
-  color: #334155;
+  color: var(--color-text-body);
   cursor: pointer;
   text-align: left;
   white-space: nowrap;
@@ -328,7 +325,7 @@
 }
 
 .nav-mega-item:hover {
-  background: #f8fafc;
+  background: var(--color-hover-bg);
   color: var(--primary);
 }
 
@@ -341,7 +338,7 @@
 
 .nav-mega-divisor {
   width: 1px;
-  background-color: #f1f5f9;
+  background-color: var(--color-subtle-bg);
   align-self: stretch;
 }
 
@@ -356,24 +353,23 @@
   padding: 6px 12px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border-color);
-  background: #f8fafc;
+  background: var(--color-hover-bg);
   font-size: 0.8rem;
-  color: #475569;
+  color: var(--color-icon);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .nav-mega-chip:hover {
-  border-color: #cbd5e1;
-  background: #ffffff;
+  border-color: var(--color-border-strong);
+  background: var(--bg-card);
 }
 
 .nav-mega-chip.ativo {
-  background: linear-gradient(135deg, #ff2a34 0%, #b80510 100%);
-  color: #ffffff;
-  border-color: transparent;
-  font-weight: 700;
-  box-shadow: 0 6px 16px rgba(227, 6, 19, 0.3);
+  background: var(--primary);
+  color: var(--color-on-ink);
+  border-color: var(--primary);
+  font-weight: 500;
 }
 
 .nav-mega-label-custom {
@@ -392,8 +388,8 @@
 .nav-mega-preco-input {
   display: flex;
   align-items: center;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
+  background: var(--color-hover-bg);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   padding: 6px 10px;
   flex: 1;
@@ -402,8 +398,8 @@
 
 .nav-mega-preco-input:focus-within {
   border-color: var(--primary);
-  background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.05);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 2px var(--color-border);
 }
 
 .nav-mega-preco-input span {
@@ -424,12 +420,12 @@
 }
 
 .nav-mega-preco-input input::placeholder {
-  color: #94a3b8;
+  color: var(--color-text-faint);
 }
 
 .nav-mega-preco-ate {
   font-size: 0.775rem;
-  color: #94a3b8;
+  color: var(--color-text-faint);
 }
 
 .nav-mega-rodape {
@@ -438,7 +434,7 @@
   justify-content: space-between;
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--color-subtle-bg);
 }
 
 .nav-mega-limpar {
@@ -516,7 +512,7 @@
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--text-muted);
-  background-color: #f1f5f9;
+  background-color: var(--color-subtle-bg);
   padding: 0.25rem 0.75rem;
   border-radius: var(--radius-pill);
   white-space: nowrap;
@@ -554,6 +550,12 @@
   text-decoration: underline;
 }
 
+/* Item atual do breadcrumb: usa a cor de texto do tema (fonte clara no modo escuro) */
+.produtos-breadcrumb .breadcrumb-atual {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
 .produtos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -579,12 +581,12 @@
 .produto-card-imagem {
     position: relative;
     aspect-ratio: 1 / 1;
-    background: #ffffff;
+    background: var(--bg-card);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--color-subtle-bg);
 }
 
 .produto-card:hover .produto-card-imagem img {
@@ -592,7 +594,7 @@
 }
 
 .produto-card-imagem-placeholder {
-    color: #cbd5e1;
+    color: var(--color-border-strong);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -605,7 +607,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--color-overlay-bg);
     backdrop-filter: blur(4px);
     border: none;
     display: flex;
@@ -620,7 +622,7 @@
 .produto-card-favorito:hover,
 .produto-card-favorito.ativo {
     color: var(--color-brand);
-    background: #ffffff;
+    background: var(--bg-card);
 }
 
 .produto-card-categoria {
@@ -722,7 +724,7 @@
 }
 
 .produto-card-qtd button {
-    background: #ffffff;
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-pill);
     width: 28px;
@@ -737,7 +739,7 @@
 
 .produto-card-qtd button:hover:not(:disabled) {
     background-color: var(--primary);
-    color: #ffffff;
+    color: var(--color-on-ink);
     border-color: var(--primary);
 }
 
@@ -776,7 +778,8 @@
 }
 
 .btn-add-carrinho:disabled {
-    background: #cbd5e1;
+    background: var(--color-disabled-bg);
+    color: var(--color-disabled-text);
     box-shadow: none;
     cursor: not-allowed;
 }
@@ -806,7 +809,7 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background-color: #f1f5f9;
+    background-color: var(--color-subtle-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -827,8 +830,9 @@
 }
 
 .produtos-feedback button {
-    background: linear-gradient(135deg, #ff2a34 0%, #b80510 100%);
-    color: #ffffff;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary);
+    color: var(--color-on-ink);
     border: none;
     border-radius: 9999px;
     font-weight: 700;
@@ -849,7 +853,7 @@
 .produto-skeleton-img {
     width: 100%;
     padding-top: 100%;
-    background-color: #e2e8f0;
+    background-color: var(--color-skeleton);
     animation: pulse 1.5s infinite ease-in-out;
 }
 
@@ -862,7 +866,7 @@
 
 .produto-skeleton-line {
     height: 12px;
-    background-color: #e2e8f0;
+    background-color: var(--color-skeleton);
     border-radius: 4px;
     animation: pulse 1.5s infinite ease-in-out;
 }
@@ -944,13 +948,13 @@ button.nav-mega-gatilho {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.5rem 0.9rem;
-  background-color: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--color-border-strong) !important;
   border-radius: var(--radius-pill);
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--color-text-body);
   cursor: pointer;
   outline: none;
   transition: all 0.2s ease-in-out;
@@ -959,8 +963,8 @@ button.nav-mega-gatilho {
 
 .produtos-filtro-inline button.nav-mega-gatilho:hover,
 button.nav-mega-gatilho:hover {
-  background-color: #f8fafc !important;
-  border-color: #94a3b8 !important;
+  background-color: var(--color-hover-bg) !important;
+  border-color: var(--color-text-faint) !important;
   color: var(--primary);
 }
 
@@ -974,11 +978,9 @@ button.nav-mega-gatilho.aberto:hover {
 
 .produtos-filtro-inline button.nav-mega-gatilho.aberto,
 button.nav-mega-gatilho.aberto {
-  background: linear-gradient(135deg, #ff2a34 0%, #b80510 100%) !important;
-  border-color: transparent !important;
-  color: #ffffff;
-  font-weight: 700;
-  box-shadow: 0 10px 28px rgba(227, 6, 19, 0.35);
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--color-on-ink);
 }
 
 .produtos-filtro-inline button.nav-mega-gatilho svg,

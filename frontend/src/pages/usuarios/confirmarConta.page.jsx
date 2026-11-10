@@ -62,14 +62,14 @@ export default function ConfirmarContaPage({ onNavigateToLogin }) {
                 {status === 'processando' && (
                     <>
                         <div className="spinner" style={{ margin: '20px auto' }}></div>
-                        <p style={{ color: '#666', fontSize: '15px' }}>{mensagem}</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>{mensagem}</p>
                     </>
                 )}
 
                 {status === 'sucesso' && (
                     <>
                         <IconeSucesso />
-                        <p style={{ color: '#28a745', fontSize: '16px', fontWeight: '500', marginBottom: '25px' }}>
+                        <p style={{ color: 'var(--color-success-text)', fontSize: '16px', fontWeight: '500', marginBottom: '25px' }}>
                             {mensagem}
                         </p>
                         <button 
@@ -91,7 +91,7 @@ export default function ConfirmarContaPage({ onNavigateToLogin }) {
                 {status === 'erro' && (
                     <>
                         <IconeErro />
-                        <p style={{ color: '#e60000', fontSize: '15px', fontWeight: '500', marginBottom: '20px' }}>
+                        <p style={{ color: 'var(--color-danger)', fontSize: '15px', fontWeight: '500', marginBottom: '20px' }}>
                             {mensagem}
                         </p>
                         <div className="cadastro-footer">
