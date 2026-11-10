@@ -14,14 +14,14 @@ clienteRoutes.get('/validate', validarToken, (req, res) => {
 });
 
 clienteRoutes.get('/', clienteController.buscarTodosClientes);
-clienteRoutes.get('/:id', clienteController.buscarClientePorID);
+clienteRoutes.get('/:id', validarToken, clienteController.buscarClientePorID);
 
 clienteRoutes.post('/', clienteController.incluirCliente);
 clienteRoutes.post('/login', clienteController.loginCliente);
 clienteRoutes.post('/refresh', clienteController.refreshToken);
 clienteRoutes.post('/logout', clienteController.logoutCliente);
 
-clienteRoutes.put('/:id', clienteController.atualizarCliente);
+clienteRoutes.put('/:id', validarToken, clienteController.atualizarCliente);
 clienteRoutes.delete('/:id', clienteController.excluirCliente);
 
 export default clienteRoutes;

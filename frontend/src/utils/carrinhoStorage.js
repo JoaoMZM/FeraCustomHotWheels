@@ -37,7 +37,6 @@ export function lerCarrinho() {
 
     return dados.map(sanitizarItem).filter(Boolean);
   } catch {
-    // JSON corrompido ou localStorage indisponível (modo privado, por exemplo)
     return [];
   }
 }

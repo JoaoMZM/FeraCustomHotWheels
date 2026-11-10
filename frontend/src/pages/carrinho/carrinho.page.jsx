@@ -5,6 +5,7 @@ import { useAuth } from "../../contexts/AuthContext.jsx";
 import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
 import { IconesCarrinho } from "../../components/icons/IconesCarrinho.jsx";
 import { CarrinhoItem } from "../../components/carrinho/CarrinhoItem.jsx";
+import { Footer } from "../../components/common/Footer.jsx";
 import { CarrinhoResumo } from "../../components/carrinho/CarrinhoResumo.jsx";
 import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
 import "../produtos/produtos.page.css"; // classes do header (.produtos-header, .produtos-logo, etc.)
@@ -228,6 +229,8 @@ export default function CarrinhoPage() {
           />
         </div>
       )}
+
+      <Footer />
     </div>
   );
 }

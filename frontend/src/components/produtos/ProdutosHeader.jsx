@@ -37,6 +37,7 @@ export const ProdutosHeader = ({ busca, setBusca, onSubmitBusca }) => {
           <button
             type="button"
             className="produtos-account"
+<<<<<<< HEAD
             onClick={() => {
               if (localStorage.getItem("payload")) {
                 navigate("/pedidos");
@@ -44,6 +45,10 @@ export const ProdutosHeader = ({ busca, setBusca, onSubmitBusca }) => {
                 navigate("/login");
               }
             }}
+=======
+            onClick={() => navegarProtegido(logado ? "/minhaconta" : "/login")}
+            aria-label={logado ? "Ir para Minha Conta" : "Faça login"}
+>>>>>>> main
           >
             <div className="produtos-account-avatar">
               <IconesProdutos name="user" size={18} />
