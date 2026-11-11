@@ -3,6 +3,7 @@ import { useState } from 'react';
 const STATUS = {
   pendente: { texto: 'Pendente', tipo: 'aberto' },
   pago: { texto: 'Pago', tipo: 'aberto' },
+  'em processamento': { texto: 'Pago · em preparo', tipo: 'aberto' },
   enviado: { texto: 'A caminho', tipo: 'aberto' },
   entregue: { texto: 'Entregue', tipo: 'finalizado' },
   cancelado: { texto: 'Cancelado', tipo: 'cancelado' },

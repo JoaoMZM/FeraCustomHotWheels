@@ -35,13 +35,22 @@ export default function AdminProdutosPage() {
             <span className="badge-admin">Painel Admin</span>
           </div>
 
-          <button
-            type="button"
-            className="btn-voltar-loja"
-            onClick={() => navigate("/")}
-          >
-            Ir para a Loja
-          </button>
+          <div style={{ display: "flex", gap: "0.75rem" }}>
+            <button
+              type="button"
+              className="btn-voltar-loja"
+              onClick={() => navigate("/admin/mensagens")}
+            >
+              Mensagens
+            </button>
+            <button
+              type="button"
+              className="btn-voltar-loja"
+              onClick={() => navigate("/")}
+            >
+              Ir para a Loja
+            </button>
+          </div>
         </div>
       </header>
 

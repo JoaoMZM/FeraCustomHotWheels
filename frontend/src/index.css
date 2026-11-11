@@ -30,7 +30,6 @@
   }
 }
 
-/* Tema escuro: sincronizado com o botão de tema (data-theme="dark" no <html>) */
 :root[data-theme="dark"] {
   color-scheme: dark;
 

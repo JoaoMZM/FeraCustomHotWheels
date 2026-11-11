@@ -5,7 +5,6 @@
 
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  /* Texto e superfícies */
   --color-ink: #0f172a;
   --color-ink-hover: #1e293b;
   --color-muted: #64748b;
@@ -14,7 +13,7 @@
   --color-icon: #475569;
   --color-border: #e6e9ef;
   --color-border-strong: #cbd5e1;
-  --color-bg-page: #eef1f6;
+  --color-bg-page: #f8f9fb;
   --color-bg-card: #ffffff;
   --color-bg-soft: #f5f6f9;
   --color-hover-bg: #f8fafc;
@@ -22,23 +21,19 @@
   --color-overlay-bg: rgba(255, 255, 255, 0.9);
   --color-skeleton: #e2e8f0;
 
-  /* Cores "invertidas" (fundo escuro + texto claro) usadas em botões sólidos */
   --color-on-ink: #ffffff;
   --color-on-ink-soft: rgba(255, 255, 255, 0.35);
   --color-on-ink-hover-bg: rgba(255, 255, 255, 0.15);
 
-  /* Botões desabilitados */
   --color-disabled-bg: #cbd5e1;
   --color-disabled-text: #94a3b8;
 
-  /* Marca */
   --color-brand: #e30613;
   --color-brand-hover: #b80510;
   --color-brand-gradient: linear-gradient(135deg, #ff2a34 0%, #b80510 100%);
   --color-brand-tint-bg: rgba(227, 6, 19, 0.08);
   --color-brand-tint-border: rgba(227, 6, 19, 0.25);
 
-  /* Status */
   --color-danger: #b91c1c;
   --color-danger-bg: #fef2f2;
   --color-danger-border: #fecaca;
@@ -73,10 +68,6 @@
   --border-color: var(--color-border);
 }
 
-/* ==========================================
-   TEMA ESCURO
-   Ativado quando <html> recebe data-theme="dark"
-   ========================================== */
 :root[data-theme="dark"] {
   color-scheme: dark;
 

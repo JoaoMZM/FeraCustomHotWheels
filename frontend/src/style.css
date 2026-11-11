@@ -1,5 +1,4 @@
 @import url('https://fonts.google.com/share?selection.family=Roboto:ital,wght@0,100..900;1,100..900');
-/* Tokens globais de cor (claro/escuro) usados em toda a aplicação */
 @import url('./styles/token.css');
 
 :root {
@@ -15,12 +14,10 @@
     --text: #000000;
     --accent: #ff0000;
 
-    /* Campos de formulário (autenticação) */
     --field-icon: #555555;
     --field-placeholder: #444444;
     --field-border-hover: #444444;
 
-    /* Variaveis da pagina de produtos/pedidos (tema claro/escuro) */
     --prod-bg: #ffffff;
     --prod-surface: #ffffff;
     --prod-text: #0f172a;
@@ -47,7 +44,6 @@
     --prod-green: #108a48;
 }
 
-/* Tema escuro: ativado colocando data-theme="dark" na tag <html> */
 :root[data-theme="dark"] {
     color-scheme: dark;
 
@@ -86,7 +82,6 @@
     --prod-green: #16a34a;
 }
 
-/* Reset Genérico Seguro */
 *,
 *::before,
 *::after {
@@ -110,11 +105,6 @@ body {
     width: 100%;
 }
 
-/* ==========================================
-   2. PÁGINA DE AUTENTICAÇÃO (CADASTRO / LOGIN)
-   ========================================== */
-
-/* Container geral da página de cadastro/login para isolar o layout */
 .auth-page {
     min-height: 100vh;
     width: 100%;
@@ -128,7 +118,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Listras diagonais de fundo (Apenas no Auth) */
 .auth-page::before {
     content: '';
     position: fixed;
@@ -142,7 +131,6 @@ body {
     z-index: 0;
 }
 
-/* Vinheta Radial (Apenas no Auth) */
 .auth-page::after {
     content: '';
     position: fixed;
@@ -190,7 +178,6 @@ body {
     height: 28px;
 }
 
-/* Card Cadastro/Login */
 .cadastro-container,
 .login-container {
     width: 100%;
@@ -211,7 +198,6 @@ body {
     max-width: 420px;
 }
 
-/* Faixa decorativa superior */
 .cadastro-container::before,
 .login-container::before {
     content: '';
@@ -228,7 +214,6 @@ body {
             var(--red) 85%);
 }
 
-/* Detalhe decorativo no canto inferior */
 .cadastro-container::after,
 .login-container::after {
     content: '';
@@ -594,10 +579,6 @@ body {
     }
 }
 
-/* ==========================================
-   3. PÁGINA DE PRODUTOS
-   ========================================== */
-
 .produtos-page {
     width: 100%;
     min-height: 100vh;
@@ -611,7 +592,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Header Produtos */
 .produtos-header {
     background: var(--prod-surface);
     border-bottom: 1px solid var(--prod-border);
@@ -658,7 +638,6 @@ body {
     white-space: nowrap;
 }
 
-/* Botao de tema (claro/escuro) */
 .produtos-tema-botao {
     background: var(--prod-surface);
     border: 1px solid var(--prod-border);
@@ -680,7 +659,6 @@ body {
     background: var(--prod-hover-bg);
 }
 
-/* Busca */
 .produtos-search {
     flex: 1;
     max-width: 500px;
@@ -727,7 +705,6 @@ body {
     color: var(--prod-red);
 }
 
-/* Ações */
 .produtos-header-actions {
     display: flex;
     align-items: center;
@@ -806,7 +783,6 @@ body {
     border: 2px solid var(--prod-surface);
 }
 
-/* Navegação Categorias */
 .produtos-nav {
     background: var(--prod-surface);
     border-bottom: 1px solid var(--prod-border);
@@ -900,7 +876,6 @@ body {
     border-color: var(--prod-text);
 }
 
-/* Toolbar */
 .produtos-toolbar {
     display: flex;
     align-items: center;
@@ -923,7 +898,6 @@ body {
     font-weight: 600;
 }
 
-/* Grid e Cards */
 .produtos-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1086,7 +1060,6 @@ body {
     letter-spacing: -0.02em;
 }
 
-/* Seletor de Quantidade */
 .produto-card-qtd {
     height: 36px;
     display: flex;
@@ -1130,7 +1103,6 @@ body {
     color: var(--prod-text);
 }
 
-/* Botão Comprar */
 .btn-add-carrinho {
     width: 100%;
     height: 40px;
@@ -1162,7 +1134,6 @@ body {
     background: var(--prod-green);
 }
 
-/* Spinners Gerais */
 .spinner {
     width: 16px;
     height: 16px;
@@ -1178,7 +1149,6 @@ body {
     }
 }
 
-/* Skeletons */
 .produto-skeleton {
     background: var(--prod-surface);
     border: 1px solid var(--prod-border);
@@ -1224,7 +1194,6 @@ body {
     margin-top: auto;
 }
 
-/* Feedback */
 .produtos-feedback {
     grid-column: 1 / -1;
     padding: 48px 20px;
@@ -1285,7 +1254,6 @@ body {
     color: var(--prod-on-accent);
 }
 
-/* Responsividade de Produtos */
 @media (max-width: 1024px) {
     .produtos-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));

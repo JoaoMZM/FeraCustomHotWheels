@@ -37,7 +37,6 @@ const clienteController = {
                 return res.status(404).json({ message: 'Cliente não encontrado' });
             }
 
-            // Não devolve senha, tokens e flags internas para o front
             const { senha, token_confirmacao, reset_token_hash, reset_token_expires, is_admin, ...clienteSeguro } = resultado;
 
             return res.status(200).json(clienteSeguro);
@@ -139,12 +138,10 @@ const clienteController = {
                 return res.status(400).json({ message: "ID é obrigatório" });
             }
 
-            // O cliente só pode alterar a própria conta
             if (id !== req.id_cliente) {
                 return res.status(403).json({ message: "Você só pode alterar a sua própria conta" });
             }
 
-            // O CPF não é alterado por aqui, por isso não é lido do body
             const { nome, email, senha, telefone } = req.body;
             const telefoneLimpo = telefone ? limparNumero(telefone) : undefined;
             const clienteAtual = await clienteRepository.selecionarPorId(id);
@@ -254,7 +251,6 @@ const clienteController = {
             res.cookie('token', token, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
             res.cookie('refresh_token', refreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 });
 
-            // Conta de administrador: além do token de cliente, emite o token de admin
             if (ehAdmin) {
                 const adminToken = jwt.sign(
                     { id_cliente: usuario.id_cliente, role: 'admin' },
@@ -311,7 +307,6 @@ const clienteController = {
             res.cookie('token', novoToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
             res.cookie('refresh_token', novoRefreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 });
 
-            // Se a conta for administradora, renova também o token de admin
             const usuario = await clienteRepository.selecionarPorId(decoded.id_cliente);
             if (usuario && usuario.is_admin) {
                 const novoAdminToken = jwt.sign(
