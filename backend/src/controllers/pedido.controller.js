@@ -2,6 +2,7 @@ import pedidoRepository from "../repositories/pedido.repository.js";
 import { ItensPedidos } from "../models/Itens_pedido.js";
 import { Pedido } from "../models/Pedidos.js";
 import { produtoRepository } from "../repositories/produto.repository.js";
+import enderecoRepository from "../repositories/endereco.repository.js";
 
 const pedidoControllers = {
 
@@ -14,6 +15,16 @@ const pedidoControllers = {
 
             if (!itens || !Array.isArray(itens) || itens.length === 0) {
                 return res.status(400).json({ message: "O pedido deve conter pelo menos um item." });
+            }
+
+            // O pedido só pode ser feito por quem tem endereço de entrega cadastrado.
+            const enderecoCliente = await enderecoRepository.buscarPorCliente(idCliente);
+
+            if (!enderecoCliente) {
+                return res.status(400).json({
+                    codigo: "ENDERECO_OBRIGATORIO",
+                    message: "Cadastre um endereço de entrega em Minha Conta antes de finalizar o pedido."
+                });
             }
 
             // Valida cada item e junta duplicados (mesmo produto enviado duas vezes)

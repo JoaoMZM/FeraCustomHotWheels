@@ -9,6 +9,7 @@ import RedefinirSenhaPage from './pages/usuarios/redefinirSenha.page.jsx';
 import PedidosPage from './pages/pedidos/pedidos.page.jsx';
 import './style.css'
 import AdminProdutosPage from './pages/admin/admin.produtos.page.jsx';
+import AdminPedidosPage from './pages/admin/admin.pedidos.page.jsx';
 import { RotaAdmin } from './components/RotaAdmin.jsx';
 import ProdutosDetalhesPage from './pages/produtos/produtosDetalhes.page';
 import MinhaContaPage from './pages/minhaConta/minhaConta.page.jsx';
@@ -35,6 +36,7 @@ export default function App() {
 
       <Route element={<RotaAdmin usuario={usuarioAdmin} />}>
         <Route path="/admin/produtos" element={<AdminProdutosPage />} />
+        <Route path="/admin/pedidos" element={<AdminPedidosPage />} />
       </Route>
     </Routes>
   );

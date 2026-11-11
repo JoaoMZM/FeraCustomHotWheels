@@ -1,0 +1,32 @@
+.endereco-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    column-gap: 12px;
+}
+
+.endereco-cep { grid-column: span 2; }
+.endereco-rua { grid-column: span 3; }
+.endereco-numero { grid-column: span 1; }
+.endereco-complemento { grid-column: span 6; }
+.endereco-bairro { grid-column: span 2; }
+.endereco-cidade { grid-column: span 3; }
+.endereco-uf { grid-column: span 1; }
+
+@media (max-width: 640px) {
+    .endereco-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .endereco-cep,
+    .endereco-rua,
+    .endereco-complemento,
+    .endereco-bairro,
+    .endereco-cidade {
+        grid-column: span 2;
+    }
+
+    .endereco-numero,
+    .endereco-uf {
+        grid-column: span 1;
+    }
+}

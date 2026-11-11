@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { finalizarCompra } from "../../services/api.js";
+import { finalizarCompra, buscarEndereco } from "../../services/api.js";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
 import { IconesCarrinho } from "../../components/icons/IconesCarrinho.jsx";
@@ -38,6 +38,7 @@ export default function CarrinhoPage() {
   const [avisos, setAvisos] = useState([]);
   const [finalizando, setFinalizando] = useState(false);
   const [pedidoConcluido, setPedidoConcluido] = useState(null);
+  const [semEndereco, setSemEndereco] = useState(false);
 
   // Estado da busca do header (mesmo padrão da página de Produtos)
   const [busca, setBusca] = useState("");
@@ -91,14 +92,27 @@ export default function CarrinhoPage() {
     }
 
     setErro("");
+    setSemEndereco(false);
     setFinalizando(true);
 
     try {
+      // O pedido precisa de um endereço de entrega cadastrado
+      const { endereco } = await buscarEndereco();
+      if (!endereco) {
+        setSemEndereco(true);
+        return;
+      }
+
       const resposta = await finalizarCompra(itens, lerIdCliente());
       setPedidoConcluido(resposta);
       limparCarrinho();
       setAvisos([]);
     } catch (err) {
+      if (err.codigo === "ENDERECO_OBRIGATORIO") {
+        setSemEndereco(true);
+        return;
+      }
+
       setErro(err.message || "Erro ao finalizar a compra.");
 
       // Provável causa: estoque/preço mudou. Atualiza o carrinho com o que a API tem agora.
@@ -154,6 +168,15 @@ export default function CarrinhoPage() {
       </div>
 
       {erro && <div className="carrinho-erro">{erro}</div>}
+
+      {semEndereco && (
+        <div className="carrinho-erro carrinho-erro--acao">
+          <span>Cadastre um endereço de entrega para finalizar o seu pedido.</span>
+          <button type="button" onClick={() => navigate("/minhaconta?voltar=carrinho")}>
+            Cadastrar endereço
+          </button>
+        </div>
+      )}
 
       {avisos.length > 0 && (
         <div className="carrinho-avisos">

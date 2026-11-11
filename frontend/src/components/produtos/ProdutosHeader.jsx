@@ -39,7 +39,7 @@ export const ProdutosHeader = ({ busca, setBusca, onSubmitBusca }) => {
             className="produtos-account"
             onClick={() => {
               if (localStorage.getItem("payload")) {
-                navigate("/pedidos");
+                navigate("/pedidosProdutos");
               } else {
                 navigate("/login");
               }

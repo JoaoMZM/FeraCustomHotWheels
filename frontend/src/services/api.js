@@ -177,6 +177,7 @@ async function request(endpoint, options = {}) {
     const mensagemErro = getErrorMessage(error, 'Erro ao processar requisição.');
     const erro = new Error(mensagemErro);
     erro.status = error.response?.status;
+    erro.codigo = error.response?.data?.codigo;
     throw erro;
   }
 }
@@ -237,6 +238,20 @@ export const listarPedidos = async () => {
   return await request('/pedidos');
 };
 
+/**
+ * Lista todos os pedidos para o painel do administrador.
+ * Cada pedido vem com cliente, telefone, endereço(s) e itens.
+ */
+export const listarPedidosAdmin = () => api.get('/admin/pedidos');
+
+/**
+ * Atualiza o status de um pedido (somente administrador).
+ * @param {number|string} idPedido
+ * @param {string} statusPedido - Pendente | Em Processamento | Enviado | Entregue | Cancelado
+ */
+export const atualizarStatusPedidoAdmin = (idPedido, statusPedido) =>
+  api.patch(`/admin/pedidos/${idPedido}/status`, { statusPedido });
+
 export const logoutAdmin = async () => {
   try {
     const response = await api.post('/admin/logout');
@@ -254,6 +269,25 @@ export const buscarCliente = async (id) => {
 
 export const atualizarCliente = async (id, dados) => {
   return await request(`/clientes/${id}`, {
+    method: 'PUT',
+    data: dados,
+  });
+};
+
+/**
+ * Endereço de entrega do cliente logado.
+ * @returns {Promise<{ endereco: object|null }>}
+ */
+export const buscarEndereco = async () => {
+  return await request('/enderecos');
+};
+
+/**
+ * Cria ou atualiza o endereço de entrega do cliente logado.
+ * @param {{ cep: string, rua: string, numero: string, bairro: string, cidade: string, uf: string, complemento?: string }} dados
+ */
+export const salvarEndereco = async (dados) => {
+  return await request('/enderecos', {
     method: 'PUT',
     data: dados,
   });

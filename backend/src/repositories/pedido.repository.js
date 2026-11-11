@@ -170,8 +170,10 @@ const pedidoRepository = {
         }
     },
 
+    // Lista todos os pedidos para o painel do administrador.
+    // Cada pedido já vem com: dados do cliente, telefone, endereço(s) e itens.
     listarPedidosAdmin: async () => {
-        const sql = `
+        const sqlPedidos = `
         SELECT 
             p.id_pedido,
             p.status_pedido,
@@ -179,13 +181,100 @@ const pedidoRepository = {
             p.valor_total,
             p.id_cliente,
             c.nome AS nome_cliente,
-            c.email AS email_cliente
+            c.email AS email_cliente,
+            c.cpf AS cpf_cliente
         FROM pedidos p
         LEFT JOIN clientes c ON p.id_cliente = c.id_cliente
-        ORDER BY p.data_pedido DESC;
+        ORDER BY p.data_pedido DESC, p.id_pedido DESC;
     `;
-        const [pedidos] = await db.execute(sql);
-        return pedidos;
+        const [pedidos] = await db.execute(sqlPedidos);
+
+        if (pedidos.length === 0) {
+            return [];
+        }
+
+        const idsPedidos = pedidos.map((pedido) => pedido.id_pedido);
+        const idsClientes = [...new Set(
+            pedidos.map((pedido) => pedido.id_cliente).filter(Boolean)
+        )];
+
+        // Itens de todos os pedidos listados (com nome e imagem do produto)
+        const sqlItens = `
+        SELECT
+            ip.id_item_pedido,
+            ip.id_pedido,
+            ip.id_produto,
+            ip.quantidade,
+            ip.preco_unitario,
+            ip.subtotal,
+            pr.nome AS nome_produto,
+            pr.sku AS sku_produto,
+            pr.imagem_produto
+        FROM itens_pedido ip
+        LEFT JOIN produtos pr ON ip.id_produto = pr.id_produto
+        WHERE ip.id_pedido IN (?)
+        ORDER BY ip.id_item_pedido ASC;
+    `;
+        const [itens] = await db.query(sqlItens, [idsPedidos]);
+
+        // Endereços e telefones dos clientes que fizeram os pedidos
+        let enderecos = [];
+        let telefones = [];
+
+        if (idsClientes.length > 0) {
+            const sqlEnderecos = `
+            SELECT
+                id_endereco,
+                id_cliente,
+                rua,
+                numero,
+                bairro,
+                cidade,
+                uf,
+                cep,
+                complemento
+            FROM enderecos
+            WHERE id_cliente IN (?);
+        `;
+            [enderecos] = await db.query(sqlEnderecos, [idsClientes]);
+
+            const sqlTelefones = `
+            SELECT id_cliente, numero
+            FROM telefones
+            WHERE id_cliente IN (?);
+        `;
+            [telefones] = await db.query(sqlTelefones, [idsClientes]);
+        }
+
+        const itensPorPedido = new Map();
+        for (const item of itens) {
+            if (!itensPorPedido.has(item.id_pedido)) {
+                itensPorPedido.set(item.id_pedido, []);
+            }
+            itensPorPedido.get(item.id_pedido).push(item);
+        }
+
+        const enderecosPorCliente = new Map();
+        for (const endereco of enderecos) {
+            if (!enderecosPorCliente.has(endereco.id_cliente)) {
+                enderecosPorCliente.set(endereco.id_cliente, []);
+            }
+            enderecosPorCliente.get(endereco.id_cliente).push(endereco);
+        }
+
+        const telefonePorCliente = new Map();
+        for (const telefone of telefones) {
+            if (!telefonePorCliente.has(telefone.id_cliente)) {
+                telefonePorCliente.set(telefone.id_cliente, telefone.numero);
+            }
+        }
+
+        return pedidos.map((pedido) => ({
+            ...pedido,
+            telefone_cliente: telefonePorCliente.get(pedido.id_cliente) ?? null,
+            enderecos: enderecosPorCliente.get(pedido.id_cliente) ?? [],
+            itens: itensPorPedido.get(pedido.id_pedido) ?? []
+        }));
     },
 
     atualizarStatusPedido: async (idPedido, novoStatus) => {

@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import { IconesProdutos } from "../../components/icons/IconesProdutos.jsx";
+import AdminHeader from "../../components/admin/AdminHeader.jsx";
 import { useAdminProdutos } from "../../hooks/useAdminProdutos.jsx";
 import "./admin-produtos.page.css";
 
 export default function AdminProdutosPage() {
-  const navigate = useNavigate();
-
   const {
     produtos,
     categorias,
@@ -27,23 +25,7 @@ export default function AdminProdutosPage() {
 
   return (
     <div className="admin-produtos-page">
-      <header className="admin-header">
-        <div className="admin-header-inner">
-          <div className="admin-logo" onClick={() => navigate("/")}>
-            <img src="..\..\public\FeraCustomLogo.jpg" alt="Fera Custom Logo" />
-            <strong>FERA CUSTOM</strong>
-            <span className="badge-admin">Painel Admin</span>
-          </div>
-
-          <button
-            type="button"
-            className="btn-voltar-loja"
-            onClick={() => navigate("/")}
-          >
-            Ir para a Loja
-          </button>
-        </div>
-      </header>
+      <AdminHeader />
 
       <main className="admin-content">
         <div className="admin-toolbar">

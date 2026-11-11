@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IconesProdutos } from '../../components/icons/IconesProdutos.jsx';
 import Alert from '../../components/common/Alert.jsx';
+import EnderecoForm from '../../components/minhaConta/EnderecoForm.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { buscarCliente, atualizarCliente, logoutCliente } from '../../services/api.js';
 import './minhaConta.page.css';
@@ -32,6 +33,7 @@ function formatarTelefone(telefone) {
 
 export default function MinhaContaPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { logado, setLogado } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -167,6 +169,13 @@ export default function MinhaContaPage() {
       setErro(error.message || 'Não foi possível salvar as alterações.');
     } finally {
       setSalvando(false);
+    }
+  }
+
+  // Quem veio do carrinho para cadastrar o endereço volta para finalizar a compra
+  function handleEnderecoSalvo() {
+    if (searchParams.get('voltar') === 'carrinho') {
+      navigate('/carrinho');
     }
   }
 
@@ -324,6 +333,8 @@ export default function MinhaContaPage() {
                 {salvando ? 'Salvando...' : 'Salvar alterações'}
               </button>
             </form>
+
+            <EnderecoForm onSalvo={handleEnderecoSalvo} />
 
             <div className="conta-card conta-sair">
               <div>

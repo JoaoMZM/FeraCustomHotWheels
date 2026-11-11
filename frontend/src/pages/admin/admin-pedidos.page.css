@@ -1,0 +1,167 @@
+/* Estilos específicos da aba de Pedidos do painel admin.
+   As variáveis (--bg-card, --border-color etc.) vêm de .admin-produtos-page */
+
+.admin-pedidos-status-abas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.status-aba {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 0.4rem 0.875rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.status-aba:hover {
+    color: var(--text-main);
+    border-color: var(--border-hover);
+}
+
+.status-aba.ativo {
+    color: var(--accent);
+    background-color: var(--accent-light);
+    border-color: var(--color-brand-tint-border);
+}
+
+.pedido-cliente-celula {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.pedido-cliente-celula small {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.badge-pedido {
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.badge-pedido.pendente,
+.badge-pedido.processando {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+    border-color: var(--color-warning-border);
+}
+
+.badge-pedido.enviado {
+    background-color: var(--color-subtle-bg);
+    color: var(--text-main);
+    border-color: var(--border-hover);
+}
+
+.badge-pedido.entregue {
+    background-color: var(--color-success-bg);
+    color: var(--color-success-text);
+    border-color: var(--color-success-border);
+}
+
+.badge-pedido.cancelado {
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger);
+    border-color: var(--color-danger-border);
+}
+
+.pedido-detalhes-linha > td {
+    background-color: var(--color-subtle-bg);
+    padding: 0;
+}
+
+.pedido-detalhes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    padding: 1.25rem 1rem;
+}
+
+.pedido-bloco {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+}
+
+.pedido-bloco h3 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin: 0 0 0.625rem;
+}
+
+.pedido-bloco p {
+    margin: 0 0 0.25rem;
+    font-size: 0.875rem;
+    color: var(--text-main);
+}
+
+.pedido-endereco {
+    font-style: normal;
+}
+
+.pedido-endereco + .pedido-endereco {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--border-color);
+}
+
+.pedido-sem-endereco {
+    color: var(--text-muted);
+}
+
+.pedido-itens-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pedido-itens-lista li {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.pedido-itens-lista li > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.pedido-itens-lista small {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.pedido-total-linha {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.875rem;
+}
+
+@media (max-width: 960px) {
+    .pedido-detalhes {
+        grid-template-columns: 1fr;
+    }
+}

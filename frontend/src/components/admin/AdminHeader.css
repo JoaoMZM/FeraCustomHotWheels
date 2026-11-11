@@ -1,0 +1,41 @@
+.admin-abas {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-right: auto;
+    margin-left: 1rem;
+}
+
+.admin-aba {
+    padding: 0.5rem 0.875rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.admin-aba:hover {
+    color: var(--text-main);
+    background-color: var(--color-subtle-bg);
+}
+
+.admin-aba.ativo {
+    color: var(--accent);
+    background-color: var(--accent-light);
+    border-color: var(--color-brand-tint-border);
+}
+
+@media (max-width: 720px) {
+    .admin-header-inner {
+        flex-wrap: wrap;
+    }
+
+    .admin-abas {
+        order: 3;
+        width: 100%;
+        margin: 0;
+    }
+}
