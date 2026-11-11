@@ -6,6 +6,8 @@ import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
 import { IconesCarrinho } from "../../components/icons/IconesCarrinho.jsx";
 import { CarrinhoItem } from "../../components/carrinho/CarrinhoItem.jsx";
 import { CarrinhoResumo } from "../../components/carrinho/CarrinhoResumo.jsx";
+import { EnderecoEntrega } from "../../components/carrinho/EnderecoEntrega.jsx";
+import { enderecoVazio, validarEnderecoForm, normalizarEnderecoForm } from "../../utils/endereco.js";
 import { PaginaLoja } from "../../components/common/PaginaLoja.jsx";
 import "./carrinho.page.css";
 import "./carrinho.extras.css";
@@ -36,7 +38,12 @@ export default function CarrinhoPage() {
   const [avisos, setAvisos] = useState([]);
   const [finalizando, setFinalizando] = useState(false);
   const [pedidoConcluido, setPedidoConcluido] = useState(null);
-  const [semEndereco, setSemEndereco] = useState(false);
+  // Endereço de entrega: o cadastrado em Minha Conta ou um informado só para este pedido
+  const [enderecoCadastrado, setEnderecoCadastrado] = useState(null);
+  const [carregandoEndereco, setCarregandoEndereco] = useState(false);
+  const [modoEntrega, setModoEntrega] = useState("cadastrado");
+  const [enderecoOutro, setEnderecoOutro] = useState(enderecoVazio());
+  const [erroEndereco, setErroEndereco] = useState("");
   const [erroPagamento, setErroPagamento] = useState("");
 
   // Estado da busca do header (mesmo padrão da página de Produtos)
@@ -58,6 +65,34 @@ export default function CarrinhoPage() {
       ativo = false;
     };
   }, [sincronizarCarrinho]);
+
+  // Com o cliente logado, busca o endereço cadastrado para oferecer como padrão
+  useEffect(() => {
+    if (logado !== true) return undefined;
+
+    let ativo = true;
+    setCarregandoEndereco(true);
+
+    buscarEndereco()
+      .then(({ endereco }) => {
+        if (!ativo) return;
+        setEnderecoCadastrado(endereco);
+        setModoEntrega(endereco ? "cadastrado" : "outro");
+      })
+      .catch(() => {
+        if (!ativo) return;
+        // Sem conseguir ler o cadastro, o cliente ainda pode informar um endereço
+        setEnderecoCadastrado(null);
+        setModoEntrega("outro");
+      })
+      .finally(() => {
+        if (ativo) setCarregandoEndereco(false);
+      });
+
+    return () => {
+      ativo = false;
+    };
+  }, [logado]);
 
   const handleRemover = (item) => {
     setErro("");
@@ -91,18 +126,28 @@ export default function CarrinhoPage() {
     }
 
     setErro("");
-    setSemEndereco(false);
+    setErroEndereco("");
+
+    // Endereço deste pedido: personalizado (enviado na requisição) ou o cadastrado
+    let enderecoPedido = null;
+
+    if (modoEntrega === "outro") {
+      const mensagem = validarEnderecoForm(enderecoOutro);
+      if (mensagem) {
+        setErroEndereco(mensagem);
+        return;
+      }
+      enderecoPedido = normalizarEnderecoForm(enderecoOutro);
+    } else if (!enderecoCadastrado) {
+      setModoEntrega("outro");
+      setErroEndereco("Informe um endereço de entrega para continuar.");
+      return;
+    }
+
     setFinalizando(true);
 
     try {
-      // O pedido precisa de um endereço de entrega cadastrado
-      const { endereco } = await buscarEndereco();
-      if (!endereco) {
-        setSemEndereco(true);
-        return;
-      }
-
-      const resposta = await finalizarCompra(itens, lerIdCliente());
+      const resposta = await finalizarCompra(itens, lerIdCliente(), enderecoPedido);
       limparCarrinho();
       setAvisos([]);
 
@@ -117,8 +162,12 @@ export default function CarrinhoPage() {
         setPedidoConcluido(resposta);
       }
     } catch (err) {
-      if (err.codigo === "ENDERECO_OBRIGATORIO") {
-        setSemEndereco(true);
+      if (err.codigo === "ENDERECO_OBRIGATORIO" || err.codigo === "ENDERECO_INVALIDO") {
+        if (err.codigo === "ENDERECO_OBRIGATORIO") {
+          setEnderecoCadastrado(null);
+          setModoEntrega("outro");
+        }
+        setErroEndereco(err.message);
         return;
       }
 
@@ -177,15 +226,6 @@ export default function CarrinhoPage() {
 
       {erro && <div className="carrinho-erro">{erro}</div>}
 
-      {semEndereco && (
-        <div className="carrinho-erro carrinho-erro--acao">
-          <span>Cadastre um endereço de entrega para finalizar o seu pedido.</span>
-          <button type="button" onClick={() => navigate("/minhaconta?voltar=carrinho")}>
-            Cadastrar endereço
-          </button>
-        </div>
-      )}
-
       {avisos.length > 0 && (
         <div className="carrinho-avisos">
           {avisos.map((aviso, indice) => (
@@ -239,17 +279,38 @@ export default function CarrinhoPage() {
         </div>
       ) : (
         <div className="carrinho-content">
-          <div className="carrinho-lista">
-            {itens.map((item) => (
-              <CarrinhoItem
-                key={item.id}
-                item={item}
-                onAlterarQuantidade={handleAlterarQuantidade}
-                onRemover={handleRemover}
-                atualizandoId={null}
-                removendoId={null}
+          <div className="carrinho-coluna">
+            <div className="carrinho-lista">
+              {itens.map((item) => (
+                <CarrinhoItem
+                  key={item.id}
+                  item={item}
+                  onAlterarQuantidade={handleAlterarQuantidade}
+                  onRemover={handleRemover}
+                  atualizandoId={null}
+                  removendoId={null}
+                />
+              ))}
+            </div>
+
+            {logado === true && (
+              <EnderecoEntrega
+                carregando={carregandoEndereco}
+                enderecoCadastrado={enderecoCadastrado}
+                modo={modoEntrega}
+                onMudarModo={(modo) => {
+                  setModoEntrega(modo);
+                  setErroEndereco("");
+                }}
+                dados={enderecoOutro}
+                onMudarDados={(novos) => {
+                  setEnderecoOutro(novos);
+                  if (erroEndereco) setErroEndereco("");
+                }}
+                erro={erroEndereco}
+                onCadastrarEndereco={() => navigate("/minhaconta?voltar=carrinho")}
               />
-            ))}
+            )}
           </div>
 
           <CarrinhoResumo
@@ -257,7 +318,7 @@ export default function CarrinhoPage() {
             total={totalPreco}
             onFinalizar={handleFinalizarCompra}
             finalizando={finalizando}
-            desabilitado={itens.length === 0 || logado === null}
+            desabilitado={itens.length === 0 || logado === null || carregandoEndereco}
             exigeLogin={logado === false}
           />
         </div>

@@ -3,6 +3,7 @@ import { ItensPedidos } from "../models/Itens_pedido.js";
 import { Pedido } from "../models/Pedidos.js";
 import { produtoRepository } from "../repositories/produto.repository.js";
 import enderecoRepository from "../repositories/endereco.repository.js";
+import { validarEndereco } from "../utils/validarEndereco.js";
 
 const pedidoControllers = {
 
@@ -16,14 +17,38 @@ const pedidoControllers = {
                 return res.status(400).json({ message: "O pedido deve conter pelo menos um item." });
             }
 
-            // O pedido só pode ser feito por quem tem endereço de entrega cadastrado.
-            const enderecoCliente = await enderecoRepository.buscarPorCliente(idCliente);
+            // Endereço de entrega do pedido:
+            //  - se o cliente enviou "endereco", é um endereço personalizado só para este pedido;
+            //  - senão, usa o endereço cadastrado em Minha Conta (obrigatório nesse caso).
+            let enderecoEntrega;
 
-            if (!enderecoCliente) {
-                return res.status(400).json({
-                    codigo: "ENDERECO_OBRIGATORIO",
-                    message: "Cadastre um endereço de entrega em Minha Conta antes de finalizar o pedido."
-                });
+            if (req.body.endereco !== undefined && req.body.endereco !== null) {
+                const { erro, endereco } = validarEndereco(req.body.endereco);
+
+                if (erro) {
+                    return res.status(400).json({ codigo: "ENDERECO_INVALIDO", message: erro });
+                }
+
+                enderecoEntrega = endereco;
+            } else {
+                const enderecoCliente = await enderecoRepository.buscarPorCliente(idCliente);
+
+                if (!enderecoCliente) {
+                    return res.status(400).json({
+                        codigo: "ENDERECO_OBRIGATORIO",
+                        message: "Cadastre um endereço em Minha Conta ou informe um endereço de entrega para finalizar o pedido."
+                    });
+                }
+
+                enderecoEntrega = {
+                    rua: enderecoCliente.rua,
+                    numero: enderecoCliente.numero,
+                    bairro: enderecoCliente.bairro,
+                    cidade: enderecoCliente.cidade,
+                    uf: enderecoCliente.uf,
+                    cep: enderecoCliente.cep,
+                    complemento: enderecoCliente.complemento ?? null
+                };
             }
 
             // Valida cada item e junta duplicados (mesmo produto enviado duas vezes)
@@ -76,7 +101,7 @@ const pedidoControllers = {
 
             const valorTotal = ItensPedidos.calcularValorTotal(itensPedidos);
 
-            const pedido = Pedido.criar({ valorTotal, idCliente });
+            const pedido = Pedido.criar({ valorTotal, idCliente, enderecoEntrega });
 
             const result = await pedidoRepository.criarPedido(pedido, itensPedidos);
 

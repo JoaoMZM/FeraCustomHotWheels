@@ -7,15 +7,28 @@ const pedidoRepository = {
         try {
             await connection.beginTransaction();
 
+            // Endereço de entrega gravado junto com o pedido (histórico não muda se o cliente editar o cadastro)
+            const entrega = pedido.enderecoEntrega ?? {};
+
             const sqlPedido = `
-            INSERT INTO pedidos (valor_total, status_pedido, id_cliente) 
-            VALUES (?, ?, ?);
+            INSERT INTO pedidos (
+                valor_total, status_pedido, id_cliente,
+                entrega_rua, entrega_numero, entrega_bairro, entrega_cidade,
+                entrega_uf, entrega_cep, entrega_complemento
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         `;
-            console.log(pedido.idCliente);
             const [resultPedido] = await connection.execute(sqlPedido, [
                 pedido.valorTotal,
                 pedido.status,
-                pedido.idCliente
+                pedido.idCliente,
+                entrega.rua ?? null,
+                entrega.numero ?? null,
+                entrega.bairro ?? null,
+                entrega.cidade ?? null,
+                entrega.uf ?? null,
+                entrega.cep ?? null,
+                entrega.complemento ?? null
             ]);
 
             const idPedido = resultPedido.insertId;
@@ -219,6 +232,13 @@ const pedidoRepository = {
             p.data_pedido,
             p.valor_total,
             p.id_cliente,
+            p.entrega_rua,
+            p.entrega_numero,
+            p.entrega_bairro,
+            p.entrega_cidade,
+            p.entrega_uf,
+            p.entrega_cep,
+            p.entrega_complemento,
             c.nome AS nome_cliente,
             c.email AS email_cliente,
             c.cpf AS cpf_cliente
@@ -308,12 +328,36 @@ const pedidoRepository = {
             }
         }
 
-        return pedidos.map((pedido) => ({
-            ...pedido,
-            telefone_cliente: telefonePorCliente.get(pedido.id_cliente) ?? null,
-            enderecos: enderecosPorCliente.get(pedido.id_cliente) ?? [],
-            itens: itensPorPedido.get(pedido.id_pedido) ?? []
-        }));
+        return pedidos.map((pedido) => {
+            // Pedidos novos guardam o endereço de entrega; pedidos antigos (sem esse dado)
+            // usam o endereço atual do cadastro do cliente.
+            const temEnderecoNoPedido = Boolean(pedido.entrega_rua);
+
+            const enderecosDoPedido = temEnderecoNoPedido
+                ? [{
+                    id_endereco: `pedido-${pedido.id_pedido}`,
+                    rua: pedido.entrega_rua,
+                    numero: pedido.entrega_numero,
+                    bairro: pedido.entrega_bairro,
+                    cidade: pedido.entrega_cidade,
+                    uf: pedido.entrega_uf,
+                    cep: pedido.entrega_cep,
+                    complemento: pedido.entrega_complemento
+                }]
+                : (enderecosPorCliente.get(pedido.id_cliente) ?? []);
+
+            let enderecoOrigem = null;
+            if (temEnderecoNoPedido) enderecoOrigem = 'pedido';
+            else if (enderecosDoPedido.length > 0) enderecoOrigem = 'cadastro';
+
+            return {
+                ...pedido,
+                telefone_cliente: telefonePorCliente.get(pedido.id_cliente) ?? null,
+                endereco_origem: enderecoOrigem,
+                enderecos: enderecosDoPedido,
+                itens: itensPorPedido.get(pedido.id_pedido) ?? []
+            };
+        });
     },
 
     atualizarStatusPedido: async (idPedido, novoStatus) => {

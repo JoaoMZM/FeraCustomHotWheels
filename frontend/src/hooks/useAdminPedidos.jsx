@@ -51,6 +51,7 @@ export function useAdminPedidos() {
         cpf: p.cpf_cliente || "",
         telefone: p.telefone_cliente || "",
       },
+      enderecoOrigem: p.endereco_origem || null,
       enderecos: (p.enderecos || []).map((e) => ({
         id: e.id_endereco,
         rua: e.rua,

@@ -6,8 +6,9 @@ export class Pedido {
     #dataPedido;
     #idCliente;
     #valorTotal;
+    #enderecoEntrega;
 
-    constructor({ status = Status.PENDENTE, idCliente = null, dataPedido = new Date(), valorTotal = 0, id = null }) {
+    constructor({ status = Status.PENDENTE, idCliente = null, dataPedido = new Date(), valorTotal = 0, id = null, enderecoEntrega = null }) {
         this.#validarStatusPedido(status);
         if (idCliente !== null) this.#validarIdCliente(idCliente);
         if (id !== null) this.#validarId(id);
@@ -18,6 +19,7 @@ export class Pedido {
         this.#dataPedido = dataPedido;
         this.#valorTotal = valorTotal;
         this.#id = id;
+        this.#enderecoEntrega = enderecoEntrega;
     }
 
     get id() {
@@ -42,6 +44,11 @@ export class Pedido {
 
     get valorTotal() {
         return this.#valorTotal;
+    }
+
+    // Endereço de entrega deste pedido (cópia do cadastro ou endereço informado no checkout)
+    get enderecoEntrega() {
+        return this.#enderecoEntrega;
     }
 
     set status(value) {
@@ -90,7 +97,8 @@ export class Pedido {
             status: dados.status || dados.statusPedido || Status.PENDENTE,
             idCliente: dados.idCliente || null,
             dataPedido: dados.dataPedido || new Date(),
-            valorTotal: dados.valorTotal
+            valorTotal: dados.valorTotal,
+            enderecoEntrega: dados.enderecoEntrega || null
         });
     }
 

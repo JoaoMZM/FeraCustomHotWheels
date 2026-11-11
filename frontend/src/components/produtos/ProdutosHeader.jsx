@@ -3,6 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { IconesProdutos } from "../icons/IconesProdutos";
 
 import useTheme from "../../hooks/useTheme";
+import { useAuth } from "../../contexts/AuthContext.jsx";
+
+// Conta de administrador logada? (o login salva o payload com role "admin")
+const lerAdmin = () => {
+  try {
+    return JSON.parse(localStorage.getItem("admin_payload"))?.role === "admin";
+  } catch {
+    return false;
+  }
+};
 
 // O cabeçalho funciona sozinho em qualquer página: se a página não controlar a
 // busca (props), ele guarda o texto e leva o usuário ao catálogo (/?busca=...).
@@ -10,6 +20,11 @@ export const ProdutosHeader = ({ busca: buscaExterna, setBusca: setBuscaExterna,
   const navigate = useNavigate();
   const { tema, alternarTema } = useTheme();
   const [buscaInterna, setBuscaInterna] = useState("");
+  const { logado } = useAuth();
+
+  // Enquanto a sessão é verificada (logado === null), usa o que está salvo no navegador
+  const estaLogado = logado ?? Boolean(localStorage.getItem("payload"));
+  const ehAdmin = estaLogado && lerAdmin();
 
   const controlado = typeof setBuscaExterna === "function";
   const busca = controlado ? buscaExterna ?? "" : buscaInterna;
@@ -50,23 +65,35 @@ export const ProdutosHeader = ({ busca: buscaExterna, setBusca: setBuscaExterna,
         </form>
 
         <div className="produtos-header-actions">
+          {/* Só para administradores: volta ao painel */}
+          {ehAdmin && (
+            <button
+              type="button"
+              className="produtos-account produtos-account--admin"
+              onClick={() => navigate("/admin/produtos")}
+              title="Voltar ao painel do administrador"
+            >
+              <div className="produtos-account-avatar">
+                <IconesProdutos name="box" size={18} />
+              </div>
+
+              <span className="produtos-account-text">
+                <strong>Painel Admin</strong>
+              </span>
+            </button>
+          )}
+
           <button
             type="button"
             className="produtos-account"
-            onClick={() => {
-              if (localStorage.getItem("payload")) {
-                navigate("/minhaconta");
-              } else {
-                navigate("/login");
-              }
-            }}
+            onClick={() => navigate(estaLogado ? "/minhaconta" : "/login")}
           >
             <div className="produtos-account-avatar">
               <IconesProdutos name="user" size={18} />
             </div>
 
             <span className="produtos-account-text">
-              <strong>Minha Conta</strong>
+              <strong>{estaLogado ? "Minha Conta" : "Faça Login"}</strong>
             </span>
           </button>
 

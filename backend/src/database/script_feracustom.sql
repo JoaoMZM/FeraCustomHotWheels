@@ -156,6 +156,13 @@ CREATE TABLE `pedidos` (
   `data_pedido` datetime DEFAULT CURRENT_TIMESTAMP,
   `valor_total` decimal(10,2) NOT NULL DEFAULT '0.00',
   `id_cliente` char(36) DEFAULT NULL,
+  `entrega_rua` varchar(100) DEFAULT NULL,
+  `entrega_numero` varchar(20) DEFAULT NULL,
+  `entrega_bairro` varchar(100) DEFAULT NULL,
+  `entrega_cidade` varchar(100) DEFAULT NULL,
+  `entrega_uf` char(2) DEFAULT NULL,
+  `entrega_cep` char(8) DEFAULT NULL,
+  `entrega_complemento` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_pedido`),
   KEY `fk_pedido_cliente` (`id_cliente`),
   CONSTRAINT `fk_pedido_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL

@@ -217,8 +217,11 @@ export const listarProdutosAdmin = () => api.get("/admin/produtos");
  * O backend recalcula preços e confere o estoque a partir do banco.
  * @param {Array<{ id: string, quantidade: number }>} itens
  * @param {string|null} idCliente - id (UUID) do cliente logado
+ * @param {object|null} endereco - endereço personalizado só para este pedido
+ *        ({ cep, rua, numero, bairro, cidade, uf, complemento }). Sem ele, o backend
+ *        usa o endereço cadastrado em Minha Conta.
  */
-export const finalizarCompra = async (itens, idCliente = null) => {
+export const finalizarCompra = async (itens, idCliente = null, endereco = null) => {
   const corpo = {
     itens: itens.map((item) => ({
       idProduto: String(item.id),
@@ -227,6 +230,7 @@ export const finalizarCompra = async (itens, idCliente = null) => {
   };
 
   if (idCliente) corpo.idCliente = idCliente;
+  if (endereco) corpo.endereco = endereco;
 
   return await request('/pedidos', {
     method: 'POST',

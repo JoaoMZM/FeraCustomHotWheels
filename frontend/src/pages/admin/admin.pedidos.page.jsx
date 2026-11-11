@@ -215,9 +215,14 @@ export default function AdminPedidosPage() {
 
                                 <section className="pedido-bloco">
                                   <h3>Endereço de entrega</h3>
+                                  {pedido.enderecoOrigem === "cadastro" && (
+                                    <p className="pedido-sem-endereco">
+                                      Pedido sem endereço próprio: mostrando o endereço atual do cadastro do cliente.
+                                    </p>
+                                  )}
                                   {pedido.enderecos.length === 0 ? (
                                     <p className="pedido-sem-endereco">
-                                      Este cliente não possui endereço cadastrado.
+                                      Este pedido não tem endereço de entrega.
                                     </p>
                                   ) : (
                                     pedido.enderecos.map((endereco) => {
