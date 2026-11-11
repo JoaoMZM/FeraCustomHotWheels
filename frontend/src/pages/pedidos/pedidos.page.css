@@ -1,27 +1,7 @@
-/* ==========================================
-   PÁGINA DE PEDIDOS
-   (o header usa as classes .produtos-* do style.css,
-   as cores usam as mesmas variáveis --prod-* do tema)
-   ========================================== */
-
-.pedidos-content {
-    max-width: 900px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 24px 24px 80px;
-}
-
-.pedidos-titulo {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--prod-text);
-    margin-bottom: 20px;
-}
-
 .pedidos-abas {
     display: flex;
     gap: 16px;
-    border-bottom: 1px solid var(--prod-border);
+    border-bottom: 1px solid var(--color-border);
     margin-bottom: 20px;
     overflow-x: auto;
 }
@@ -33,24 +13,24 @@
     padding: 10px 4px;
     font-size: 13.5px;
     font-weight: 500;
-    color: var(--prod-text-muted);
+    color: var(--color-muted);
     cursor: pointer;
     white-space: nowrap;
 }
 
 .pedidos-aba:hover {
-    color: var(--prod-text);
+    color: var(--color-ink);
 }
 
 .pedidos-aba.ativo {
-    color: var(--prod-red);
+    color: var(--color-brand);
     font-weight: 700;
-    border-bottom-color: var(--prod-red);
+    border-bottom-color: var(--color-brand);
 }
 
 .pedido-card {
-    background: var(--prod-surface);
-    border: 1px solid var(--prod-border);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 16px;
@@ -67,7 +47,7 @@
 .pedido-data {
     margin-left: 12px;
     font-size: 12px;
-    color: var(--prod-text-muted);
+    color: var(--color-muted);
 }
 
 .pedido-status {
@@ -78,18 +58,18 @@
 }
 
 .pedido-status--aberto {
-    background: var(--prod-warn-bg);
-    color: var(--prod-warn-text);
+    background: var(--color-warning-bg);
+    color: var(--color-warning);
 }
 
 .pedido-status--finalizado {
-    background: var(--prod-success-bg);
-    color: var(--prod-success-text);
+    background: var(--color-success-bg);
+    color: var(--color-success-text);
 }
 
 .pedido-status--cancelado {
-    background: var(--prod-cancel-bg);
-    color: var(--prod-cancel-text);
+    background: var(--color-danger-bg);
+    color: var(--color-danger);
 }
 
 .pedido-resumo {
@@ -98,7 +78,7 @@
     align-items: center;
     gap: 12px;
     font-size: 14px;
-    color: var(--prod-text-body);
+    color: var(--color-text-body);
 }
 
 .pedido-resumo-direita {
@@ -109,15 +89,15 @@
 
 .pedido-total {
     font-size: 16px;
-    color: var(--prod-text);
+    color: var(--color-ink);
 }
 
 .pedidos-botao {
     padding: 8px 16px;
     border-radius: 6px;
-    border: 1px solid var(--prod-red);
-    background: var(--prod-surface);
-    color: var(--prod-red);
+    border: 1px solid var(--color-brand);
+    background: var(--color-bg-card);
+    color: var(--color-brand);
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
@@ -128,14 +108,14 @@
 }
 
 .pedidos-botao:hover {
-    background: var(--prod-red);
-    color: var(--prod-on-accent);
+    background: var(--color-brand);
+    color: var(--color-on-ink);
 }
 
 .pedido-itens {
     margin-top: 14px;
     padding-top: 14px;
-    border-top: 1px solid var(--prod-subtle-bg);
+    border-top: 1px solid var(--color-subtle-bg);
 }
 
 .pedido-item {
@@ -149,7 +129,7 @@
     width: 56px;
     height: 56px;
     object-fit: contain;
-    border: 1px solid var(--prod-subtle-bg);
+    border: 1px solid var(--color-subtle-bg);
     border-radius: 8px;
 }
 
@@ -158,20 +138,20 @@
     display: flex;
     flex-direction: column;
     font-size: 14px;
-    color: var(--prod-text);
+    color: var(--color-ink);
 }
 
 .pedido-item-info small {
-    color: var(--prod-text-muted);
+    color: var(--color-muted);
     font-size: 12px;
 }
 
 .pedidos-mensagem {
     text-align: center;
     padding: 48px 20px;
-    color: var(--prod-text-muted);
+    color: var(--color-muted);
     font-size: 14px;
-    border: 1px dashed var(--prod-border);
+    border: 1px dashed var(--color-border);
     border-radius: 12px;
 }
 
@@ -190,3 +170,10 @@
         justify-content: space-between;
     }
 }
+.pedidos-botao--pagar {
+  background: var(--color-brand);
+  color: #fff;
+  border-color: var(--color-brand);
+}
+.pedidos-botao--pagar:hover:not(:disabled) { background: var(--color-brand-hover); }
+.pedidos-botao--pagar:disabled { opacity: 0.6; cursor: wait; }

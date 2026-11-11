@@ -305,3 +305,53 @@ export const logoutCliente = async () => {
     localStorage.removeItem('admin_payload');
   }
 };
+
+/* ------------------------------------------------------------------ */
+/* Pagamento (Mercado Pago)                                           */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Cria o checkout do pedido e devolve { urlPagamento }.
+ * O cliente é enviado para essa URL para pagar (Pix, cartão, boleto...).
+ */
+export const criarCheckoutPagamento = async (idPedido) => {
+  return await request(`/pagamentos/pedidos/${idPedido}/checkout`, { method: 'POST' });
+};
+
+/** Confirma no servidor (direto no Mercado Pago) o resultado do pagamento do pedido. */
+export const sincronizarPagamento = async (idPedido) => {
+  return await request(`/pagamentos/pedidos/${idPedido}/sincronizar`, { method: 'POST' });
+};
+
+/* ------------------------------------------------------------------ */
+/* Chat do produto (cliente <-> vendedor)                             */
+/* `_silent` evita redirecionar para o login durante o polling.       */
+/* ------------------------------------------------------------------ */
+
+export const buscarConversaDoProduto = async (idProduto, apos = 0) => {
+  return await request(`/chat/produtos/${idProduto}`, { params: { apos }, _silent: true });
+};
+
+export const enviarMensagemProduto = async (idProduto, texto) => {
+  return await request(`/chat/produtos/${idProduto}/mensagens`, {
+    method: 'POST',
+    data: { texto },
+    _silent: true,
+  });
+};
+
+export const listarConversasAdmin = async () => {
+  return await request('/chat/admin/conversas', { _silent: true });
+};
+
+export const buscarMensagensAdmin = async (idConversa, apos = 0) => {
+  return await request(`/chat/admin/conversas/${idConversa}/mensagens`, { params: { apos }, _silent: true });
+};
+
+export const enviarMensagemAdmin = async (idConversa, texto) => {
+  return await request(`/chat/admin/conversas/${idConversa}/mensagens`, {
+    method: 'POST',
+    data: { texto },
+    _silent: true,
+  });
+};

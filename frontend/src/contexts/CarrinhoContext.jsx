@@ -9,17 +9,13 @@ export const CarrinhoContext = createContext(null);
 export function CarrinhoProvider({ children }) {
   const [itens, setItens] = useState(lerCarrinho);
 
-  // Referência sempre atualizada: permite várias ações seguidas (cliques rápidos)
-  // sem depender do ciclo de renderização do React.
   const itensRef = useRef(itens);
 
-  // Persiste no localStorage a cada mudança
   useEffect(() => {
     itensRef.current = itens;
     salvarCarrinho(itens);
   }, [itens]);
 
-  // Mantém várias abas abertas sincronizadas
   useEffect(() => {
     const aoMudarStorage = (evento) => {
       if (evento.key === CHAVE_CARRINHO || evento.key === null) {
@@ -222,7 +218,6 @@ export function CarrinhoProvider({ children }) {
     [itens]
   );
 
-  // Soma em centavos para evitar erros de ponto flutuante (0.1 + 0.2)
   const totalPreco = useMemo(
     () =>
       itens.reduce((soma, item) => soma + Math.round(item.preco * 100) * item.quantidade, 0) / 100,

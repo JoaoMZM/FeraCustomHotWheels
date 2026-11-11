@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { IconesProdutos } from '../../components/icons/IconesProdutos.jsx';
+import { useNavigate } from 'react-router-dom';
+import { PaginaLoja } from '../../components/common/PaginaLoja.jsx';
 import Alert from '../../components/common/Alert.jsx';
 import EnderecoForm from '../../components/minhaConta/EnderecoForm.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { buscarCliente, atualizarCliente, logoutCliente } from '../../services/api.js';
 import './minhaConta.page.css';
+import { useSearchParams } from 'react-router-dom';
 
 function lerPayload() {
   try {
@@ -194,37 +195,9 @@ export default function MinhaContaPage() {
   const inicial = formData.nome ? formData.nome.trim().charAt(0).toUpperCase() : '?';
 
   return (
-    <div className="produtos-page">
-      <header className="produtos-header">
-        <div className="produtos-header-main">
-          <button
-            type="button"
-            className="produtos-logo"
-            onClick={() => navigate('/')}
-            aria-label="Ir para produtos"
-          >
-            <img src="/FeraCustomLogo.jpg" alt="Fera Custom" />
-            <strong>FERA CUSTOM</strong>
-          </button>
+    <PaginaLoja largura="estreito" titulo="Minha Conta">
+      <div className="conta-conteudo">
 
-          <div className="produtos-header-actions">
-            <button type="button" className="produtos-back" onClick={() => navigate('/')}>
-              Voltar para a loja
-            </button>
-            <button
-              type="button"
-              className="produtos-icon-button"
-              aria-label="Carrinho"
-              onClick={() => navigate('/carrinho')}
-            >
-              <IconesProdutos name="cart" size={20} />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="conta-content">
-        <h1 className="conta-titulo">Minha Conta</h1>
 
         {(logado === null || carregando) && !erro && (
           <p className="conta-mensagem">Carregando seus dados...</p>
@@ -361,7 +334,7 @@ export default function MinhaContaPage() {
             </button>
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </PaginaLoja>
   );
 }

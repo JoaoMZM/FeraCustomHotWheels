@@ -64,7 +64,7 @@ export function CarrinhoItem({
                 className="spinner"
                 aria-hidden="true"
                 style={{
-                  borderTopColor: "var(--prod-red)",
+                  borderTopColor: "var(--color-brand)",
                   borderColor: "rgba(227,6,19,0.2)",
                 }}
               />

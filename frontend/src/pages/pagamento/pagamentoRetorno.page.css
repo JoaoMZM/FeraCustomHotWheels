@@ -1,0 +1,30 @@
+@import url('../../styles/token.css');
+
+.pg-card {
+  width: 100%;
+  margin: 2rem auto 0;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-brand);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: 2.25rem 1.75rem;
+  text-align: center;
+}
+.pg-card h1 { font-size: 1.4rem; margin: 0.75rem 0 0.5rem; }
+.pg-card p { color: var(--color-muted); line-height: 1.5; margin: 0 0 0.75rem; }
+.pg-pedido { font-weight: 700; color: var(--color-ink) !important; }
+.pg-icone {
+  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto;
+  display: grid; place-items: center; font-size: 1.6rem; font-weight: 800;
+  background: var(--color-subtle-bg); color: var(--color-muted);
+}
+.pg-card--ok .pg-icone { background: var(--color-success-bg); color: var(--color-success-text); border: 1px solid var(--color-success-border); }
+.pg-card--espera .pg-icone { background: var(--color-warning-bg); color: var(--color-warning); border: 1px solid var(--color-warning-border); }
+.pg-card--erro .pg-icone { background: var(--color-danger-bg); color: var(--color-danger); border: 1px solid var(--color-danger-border); }
+.pg-acoes { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.25rem; }
+.pg-acoes button, .pg-card > button {
+  border: none; background: var(--color-brand); color: #ffffff;
+  padding: 0.8rem 1.25rem; border-radius: var(--radius-md); font-weight: 700; cursor: pointer;
+}
+.pg-acoes .pg-secundario { background: transparent; color: var(--color-ink); border: 1px solid var(--color-border-strong); }

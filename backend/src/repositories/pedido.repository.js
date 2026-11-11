@@ -92,6 +92,45 @@ const pedidoRepository = {
         return rows;
     },
 
+    listarPedidosDoCliente: async (idCliente) => {
+        const [pedidos] = await db.execute(
+            `SELECT p.id_pedido, p.status_pedido, p.data_pedido, p.valor_total,
+                    (SELECT pg.status_pagamento FROM pagamentos pg
+                     WHERE pg.id_pedido = p.id_pedido ORDER BY pg.id_pagamento DESC LIMIT 1) AS status_pagamento
+             FROM pedidos p
+             WHERE p.id_cliente = ?
+             ORDER BY p.data_pedido DESC, p.id_pedido DESC;`,
+            [idCliente]
+        );
+
+        if (pedidos.length === 0) return [];
+
+        const ids = pedidos.map((p) => p.id_pedido);
+        const [itens] = await db.query(
+            `SELECT i.id_pedido, i.quantidade, i.preco_unitario, pr.nome, pr.imagem_produto
+             FROM itens_pedido i
+             INNER JOIN produtos pr ON pr.id_produto = i.id_produto
+             WHERE i.id_pedido IN (?);`,
+            [ids]
+        );
+
+        return pedidos.map((p) => ({
+            id: p.id_pedido,
+            status: p.status_pedido,
+            data_pedido: p.data_pedido,
+            total: Number(p.valor_total),
+            status_pagamento: p.status_pagamento,
+            itens: itens
+                .filter((i) => i.id_pedido === p.id_pedido)
+                .map((i) => ({
+                    nome: i.nome,
+                    quantidade: i.quantidade,
+                    preco: Number(i.preco_unitario),
+                    imagem_produto: i.imagem_produto,
+                })),
+        }));
+    },
+
     selectPedidosId: async (id) => {
         const sql = "SELECT * FROM pedidos WHERE id_pedido = ?;";
         const [rows] = await db.execute(sql, [id]);

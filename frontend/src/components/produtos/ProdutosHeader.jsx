@@ -1,10 +1,26 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IconesProdutos } from "../icons/IconesProdutos";
+
 import useTheme from "../../hooks/useTheme";
 
-export const ProdutosHeader = ({ busca, setBusca, onSubmitBusca }) => {
+// O cabeçalho funciona sozinho em qualquer página: se a página não controlar a
+// busca (props), ele guarda o texto e leva o usuário ao catálogo (/?busca=...).
+export const ProdutosHeader = ({ busca: buscaExterna, setBusca: setBuscaExterna, onSubmitBusca }) => {
   const navigate = useNavigate();
   const { tema, alternarTema } = useTheme();
+  const [buscaInterna, setBuscaInterna] = useState("");
+
+  const controlado = typeof setBuscaExterna === "function";
+  const busca = controlado ? buscaExterna ?? "" : buscaInterna;
+  const setBusca = controlado ? setBuscaExterna : setBuscaInterna;
+
+  const enviarBusca = (e) => {
+    if (onSubmitBusca) return onSubmitBusca(e);
+    e.preventDefault();
+    const termo = buscaInterna.trim();
+    navigate(termo ? `/?busca=${encodeURIComponent(termo)}` : "/");
+  };
 
   return (
     <header className="produtos-header">
@@ -19,7 +35,7 @@ export const ProdutosHeader = ({ busca, setBusca, onSubmitBusca }) => {
           <strong>FERA CUSTOM</strong>
         </button>
 
-        <form className="produtos-search" onSubmit={onSubmitBusca}>
+        <form className="produtos-search" onSubmit={enviarBusca}>
           <input
             type="text"
             placeholder="Buscar miniaturas, linhas..."
@@ -39,7 +55,7 @@ export const ProdutosHeader = ({ busca, setBusca, onSubmitBusca }) => {
             className="produtos-account"
             onClick={() => {
               if (localStorage.getItem("payload")) {
-                navigate("/pedidosProdutos");
+                navigate("/minhaconta");
               } else {
                 navigate("/login");
               }
@@ -50,9 +66,18 @@ export const ProdutosHeader = ({ busca, setBusca, onSubmitBusca }) => {
             </div>
 
             <span className="produtos-account-text">
-              Minha Conta
-              <strong>Meus Pedidos</strong>
+              <strong>Minha Conta</strong>
             </span>
+          </button>
+
+          <button
+            type="button"
+            className="produtos-icon-button"
+            aria-label="Acompanhar Pedidos"
+            title="Acompanhar Pedidos"
+            onClick={() => navigate("/pedidosProdutos")}
+          >
+            <IconesProdutos name="truck" size={20} />
           </button>
 
           {/* Botão de modo claro/escuro */}

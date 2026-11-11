@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { listarPedidos } from '../../services/api.js';
+import { montarUrlImagem } from '../../utils/produtos.js';
 
 export default function usePedidos() {
   const [pedidos, setPedidos] = useState([]);
@@ -16,7 +17,16 @@ export default function usePedidos() {
       setErro('');
 
       const dados = await listarPedidos();
-      setPedidos(Array.isArray(dados) ? dados : dados.pedidos || []);
+      const lista = Array.isArray(dados) ? dados : dados.pedidos || [];
+      setPedidos(
+        lista.map((pedido) => ({
+          ...pedido,
+          itens: (pedido.itens || []).map((item) => ({
+            ...item,
+            imagem: item.imagem || montarUrlImagem(item.imagem_produto),
+          })),
+        }))
+      );
     } catch (error) {
       setErro(error.message || 'Não foi possível carregar seus pedidos.');
     } finally {

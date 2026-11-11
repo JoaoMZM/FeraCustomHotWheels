@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { listarCategorias, buscarProdutos } from "../../services/api.js";
 import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
 import { normalizarProduto, obterIdProduto } from "../../utils/produtos.js";
-import { Footer } from "../../components/common/Footer.jsx";
+import { PaginaLoja } from "../../components/common/PaginaLoja.jsx";
 import { ToastCarrinho } from "../../components/common/ToastCarrinho.jsx";
 import { IconesProdutos } from "../../components/icons/IconesProdutos.jsx";
-import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
 import { ProdutoCard } from "../../components/produtos/ProdutoCard.jsx";
 import { PainelFiltroModal } from "../../components/produtos/PainelFiltroModal.jsx";
 import "./produtos.page.css";
@@ -21,7 +20,8 @@ export default function ProdutosPage() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
-  const [busca, setBusca] = useState("");
+  const [searchParams] = useSearchParams();
+  const [busca, setBusca] = useState(() => searchParams.get("busca") || "");
   const [categoria, setCategoria] = useState("todas");
   const [precoMin, setPrecoMin] = useState("");
   const [precoMax, setPrecoMax] = useState("");
@@ -158,13 +158,11 @@ const produtosFiltrados = produtos.filter((produto) => {
     "Todos os Produtos";
 
   return (
-    <div className="produtos-page">
-      <ProdutosHeader
-        busca={busca}
-        setBusca={setBusca}
-        onSubmitBusca={handleSubmitBusca}
-      />
-
+    <PaginaLoja
+      classe="produtos-page"
+      semMain
+      header={{ busca, setBusca, onSubmitBusca: handleSubmitBusca }}
+    >
       <main className="produtos-content">
         <div className="produtos-toolbar-topo" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           <div className="produtos-breadcrumb">
@@ -281,14 +279,12 @@ const produtosFiltrados = produtos.filter((produto) => {
         </section>
       </main>
 
-      <Footer />
-
       <ToastCarrinho
         mensagem={aviso?.mensagem}
         tipo={aviso?.tipo}
         chave={aviso?.chave}
         onFechar={() => setAviso(null)}
       />
-    </div>
+    </PaginaLoja>
   );
 }

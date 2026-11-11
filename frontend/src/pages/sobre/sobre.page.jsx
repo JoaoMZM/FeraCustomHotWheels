@@ -1,17 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
-import { Footer } from "../../components/common/Footer.jsx";
-import "../produtos/produtos.page.css"; // classes do header
+import { PaginaLoja } from "../../components/common/PaginaLoja.jsx";
 import "./sobre.page.css";
 
 export default function SobrePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="sobre-page">
-      <ProdutosHeader />
-
-      <main className="sobre-content">
+    <PaginaLoja classe="sobre-page">
+      <div className="sobre-content">
         <section className="sobre-hero">
           <h1>Sobre a Fera Custom</h1>
           <p>
@@ -50,9 +46,7 @@ export default function SobrePage() {
             Ver catálogo
           </button>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </PaginaLoja>
   );
 }

@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { finalizarCompra, buscarEndereco } from "../../services/api.js";
+import { finalizarCompra, criarCheckoutPagamento, buscarEndereco } from "../../services/api.js";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 import { useCarrinho } from "../../hooks/carrinho/useCarrinho.js";
 import { IconesCarrinho } from "../../components/icons/IconesCarrinho.jsx";
 import { CarrinhoItem } from "../../components/carrinho/CarrinhoItem.jsx";
-import { Footer } from "../../components/common/Footer.jsx";
 import { CarrinhoResumo } from "../../components/carrinho/CarrinhoResumo.jsx";
-import { ProdutosHeader } from "../../components/produtos/ProdutosHeader.jsx";
-import "../produtos/produtos.page.css"; // classes do header (.produtos-header, .produtos-logo, etc.)
+import { PaginaLoja } from "../../components/common/PaginaLoja.jsx";
 import "./carrinho.page.css";
 import "./carrinho.extras.css";
 
@@ -39,6 +37,7 @@ export default function CarrinhoPage() {
   const [finalizando, setFinalizando] = useState(false);
   const [pedidoConcluido, setPedidoConcluido] = useState(null);
   const [semEndereco, setSemEndereco] = useState(false);
+  const [erroPagamento, setErroPagamento] = useState("");
 
   // Estado da busca do header (mesmo padrão da página de Produtos)
   const [busca, setBusca] = useState("");
@@ -104,9 +103,19 @@ export default function CarrinhoPage() {
       }
 
       const resposta = await finalizarCompra(itens, lerIdCliente());
-      setPedidoConcluido(resposta);
       limparCarrinho();
       setAvisos([]);
+
+      // Pedido criado: leva o cliente ao checkout do Mercado Pago.
+      try {
+        const { urlPagamento } = await criarCheckoutPagamento(resposta.result.idPedido);
+        window.location.href = urlPagamento;
+        return; // mantém "finalizando" enquanto o navegador troca de página
+      } catch (errPagamento) {
+        // O pedido existe; o cliente pode pagar depois em "Meus pedidos"
+        setErroPagamento(errPagamento.message || "Não foi possível abrir o pagamento agora.");
+        setPedidoConcluido(resposta);
+      }
     } catch (err) {
       if (err.codigo === "ENDERECO_OBRIGATORIO") {
         setSemEndereco(true);
@@ -136,12 +145,11 @@ export default function CarrinhoPage() {
   const idPedido = pedidoConcluido?.result?.idPedido;
 
   return (
-    <div className="carrinho-page">
-      <ProdutosHeader
-        busca={busca}
-        setBusca={setBusca}
-        onSubmitBusca={handleSubmitBusca}
-      />
+    <PaginaLoja
+      classe="carrinho-page"
+      semMain
+      header={{ busca, setBusca, onSubmitBusca: handleSubmitBusca }}
+    >
 
       <div className="carrinho-header">
         <div className="carrinho-breadcrumb">
@@ -201,13 +209,15 @@ export default function CarrinhoPage() {
             <div className="carrinho-feedback-icon carrinho-feedback-icon--sucesso">
               <IconesCarrinho name="check" size={26} />
             </div>
-            <strong>Pedido realizado com sucesso!</strong>
+            <strong>Pedido registrado!</strong>
             <p>
-              {idPedido ? `Seu pedido #${idPedido} foi registrado. ` : ""}
-              Obrigado pela compra.
+              {idPedido ? `Seu pedido #${idPedido} foi registrado, mas ainda não foi pago. ` : ""}
+              {erroPagamento
+                ? `${erroPagamento} Você pode concluir o pagamento em "Meus pedidos".`
+                : "Conclua o pagamento em \"Meus pedidos\"."}
             </p>
             <button type="button" onClick={() => navigate("/pedidosProdutos")}>
-              Ver meus pedidos
+              Ir para meus pedidos
             </button>
             <button type="button" onClick={() => navigate("/")}>
               Voltar aos produtos
@@ -253,7 +263,6 @@ export default function CarrinhoPage() {
         </div>
       )}
 
-      <Footer />
-    </div>
+    </PaginaLoja>
   );
 }

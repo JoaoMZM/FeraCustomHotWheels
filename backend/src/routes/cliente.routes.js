@@ -4,7 +4,6 @@ import validarToken from "../middlewares/authMiddleware.js";
 
 const clienteRoutes = Router();
 
-// Rotas com caminho FIXO sempre antes das rotas com parâmetro (/:id)
 clienteRoutes.get('/confirmar', clienteController.confirmarConta);
 clienteRoutes.get('/validate', validarToken, (req, res) => {
     return res.status(200).json({

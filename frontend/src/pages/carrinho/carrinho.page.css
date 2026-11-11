@@ -19,16 +19,11 @@ body {
     --pc-shadow-sm: var(--shadow-sm);
     --pc-shadow-md: var(--shadow-md);
 
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background:
-        radial-gradient(1100px 500px at 15% -10%, rgba(227, 6, 19, 0.06), transparent 60%),
-        linear-gradient(180deg, var(--color-bg-page) 0%, var(--color-bg-soft) 40%, var(--color-bg-soft) 100%);
+    background: var(--color-bg-page);
     color: var(--pc-text);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
-    min-width: 100vw;
+    flex: 1;
 }
 
 .carrinho-page *,
@@ -38,7 +33,7 @@ body {
 }
 
 .carrinho-header {
-    width: min(1120px, calc(100% - 48px));
+    width: min(var(--container, 1280px), calc(100% - 2 * var(--espaco-pagina, 1.5rem)));
     margin: 0 auto;
     padding: 44px 0 4px;
 }
@@ -88,8 +83,8 @@ body {
 }
 
 .carrinho-titulo-badge {
-    background: var(--color-ink);
-    color: var(--color-on-ink);
+    background: var(--color-brand);
+    color: #ffffff;
     font-size: 12px;
     font-weight: 700;
     padding: 5px 12px;
@@ -98,7 +93,7 @@ body {
 }
 
 .carrinho-content {
-    width: min(1120px, calc(100% - 48px));
+    width: min(var(--container, 1280px), calc(100% - 2 * var(--espaco-pagina, 1.5rem)));
     margin: 0 auto;
     flex: 1;
     padding-bottom: 70px;
@@ -225,8 +220,8 @@ body {
 }
 
 .carrinho-item-qtd-stepper button:hover:not(:disabled) {
-    background: var(--color-ink);
-    color: var(--color-on-ink);
+    background: var(--color-brand);
+    color: #ffffff;
 }
 
 .carrinho-item-qtd-stepper button:disabled {
@@ -387,7 +382,7 @@ body {
 }
 
 .carrinho-erro {
-    width: min(1120px, calc(100% - 48px));
+    width: min(var(--container, 1280px), calc(100% - 2 * var(--espaco-pagina, 1.5rem)));
     margin: 0 auto 16px;
     background: var(--color-danger-bg);
     border: 1px solid var(--color-danger-border);
@@ -399,7 +394,7 @@ body {
 }
 
 .carrinho-feedback {
-    width: min(1120px, calc(100% - 48px));
+    width: min(var(--container, 1280px), calc(100% - 2 * var(--espaco-pagina, 1.5rem)));
     margin: 0 auto;
     flex: 1;
     padding: 70px 20px;
@@ -446,8 +441,8 @@ body {
     padding: 11px 22px;
     border-radius: var(--radius-pill);
     border: 0;
-    background: var(--color-ink);
-    color: var(--color-on-ink);
+    background: var(--color-brand);
+    color: #ffffff;
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 10px 28px rgba(227, 6, 19, 0.35);

@@ -10,7 +10,6 @@ const pedidoControllers = {
         try {
             const { itens } = req.body;
 
-            // O cliente vem do token JWT (validarToken), nunca do corpo da requisição.
             const idCliente = req.id_cliente;
 
             if (!itens || !Array.isArray(itens) || itens.length === 0) {
@@ -61,7 +60,7 @@ const pedidoControllers = {
                 }
 
                 const estoqueDisponivel = produto.estoque ?? produto.estoque_produto;
-                // O preço sempre vem do banco: o valor enviado pelo navegador é ignorado.
+
                 const precoUnitario = Number(produto.preco ?? produto.preco_produto);
 
                 if (estoqueDisponivel < quantidade) {
@@ -77,7 +76,6 @@ const pedidoControllers = {
 
             const valorTotal = ItensPedidos.calcularValorTotal(itensPedidos);
 
-            // O status inicial é sempre "Pendente" (o cliente não escolhe o status do próprio pedido).
             const pedido = Pedido.criar({ valorTotal, idCliente });
 
             const result = await pedidoRepository.criarPedido(pedido, itensPedidos);
@@ -102,15 +100,15 @@ const pedidoControllers = {
 
                 const result = await pedidoRepository.selectPedidosId(id_pedido_num);
 
-                if (!result || result.length === 0) {
+                if (!result || result.length === 0 || result[0].id_cliente !== req.id_cliente) {
                     return res.status(404).json({ message: "Pedido não encontrado." });
                 }
 
                 return res.status(200).json({ message: "Pedido selecionado:", result: result[0] });
             }
 
-            const result = await pedidoRepository.selectPedidos();
-            return res.status(200).json({ message: "Pedidos selecionados:", result });
+            const pedidos = await pedidoRepository.listarPedidosDoCliente(req.id_cliente);
+            return res.status(200).json({ message: "Pedidos selecionados:", result: pedidos, pedidos });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Erro interno do servidor", errorMessage: error.message });
