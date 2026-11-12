@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { listarPedidosAdmin } from "../services/api.js";
+import { listarPedidosAdmin, atualizarStatusPedidoAdmin } from "../services/api.js";
 
 export const STATUS_PEDIDO = [
   "Pendente",
@@ -16,6 +16,7 @@ export function useAdminPedidos() {
   const [busca, setBusca] = useState("");
   const [statusFiltro, setStatusFiltro] = useState("todos");
   const [pedidoAberto, setPedidoAberto] = useState(null);
+  const [atualizandoId, setAtualizandoId] = useState(null);
 
   const carregarPedidos = useCallback(async () => {
     setCarregando(true);
@@ -97,6 +98,29 @@ export function useAdminPedidos() {
     });
   }, [pedidos, busca, statusFiltro]);
 
+  const atualizarStatus = async (idPedido, novoStatus) => {
+    const anterior = pedidosRaw;
+    setAtualizandoId(idPedido);
+    setErro("");
+    setPedidosRaw((lista) =>
+      lista.map((p) =>
+        p.id_pedido === idPedido ? { ...p, status_pedido: novoStatus } : p
+      )
+    );
+    try {
+      await atualizarStatusPedidoAdmin(idPedido, novoStatus);
+    } catch (err) {
+      setPedidosRaw(anterior);
+      setErro(
+        err.response?.data?.message ||
+          err.message ||
+          "Não foi possível atualizar o status do pedido."
+      );
+    } finally {
+      setAtualizandoId(null);
+    }
+  };
+
   const alternarDetalhes = (id) => {
     setPedidoAberto((atual) => (atual === id ? null : id));
   };
@@ -112,6 +136,8 @@ export function useAdminPedidos() {
     setStatusFiltro,
     pedidoAberto,
     alternarDetalhes,
+    atualizarStatus,
+    atualizandoId,
     recarregar: carregarPedidos,
   };
 }

@@ -16,7 +16,7 @@ export function useProdutoDetalhes() {
     const [imagemAtiva, setImagemAtiva] = useState(0);
     const [quantidade, setQuantidade] = useState(1);
     const [adicionado, setAdicionado] = useState(false);
-    const enviando = false; // adicionar ao carrinho agora é instantâneo (localStorage)
+    const enviando = false; 
 
     useEffect(() => {
         async function carregar() {
@@ -62,7 +62,6 @@ export function useProdutoDetalhes() {
         if (id) carregar();
     }, [id]);
 
-    // O carrinho fica no localStorage: adicionar não exige login.
     const handleAdicionar = () => {
         if (!produto || produto.estoque <= 0) return;
 

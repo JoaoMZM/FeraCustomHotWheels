@@ -59,7 +59,6 @@
   color: var(--color-muted, #64748b);
 }
 
-/* Aviso de endereço obrigatório no carrinho */
 .carrinho-erro--acao {
     display: flex;
     align-items: center;

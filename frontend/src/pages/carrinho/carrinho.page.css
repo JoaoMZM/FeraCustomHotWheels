@@ -62,7 +62,6 @@ body {
     color: var(--pc-primary);
 }
 
-/* Item atual do breadcrumb: usa a cor de texto do tema (fonte clara no modo escuro) */
 .carrinho-breadcrumb .breadcrumb-atual {
     color: var(--pc-text);
     font-weight: 600;

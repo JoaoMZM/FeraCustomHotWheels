@@ -46,7 +46,6 @@ export class Pedido {
         return this.#valorTotal;
     }
 
-    // Endereço de entrega deste pedido (cópia do cadastro ou endereço informado no checkout)
     get enderecoEntrega() {
         return this.#enderecoEntrega;
     }

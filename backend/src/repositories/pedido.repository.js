@@ -7,7 +7,6 @@ const pedidoRepository = {
         try {
             await connection.beginTransaction();
 
-            // Endereço de entrega gravado junto com o pedido (histórico não muda se o cliente editar o cadastro)
             const entrega = pedido.enderecoEntrega ?? {};
 
             const sqlPedido = `
@@ -222,8 +221,6 @@ const pedidoRepository = {
         }
     },
 
-    // Lista todos os pedidos para o painel do administrador.
-    // Cada pedido já vem com: dados do cliente, telefone, endereço(s) e itens.
     listarPedidosAdmin: async () => {
         const sqlPedidos = `
         SELECT 
@@ -257,7 +254,6 @@ const pedidoRepository = {
             pedidos.map((pedido) => pedido.id_cliente).filter(Boolean)
         )];
 
-        // Itens de todos os pedidos listados (com nome e imagem do produto)
         const sqlItens = `
         SELECT
             ip.id_item_pedido,
@@ -276,7 +272,6 @@ const pedidoRepository = {
     `;
         const [itens] = await db.query(sqlItens, [idsPedidos]);
 
-        // Endereços e telefones dos clientes que fizeram os pedidos
         let enderecos = [];
         let telefones = [];
 
@@ -329,8 +324,6 @@ const pedidoRepository = {
         }
 
         return pedidos.map((pedido) => {
-            // Pedidos novos guardam o endereço de entrega; pedidos antigos (sem esse dado)
-            // usam o endereço atual do cadastro do cliente.
             const temEnderecoNoPedido = Boolean(pedido.entrega_rua);
 
             const enderecosDoPedido = temEnderecoNoPedido
@@ -358,6 +351,72 @@ const pedidoRepository = {
                 itens: itensPorPedido.get(pedido.id_pedido) ?? []
             };
         });
+    },
+
+    cancelarPedidoCliente: async (idPedido, idCliente) => {
+        const conn = await db.getConnection();
+        try {
+            await conn.beginTransaction();
+
+            const [pedidos] = await conn.execute(
+                'SELECT id_pedido, status_pedido, id_cliente FROM pedidos WHERE id_pedido = ? FOR UPDATE;',
+                [idPedido]
+            );
+
+            if (pedidos.length === 0 || pedidos[0].id_cliente !== idCliente) {
+                await conn.rollback();
+                return { ok: false, codigo: 404, message: 'Pedido não encontrado.' };
+            }
+
+            if (pedidos[0].status_pedido === 'Cancelado') {
+                await conn.rollback();
+                return { ok: false, codigo: 400, message: 'Este pedido já está cancelado.' };
+            }
+
+            if (pedidos[0].status_pedido !== 'Pendente') {
+                await conn.rollback();
+                return {
+                    ok: false,
+                    codigo: 400,
+                    message: `Este pedido está '${pedidos[0].status_pedido}' e não pode mais ser cancelado.`,
+                };
+            }
+
+            const [pagos] = await conn.execute(
+                "SELECT 1 FROM pagamentos WHERE id_pedido = ? AND status_pagamento IN ('Aprovado', 'Em análise') LIMIT 1;",
+                [idPedido]
+            );
+            if (pagos.length > 0) {
+                await conn.rollback();
+                return {
+                    ok: false,
+                    codigo: 400,
+                    message: 'Este pedido já tem um pagamento aprovado ou em análise e não pode ser cancelado por aqui.',
+                };
+            }
+
+            await conn.execute(
+                `UPDATE produtos p
+                 INNER JOIN itens_pedido i ON i.id_produto = p.id_produto
+                 SET p.estoque = p.estoque + i.quantidade
+                 WHERE i.id_pedido = ?;`,
+                [idPedido]
+            );
+
+            await conn.execute("UPDATE pedidos SET status_pedido = 'Cancelado' WHERE id_pedido = ?;", [idPedido]);
+            await conn.execute(
+                "UPDATE pagamentos SET status_pagamento = 'Cancelado' WHERE id_pedido = ? AND status_pagamento = 'Pendente';",
+                [idPedido]
+            );
+
+            await conn.commit();
+            return { ok: true };
+        } catch (error) {
+            await conn.rollback();
+            throw error;
+        } finally {
+            conn.release();
+        }
     },
 
     atualizarStatusPedido: async (idPedido, novoStatus) => {

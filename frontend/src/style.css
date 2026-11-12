@@ -932,10 +932,15 @@ body {
     border-bottom: 1px solid var(--prod-subtle-bg);
 }
 
-.produto-card-imagem img {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
+.produto-card .produto-card-imagem img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    display: block;
+    object-fit: cover;
+    object-position: center;
     transition: transform 0.3s ease;
 }
 

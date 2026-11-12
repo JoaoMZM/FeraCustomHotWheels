@@ -30,6 +30,14 @@ export default function AdminHeader() {
           >
             Pedidos
           </NavLink>
+          <NavLink
+            to="/admin/mensagens"
+            className={({ isActive }) =>
+              isActive ? "admin-aba ativo" : "admin-aba"
+            }
+          >
+            Mensagens
+          </NavLink>
         </nav>
 
         <button

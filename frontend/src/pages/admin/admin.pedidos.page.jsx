@@ -72,6 +72,8 @@ export default function AdminPedidosPage() {
     setStatusFiltro,
     pedidoAberto,
     alternarDetalhes,
+    atualizarStatus,
+    atualizandoId,
     recarregar,
   } = useAdminPedidos();
 
@@ -176,11 +178,19 @@ export default function AdminPedidosPage() {
                             <strong>{formatarPreco(pedido.total)}</strong>
                           </td>
                           <td>
-                            <span
-                              className={`badge-pedido ${CLASSE_STATUS[pedido.status] || "pendente"}`}
+                            <select
+                              className={`select-status-pedido ${CLASSE_STATUS[pedido.status] || "pendente"}`}
+                              value={pedido.status}
+                              disabled={atualizandoId === pedido.id}
+                              onChange={(e) => atualizarStatus(pedido.id, e.target.value)}
+                              aria-label={`Status do pedido ${pedido.id}`}
                             >
-                              {pedido.status}
-                            </span>
+                              {STATUS_PEDIDO.map((status) => (
+                                <option key={status} value={status}>
+                                  {status}
+                                </option>
+                              ))}
+                            </select>
                           </td>
                           <td style={{ textAlign: "right" }}>
                             <div className="acoes-botoes">

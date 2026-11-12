@@ -2,7 +2,6 @@ import { db } from "../configs/database.js";
 
 const enderecoRepository = {
 
-    // Cada cliente tem um único endereço de entrega (o mais antigo, caso existam vários).
     buscarPorCliente: async (idCliente) => {
         const sql = `
             SELECT id_endereco, rua, numero, bairro, cidade, uf, cep, complemento, id_cliente
@@ -51,7 +50,6 @@ const enderecoRepository = {
         return result;
     },
 
-    // Cria o endereço se o cliente ainda não tiver um; senão, atualiza.
     salvar: async (idCliente, endereco) => {
         const existente = await enderecoRepository.buscarPorCliente(idCliente);
 

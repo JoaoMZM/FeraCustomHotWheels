@@ -5,6 +5,7 @@ import {
   atualizarProduto,
   alternarStatusProduto,
   listarCategorias,
+  criarCategoria,
 } from "../services/api.js";
 
 const API_URL = 'https://localhost:443';
@@ -18,6 +19,7 @@ const formInicial = {
   precoOriginal: "",
   estoque: "",
   imagemArquivo: null,
+  imagemUrlAtual: null,
   descricao: "",
 };
 
@@ -126,6 +128,7 @@ export function useAdminProdutos() {
       precoOriginal: produto.precoOriginal || "",
       estoque: produto.estoque ?? "",
       imagemArquivo: null,
+      imagemUrlAtual: produto.imagemUrl || null,
       descricao: produto.descricao || "",
     });
     setModalAberto(true);
@@ -146,6 +149,20 @@ export function useAdminProdutos() {
     }
 
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleRemoverImagem = () => {
+    setFormData((prev) => ({ ...prev, imagemArquivo: null }));
+  };
+
+  const handleCriarCategoria = async (nome, descricao) => {
+    const resposta = await criarCategoria(nome.trim(), (descricao || "").trim());
+    await carregarCategorias();
+    if (resposta?.id_categoria) {
+      setFormData((prev) => ({ ...prev, id_categoria: String(resposta.id_categoria) }));
+    }
+    setSucesso("Categoria criada com sucesso!");
+    return resposta;
   };
 
   const handleSalvar = async (e) => {
@@ -214,6 +231,8 @@ export function useAdminProdutos() {
     handleFecharModal,
     handleChange,
     handleSalvar,
+    handleRemoverImagem,
+    handleCriarCategoria,
     handleAlternarStatus,
     carregarProdutos,
   };

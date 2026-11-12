@@ -70,8 +70,6 @@ export default function EnderecoForm({ onSalvo }) {
     if (camposComErro[name]) setCamposComErro((prev) => ({ ...prev, [name]: false }));
   }
 
-  // Ao sair do campo CEP, tenta preencher rua/bairro/cidade/UF pelo ViaCEP.
-  // Se a consulta falhar, o cliente simplesmente preenche à mão.
   async function handleCepBlur() {
     const cep = formData.cep.replace(/\D/g, '');
     if (cep.length !== 8) return;
@@ -94,7 +92,6 @@ export default function EnderecoForm({ onSalvo }) {
         uf: (dados.uf || prev.uf || '').toUpperCase(),
       }));
     } catch {
-      // Sem internet ou ViaCEP fora do ar: segue com preenchimento manual
     } finally {
       setBuscandoCep(false);
     }

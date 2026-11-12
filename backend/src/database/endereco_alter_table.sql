@@ -1,6 +1,3 @@
--- Endereço de entrega gravado em cada pedido (cadastrado ou personalizado no checkout).
--- Rode UMA vez no banco que já existe (feracustom_database).
--- Se você criar o banco do zero com script_feracustom.sql, NÃO precisa rodar este arquivo.
 
 USE `feracustom_database`;
 

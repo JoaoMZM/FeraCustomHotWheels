@@ -4,7 +4,7 @@ import usePedidos from '../../hooks/pedidos/usePedidos.js'
 import usePedidosFiltro, { infoStatus } from '../../hooks/pedidos/usePedidosFiltros.js'
 import { PaginaLoja } from '../../components/common/PaginaLoja.jsx';
 import './pedidos.page.css';
-import { criarCheckoutPagamento } from '../../services/api.js';
+import { criarCheckoutPagamento, cancelarPedido } from '../../services/api.js';
 
 function formatarPreco(valor) {
   return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -21,6 +21,25 @@ export default function PedidosPage() {
   const [pedidoAberto, setPedidoAberto] = useState(null);
   const [pagandoId, setPagandoId] = useState(null);
   const [erroPagamento, setErroPagamento] = useState('');
+  const [cancelandoId, setCancelandoId] = useState(null);
+
+  const podeCancelar = (pedido) =>
+    pedido.status === 'Pendente' &&
+    !['Aprovado', 'Em análise'].includes(pedido.status_pagamento);
+
+  async function cancelar(idPedido) {
+    if (!window.confirm(`Cancelar o pedido #${idPedido}? Essa ação não pode ser desfeita.`)) return;
+    setErroPagamento('');
+    setCancelandoId(idPedido);
+    try {
+      await cancelarPedido(idPedido);
+      await buscarPedidos();
+    } catch (err) {
+      setErroPagamento(err.message || 'Não foi possível cancelar o pedido.');
+    } finally {
+      setCancelandoId(null);
+    }
+  }
 
   function alternarDetalhes(id) {
     if (pedidoAberto === id) {
@@ -125,6 +144,15 @@ export default function PedidosPage() {
                       disabled={pagandoId === pedido.id}
                     >
                       {pagandoId === pedido.id ? 'Abrindo...' : 'Pagar agora'}
+                    </button>
+                  )}
+                  {podeCancelar(pedido) && (
+                    <button
+                      className="pedidos-botao pedidos-botao--cancelar"
+                      onClick={() => cancelar(pedido.id)}
+                      disabled={cancelandoId === pedido.id}
+                    >
+                      {cancelandoId === pedido.id ? 'Cancelando...' : 'Cancelar pedido'}
                     </button>
                   )}
                   <button

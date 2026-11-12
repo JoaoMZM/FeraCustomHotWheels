@@ -32,7 +32,6 @@ api.interceptors.response.use(
         return Promise.reject(error);
       }
 
-      // Já tentou renovar a sessão e continua sem autorização
       if (originalRequest._retry) {
         irParaLogin(originalRequest);
         return Promise.reject(error);
@@ -41,7 +40,6 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // O refresh renova o token de cliente e, para contas admin, o admin_token
         await api.post('/clientes/refresh', null, { _silent: originalRequest._silent });
 
         return api(originalRequest);
@@ -100,7 +98,6 @@ export const obterProdutoPorId = async (id) => {
   } catch (error) {
     console.error(`Erro ao buscar produto com ID ${id}:`, error);
     const erro = new Error(getErrorMessage(error, 'Erro ao carregar os detalhes do produto.'));
-    // O status permite ao carrinho distinguir "produto removido" (404) de "API fora do ar"
     erro.status = error.response?.status;
     throw erro;
   }
@@ -185,16 +182,21 @@ async function request(endpoint, options = {}) {
 export const listarProdutos = (filtros = {}) =>
   api.get("/produtos", { params: filtros });
 
-/**
- * Busca os detalhes de um produto pelo ID.
- * @param {string|number} id
- */
 export const buscarProduto = async (id) => {
   return await request(`/produtos/${id}`);
 };
 
 export const listarCategorias = async () => {
   return await request('/categorias');
+};
+
+export const criarCategoria = async (nome, descricao = '') => {
+  try {
+    const response = await api.post('/categorias', { nome, descricao });
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error, 'Erro ao criar a categoria.'));
+  }
 };
 
 export const criarProduto = (formData) =>
@@ -212,15 +214,6 @@ export const alternarStatusProduto = (id, ativo) =>
 
 export const listarProdutosAdmin = () => api.get("/admin/produtos");
 
-/**
- * Cria o pedido a partir dos itens do carrinho (que fica no localStorage).
- * O backend recalcula preços e confere o estoque a partir do banco.
- * @param {Array<{ id: string, quantidade: number }>} itens
- * @param {string|null} idCliente - id (UUID) do cliente logado
- * @param {object|null} endereco - endereço personalizado só para este pedido
- *        ({ cep, rua, numero, bairro, cidade, uf, complemento }). Sem ele, o backend
- *        usa o endereço cadastrado em Minha Conta.
- */
 export const finalizarCompra = async (itens, idCliente = null, endereco = null) => {
   const corpo = {
     itens: itens.map((item) => ({
@@ -242,17 +235,12 @@ export const listarPedidos = async () => {
   return await request('/pedidos');
 };
 
-/**
- * Lista todos os pedidos para o painel do administrador.
- * Cada pedido vem com cliente, telefone, endereço(s) e itens.
- */
+export const cancelarPedido = async (idPedido) => {
+  return await request(`/pedidos/${idPedido}/cancelar`, { method: 'PATCH' });
+};
+
 export const listarPedidosAdmin = () => api.get('/admin/pedidos');
 
-/**
- * Atualiza o status de um pedido (somente administrador).
- * @param {number|string} idPedido
- * @param {string} statusPedido - Pendente | Em Processamento | Enviado | Entregue | Cancelado
- */
 export const atualizarStatusPedidoAdmin = (idPedido, statusPedido) =>
   api.patch(`/admin/pedidos/${idPedido}/status`, { statusPedido });
 
@@ -278,18 +266,10 @@ export const atualizarCliente = async (id, dados) => {
   });
 };
 
-/**
- * Endereço de entrega do cliente logado.
- * @returns {Promise<{ endereco: object|null }>}
- */
 export const buscarEndereco = async () => {
   return await request('/enderecos');
 };
 
-/**
- * Cria ou atualiza o endereço de entrega do cliente logado.
- * @param {{ cep: string, rua: string, numero: string, bairro: string, cidade: string, uf: string, complemento?: string }} dados
- */
 export const salvarEndereco = async (dados) => {
   return await request('/enderecos', {
     method: 'PUT',
@@ -310,27 +290,15 @@ export const logoutCliente = async () => {
   }
 };
 
-/* ------------------------------------------------------------------ */
-/* Pagamento (Mercado Pago)                                           */
-/* ------------------------------------------------------------------ */
 
-/**
- * Cria o checkout do pedido e devolve { urlPagamento }.
- * O cliente é enviado para essa URL para pagar (Pix, cartão, boleto...).
- */
 export const criarCheckoutPagamento = async (idPedido) => {
   return await request(`/pagamentos/pedidos/${idPedido}/checkout`, { method: 'POST' });
 };
 
-/** Confirma no servidor (direto no Mercado Pago) o resultado do pagamento do pedido. */
 export const sincronizarPagamento = async (idPedido) => {
   return await request(`/pagamentos/pedidos/${idPedido}/sincronizar`, { method: 'POST' });
 };
 
-/* ------------------------------------------------------------------ */
-/* Chat do produto (cliente <-> vendedor)                             */
-/* `_silent` evita redirecionar para o login durante o polling.       */
-/* ------------------------------------------------------------------ */
 
 export const buscarConversaDoProduto = async (idProduto, apos = 0) => {
   return await request(`/chat/produtos/${idProduto}`, { params: { apos }, _silent: true });

@@ -7,7 +7,6 @@ import { CarrinhoProvider } from './contexts/CarrinhoContext.jsx';
 import './styles/layout.css';
 import { aplicarTema, temaInicial } from './hooks/useTheme.js';
 
-// Aplica o tema salvo (claro/escuro) antes da primeira renderização
 aplicarTema(temaInicial());
 
 ReactDOM.createRoot(document.getElementById('root')).render(

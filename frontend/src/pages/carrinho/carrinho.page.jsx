@@ -12,7 +12,6 @@ import { PaginaLoja } from "../../components/common/PaginaLoja.jsx";
 import "./carrinho.page.css";
 import "./carrinho.extras.css";
 
-// O id do cliente (UUID) fica no "payload" salvo no login
 const lerIdCliente = () => {
   try {
     return JSON.parse(localStorage.getItem("payload"))?.sub || null;
@@ -38,7 +37,6 @@ export default function CarrinhoPage() {
   const [avisos, setAvisos] = useState([]);
   const [finalizando, setFinalizando] = useState(false);
   const [pedidoConcluido, setPedidoConcluido] = useState(null);
-  // Endereço de entrega: o cadastrado em Minha Conta ou um informado só para este pedido
   const [enderecoCadastrado, setEnderecoCadastrado] = useState(null);
   const [carregandoEndereco, setCarregandoEndereco] = useState(false);
   const [modoEntrega, setModoEntrega] = useState("cadastrado");
@@ -46,10 +44,8 @@ export default function CarrinhoPage() {
   const [erroEndereco, setErroEndereco] = useState("");
   const [erroPagamento, setErroPagamento] = useState("");
 
-  // Estado da busca do header (mesmo padrão da página de Produtos)
   const [busca, setBusca] = useState("");
 
-  // Ao abrir o carrinho, confere preço/estoque atuais com a API
   useEffect(() => {
     let ativo = true;
 
@@ -58,7 +54,6 @@ export default function CarrinhoPage() {
         if (ativo) setAvisos(novosAvisos);
       })
       .catch(() => {
-        // API fora do ar: mantém o carrinho como está
       });
 
     return () => {
@@ -66,7 +61,6 @@ export default function CarrinhoPage() {
     };
   }, [sincronizarCarrinho]);
 
-  // Com o cliente logado, busca o endereço cadastrado para oferecer como padrão
   useEffect(() => {
     if (logado !== true) return undefined;
 
@@ -81,7 +75,6 @@ export default function CarrinhoPage() {
       })
       .catch(() => {
         if (!ativo) return;
-        // Sem conseguir ler o cadastro, o cliente ainda pode informar um endereço
         setEnderecoCadastrado(null);
         setModoEntrega("outro");
       })
@@ -118,7 +111,7 @@ export default function CarrinhoPage() {
 
   const handleFinalizarCompra = async () => {
     if (itens.length === 0 || finalizando) return;
-    if (logado === null) return; // ainda verificando a sessão
+    if (logado === null) return; 
 
     if (!logado) {
       navigate("/login");
@@ -128,7 +121,6 @@ export default function CarrinhoPage() {
     setErro("");
     setErroEndereco("");
 
-    // Endereço deste pedido: personalizado (enviado na requisição) ou o cadastrado
     let enderecoPedido = null;
 
     if (modoEntrega === "outro") {
@@ -151,13 +143,11 @@ export default function CarrinhoPage() {
       limparCarrinho();
       setAvisos([]);
 
-      // Pedido criado: leva o cliente ao checkout do Mercado Pago.
       try {
         const { urlPagamento } = await criarCheckoutPagamento(resposta.result.idPedido);
         window.location.href = urlPagamento;
-        return; // mantém "finalizando" enquanto o navegador troca de página
+        return; 
       } catch (errPagamento) {
-        // O pedido existe; o cliente pode pagar depois em "Meus pedidos"
         setErroPagamento(errPagamento.message || "Não foi possível abrir o pagamento agora.");
         setPedidoConcluido(resposta);
       }
@@ -173,19 +163,15 @@ export default function CarrinhoPage() {
 
       setErro(err.message || "Erro ao finalizar a compra.");
 
-      // Provável causa: estoque/preço mudou. Atualiza o carrinho com o que a API tem agora.
       try {
         setAvisos(await sincronizarCarrinho());
       } catch {
-        // ignora
       }
     } finally {
       setFinalizando(false);
     }
   };
 
-  // Busca do header: no carrinho não filtramos itens, então enviar uma
-  // busca leva o usuário de volta pro catálogo.
   const handleSubmitBusca = (e) => {
     if (e) e.preventDefault();
     navigate("/");

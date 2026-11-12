@@ -5,10 +5,6 @@ const UFS_VALIDAS = [
 
 const texto = (valor) => (typeof valor === 'string' ? valor.trim() : '');
 
-/**
- * Valida e normaliza os dados de endereço vindos do corpo da requisição.
- * Retorna { erro } quando algo é inválido ou { endereco } já limpo para salvar.
- */
 export function validarEndereco(dados = {}) {
     const rua = texto(dados.rua);
     const numero = texto(dados.numero);

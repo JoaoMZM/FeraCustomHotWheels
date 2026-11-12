@@ -1,5 +1,3 @@
-// Camada de persistência do carrinho no localStorage.
-// Só mexe com leitura/gravação e validação dos dados salvos.
 
 export const CHAVE_CARRINHO = 'carrinho';
 
@@ -53,6 +51,5 @@ export function limparCarrinhoSalvo() {
   try {
     localStorage.removeItem(CHAVE_CARRINHO);
   } catch {
-    // ignora
   }
 }

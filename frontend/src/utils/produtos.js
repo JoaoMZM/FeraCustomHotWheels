@@ -1,7 +1,3 @@
-// Utilitários para lidar com o formato dos produtos vindos da API.
-// A API devolve linhas cruas do banco (id_produto, preco_original, imagem_produto...),
-// e o front às vezes usa `id`. Aqui padronizamos tudo em um só lugar.
-// IMPORTANTE: os IDs são UUID (string). Nunca use Number()/parseInt() neles.
 
 const BASE_IMAGENS = 'https://localhost/';
 

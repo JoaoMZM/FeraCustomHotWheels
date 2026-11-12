@@ -5,7 +5,6 @@ import { IconesProdutos } from "../icons/IconesProdutos";
 import useTheme from "../../hooks/useTheme";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 
-// Conta de administrador logada? (o login salva o payload com role "admin")
 const lerAdmin = () => {
   try {
     return JSON.parse(localStorage.getItem("admin_payload"))?.role === "admin";
@@ -14,15 +13,12 @@ const lerAdmin = () => {
   }
 };
 
-// O cabeçalho funciona sozinho em qualquer página: se a página não controlar a
-// busca (props), ele guarda o texto e leva o usuário ao catálogo (/?busca=...).
 export const ProdutosHeader = ({ busca: buscaExterna, setBusca: setBuscaExterna, onSubmitBusca }) => {
   const navigate = useNavigate();
   const { tema, alternarTema } = useTheme();
   const [buscaInterna, setBuscaInterna] = useState("");
   const { logado } = useAuth();
 
-  // Enquanto a sessão é verificada (logado === null), usa o que está salvo no navegador
   const estaLogado = logado ?? Boolean(localStorage.getItem("payload"));
   const ehAdmin = estaLogado && lerAdmin();
 
@@ -65,7 +61,6 @@ export const ProdutosHeader = ({ busca: buscaExterna, setBusca: setBuscaExterna,
         </form>
 
         <div className="produtos-header-actions">
-          {/* Só para administradores: volta ao painel */}
           {ehAdmin && (
             <button
               type="button"
@@ -107,7 +102,6 @@ export const ProdutosHeader = ({ busca: buscaExterna, setBusca: setBuscaExterna,
             <IconesProdutos name="truck" size={20} />
           </button>
 
-          {/* Botão de modo claro/escuro */}
           <button
             type="button"
             className="produtos-tema-botao"
@@ -122,6 +116,7 @@ export const ProdutosHeader = ({ busca: buscaExterna, setBusca: setBuscaExterna,
             type="button"
             className="produtos-icon-button"
             aria-label="Favoritos"
+            onClick={() => navigate("/pedidosProdutos")}
           >
             <IconesProdutos name="heart" size={20} />
           </button>

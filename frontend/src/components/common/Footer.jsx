@@ -18,7 +18,6 @@ export const Footer = () => {
 
   return (
     <footer className="fera-footer">
-      {/* Faixa quadriculada: referência às pistas de corrida */}
       <div className="fera-footer-faixa" aria-hidden="true" />
 
       <div className="fera-footer-main">

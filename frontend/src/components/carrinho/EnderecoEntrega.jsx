@@ -2,13 +2,6 @@ import { useState } from "react";
 import { consultarCep, formatarCep, linhasEndereco } from "../../utils/endereco.js";
 import "./EnderecoEntrega.css";
 
-/**
- * Escolha do endereço de entrega no carrinho:
- *  - "cadastrado": usa o endereço salvo em Minha Conta;
- *  - "outro": o cliente informa um endereço só para este pedido.
- *
- * É um componente controlado: o estado (modo e campos) fica na página do carrinho.
- */
 export function EnderecoEntrega({
   carregando,
   enderecoCadastrado,
@@ -33,8 +26,6 @@ export function EnderecoEntrega({
     onMudarDados({ ...dados, [name]: novoValor });
   };
 
-  // Ao sair do campo CEP, preenche rua/bairro/cidade/UF pelo ViaCEP.
-  // Se a consulta falhar, o cliente preenche à mão.
   const handleCepBlur = async () => {
     const cep = dados.cep.replace(/\D/g, "");
     if (cep.length !== 8) return;
@@ -56,7 +47,6 @@ export function EnderecoEntrega({
         uf: resultado.uf || dados.uf,
       });
     } catch {
-      // Sem internet ou ViaCEP fora do ar: segue com preenchimento manual
     } finally {
       setBuscandoCep(false);
     }

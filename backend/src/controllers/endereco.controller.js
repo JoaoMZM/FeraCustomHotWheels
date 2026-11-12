@@ -3,10 +3,8 @@ import { validarEndereco } from "../utils/validarEndereco.js";
 
 const enderecoController = {
 
-    // GET /enderecos -> endereço do cliente logado (ou null)
     obterMeuEndereco: async (req, res) => {
         try {
-            // O cliente vem do token JWT (validarToken), nunca da URL ou do corpo.
             const endereco = await enderecoRepository.buscarPorCliente(req.id_cliente);
 
             return res.status(200).json({ endereco });
@@ -16,7 +14,6 @@ const enderecoController = {
         }
     },
 
-    // PUT /enderecos -> cria ou atualiza o endereço do cliente logado
     salvarMeuEndereco: async (req, res) => {
         try {
             const { erro, endereco } = validarEndereco(req.body);

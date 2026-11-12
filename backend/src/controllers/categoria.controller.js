@@ -47,6 +47,11 @@ export const categoriaController = {
 
             const categoria = Categoria.criar({nome: nome || nome_categoria, descricao: descricao || descricao_categoria});
 
+            const existente = await categoriaRepository.buscarPorNome(categoria.nome.trim());
+            if (existente) {
+                return res.status(409).json({ message: `A categoria '${existente.nome}' já existe.` });
+            }
+
             const result = await categoriaRepository.criar(categoria);
 
             return res.status(201).json({ 

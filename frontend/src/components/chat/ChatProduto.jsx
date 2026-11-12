@@ -5,7 +5,6 @@ import { buscarConversaDoProduto, enviarMensagemProduto } from '../../services/a
 import { ChatThread } from './ChatThread.jsx';
 import './chat.css';
 
-/** Chat do cliente com o vendedor, na página de detalhes do produto. */
 export function ChatProduto({ idProduto, nomeProduto }) {
   const navigate = useNavigate();
   const { logado } = useAuth();

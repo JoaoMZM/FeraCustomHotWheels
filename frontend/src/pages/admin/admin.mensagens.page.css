@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 340px 1fr;
   gap: 1rem;
-  height: calc(100vh - 110px);
+  height: calc(100vh - 150px);
   min-height: 480px;
 }
 .admin-msg-lista,

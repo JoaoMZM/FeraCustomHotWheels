@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AdminHeader from '../../components/admin/AdminHeader.jsx';
 import { ChatThread } from '../../components/chat/ChatThread.jsx';
 import { useConversa } from '../../hooks/chat/useConversa.js';
 import {
@@ -53,7 +54,6 @@ export default function AdminMensagensPage() {
     intervalo: 3000,
   });
 
-  // Ao abrir uma conversa o servidor marca as mensagens como lidas: zera o contador localmente
   useEffect(() => {
     if (!selecionadaId) return;
     setConversas((lista) => lista.map((c) => (c.id === selecionadaId ? { ...c, nao_lidas: 0 } : c)));
@@ -61,17 +61,7 @@ export default function AdminMensagensPage() {
 
   return (
     <div className="admin-produtos-page">
-      <header className="admin-header">
-        <div className="admin-header-inner">
-          <div className="admin-logo" onClick={() => navigate('/')}>
-            <strong>FERA CUSTOM</strong>
-            <span className="badge-admin">Mensagens</span>
-          </div>
-          <button type="button" className="btn-voltar-loja" onClick={() => navigate('/admin/produtos')}>
-            Voltar aos Produtos
-          </button>
-        </div>
-      </header>
+      <AdminHeader />
 
       <main className="admin-content admin-msg-layout">
         <aside className="admin-msg-lista" aria-label="Conversas">

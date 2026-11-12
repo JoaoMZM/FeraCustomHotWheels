@@ -1,4 +1,3 @@
-// Funções compartilhadas pelos formulários de endereço (checkout etc.)
 
 export const enderecoVazio = () => ({
   cep: '',
@@ -15,10 +14,6 @@ export function formatarCep(valor) {
   return numeros.length > 5 ? numeros.replace(/(\d{5})(\d{1,3})/, '$1-$2') : numeros;
 }
 
-/**
- * Confere os campos do formulário de endereço.
- * @returns {string|null} mensagem de erro ou null quando está tudo certo
- */
 export function validarEnderecoForm(dados) {
   if (String(dados.cep || '').replace(/\D/g, '').length !== 8) {
     return 'Digite um CEP válido com 8 dígitos.';
@@ -41,7 +36,6 @@ export function validarEnderecoForm(dados) {
   return null;
 }
 
-/** Deixa o endereço no formato que a API espera. */
 export function normalizarEnderecoForm(dados) {
   return {
     cep: String(dados.cep || '').replace(/\D/g, ''),
@@ -54,11 +48,6 @@ export function normalizarEnderecoForm(dados) {
   };
 }
 
-/**
- * Consulta o ViaCEP.
- * @returns {Promise<{rua: string, bairro: string, cidade: string, uf: string}|null>}
- *          null quando o CEP não existe. Lança erro se a consulta falhar (sem internet etc.).
- */
 export async function consultarCep(cepNumeros) {
   const resposta = await fetch(`https://viacep.com.br/ws/${cepNumeros}/json/`);
   const dados = await resposta.json();
@@ -73,7 +62,6 @@ export async function consultarCep(cepNumeros) {
   };
 }
 
-/** Texto em duas linhas para mostrar um endereço salvo. */
 export function linhasEndereco(endereco) {
   const rua = [endereco.rua, endereco.numero].filter(Boolean).join(', ');
   const complemento = endereco.complemento || '';

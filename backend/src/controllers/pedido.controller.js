@@ -17,9 +17,6 @@ const pedidoControllers = {
                 return res.status(400).json({ message: "O pedido deve conter pelo menos um item." });
             }
 
-            // Endereço de entrega do pedido:
-            //  - se o cliente enviou "endereco", é um endereço personalizado só para este pedido;
-            //  - senão, usa o endereço cadastrado em Minha Conta (obrigatório nesse caso).
             let enderecoEntrega;
 
             if (req.body.endereco !== undefined && req.body.endereco !== null) {
@@ -51,7 +48,6 @@ const pedidoControllers = {
                 };
             }
 
-            // Valida cada item e junta duplicados (mesmo produto enviado duas vezes)
             const quantidadePorProduto = new Map();
 
             for (const item of itens) {
@@ -261,6 +257,27 @@ const pedidoControllers = {
                 total: pedidos.length,
                 result: pedidos
             });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Erro interno do servidor", errorMessage: error.message });
+        }
+    },
+
+    cancelarPedido: async (req, res) => {
+        try {
+            const idPedido = Number(req.params.id);
+
+            if (!Number.isInteger(idPedido) || idPedido <= 0) {
+                return res.status(400).json({ message: "Envie um id de pedido válido." });
+            }
+
+            const resultado = await pedidoRepository.cancelarPedidoCliente(idPedido, req.id_cliente);
+
+            if (!resultado.ok) {
+                return res.status(resultado.codigo).json({ message: resultado.message });
+            }
+
+            return res.status(200).json({ message: `Pedido #${idPedido} cancelado com sucesso.` });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Erro interno do servidor", errorMessage: error.message });

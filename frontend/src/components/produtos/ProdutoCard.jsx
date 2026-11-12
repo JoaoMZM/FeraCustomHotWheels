@@ -59,7 +59,6 @@ export const ProdutoCard = ({
 
   return (
     <article className="produto-card">
-      {/* Clique na Imagem abre os Detalhes */}
       <div 
         className="produto-card-imagem" 
         onClick={onClickDetalhes}
@@ -97,7 +96,6 @@ export const ProdutoCard = ({
           <span className="produto-card-sku">SKU #{produto.sku}</span>
         )}
 
-        {/* Clique no Nome abre os Detalhes */}
         <span 
           className="produto-card-nome" 
           onClick={onClickDetalhes}

@@ -1,15 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-/**
- * Mantém uma conversa atualizada por polling incremental (só busca mensagens novas).
- *
- * @param {object}   opts
- * @param {string}   opts.chave      
- * @param {boolean}  opts.ativo      
- * @param {Function} opts.carregar   
- * @param {Function} opts.enviar     
- * @param {number}   opts.intervalo  
- */
 export function useConversa({ chave, ativo = true, carregar, enviar, intervalo = 4000 }) {
   const [mensagens, setMensagens] = useState([]);
   const [carregando, setCarregando] = useState(true);

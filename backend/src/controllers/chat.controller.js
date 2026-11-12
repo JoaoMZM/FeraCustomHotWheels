@@ -9,7 +9,6 @@ const lerApos = (valor) => {
     return Number.isInteger(n) && n > 0 ? n : 0;
 };
 
-// Valida e normaliza o texto. Retorna { texto } ou { erro }.
 const validarTexto = (bruto) => {
     if (typeof bruto !== 'string') return { erro: "Digite uma mensagem." };
     const texto = bruto.trim();
@@ -25,9 +24,7 @@ const erroInterno = (res, error) => {
 
 const chatController = {
 
-    // ---------------- CLIENTE ----------------
 
-    // GET /chat/produtos/:idProduto?apos=<id>
     buscarConversaDoProduto: async (req, res) => {
         try {
             const { idProduto } = req.params;
@@ -38,7 +35,6 @@ const chatController = {
             }
 
             const mensagens = await chatRepository.listarMensagens(conversa.id_conversa, lerApos(req.query.apos));
-            // Quem abre a conversa leu as respostas do vendedor
             await chatRepository.marcarComoLidas(conversa.id_conversa, 'vendedor');
 
             return res.status(200).json({ idConversa: conversa.id_conversa, mensagens });
@@ -47,7 +43,6 @@ const chatController = {
         }
     },
 
-    // POST /chat/produtos/:idProduto/mensagens
     enviarDoCliente: async (req, res) => {
         try {
             const { idProduto } = req.params;
@@ -75,9 +70,7 @@ const chatController = {
         }
     },
 
-    // ---------------- VENDEDOR (admin) ----------------
 
-    // GET /chat/admin/conversas
     listarConversas: async (req, res) => {
         try {
             const conversas = await chatRepository.listarConversasAdmin();
@@ -90,7 +83,6 @@ const chatController = {
         }
     },
 
-    // GET /chat/admin/conversas/:id/mensagens?apos=<id>
     listarMensagensAdmin: async (req, res) => {
         try {
             const conversa = await chatRepository.buscarConversaPorId(req.params.id);
@@ -113,7 +105,6 @@ const chatController = {
         }
     },
 
-    // POST /chat/admin/conversas/:id/mensagens
     enviarDoVendedor: async (req, res) => {
         try {
             const { texto, erro } = validarTexto(req.body?.texto);

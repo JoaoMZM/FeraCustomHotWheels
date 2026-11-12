@@ -28,7 +28,7 @@ export default function ProdutosPage() {
 
   const [adicionados, setAdicionados] = useState({});
   const [favoritos, setFavoritos] = useState({});
-  const [aviso, setAviso] = useState(null); // { mensagem, tipo, chave }
+  const [aviso, setAviso] = useState(null); 
 
   const [menuAberto, setMenuAberto] = useState(false);
   const [posicao, setPosicao] = useState({ top: 0, left: 0 });
@@ -98,8 +98,6 @@ const carregarCategorias = useCallback(async () => {
     carregarProdutos();
   }, [carregarCategorias, carregarProdutos]);
 
-  // O carrinho fica no localStorage: adicionar não exige login
-  // (o login só é pedido ao finalizar a compra).
   const handleAdicionarCarrinho = (produto, quantidade = 1) => {
     if (produto.estoque <= 0) return;
 

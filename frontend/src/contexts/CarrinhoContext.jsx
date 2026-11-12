@@ -35,12 +35,6 @@ export function CarrinhoProvider({ children }) {
     setItens(proximo);
   }, []);
 
-  /**
-   * Adiciona um produto ao carrinho respeitando o estoque.
-   * Retorna { ok, mensagem }:
-   *  - ok=false: nada foi adicionado (mensagem explica o motivo)
-   *  - ok=true com mensagem: adicionou, mas limitou a quantidade pelo estoque
-   */
   const adicionarItem = useCallback(
     (produto, quantidade = 1) => {
       const normal = normalizarProduto(produto);
@@ -137,11 +131,6 @@ export function CarrinhoProvider({ children }) {
     aplicar(() => []);
   }, [aplicar]);
 
-  /**
-   * Confere o carrinho com a API: atualiza preço/estoque e remove produtos
-   * que saíram do ar ou esgotaram. Retorna uma lista de avisos (strings).
-   * Se a API estiver fora do ar, o carrinho fica como está.
-   */
   const sincronizarCarrinho = useCallback(async () => {
     const snapshot = itensRef.current;
     if (snapshot.length === 0) return [];

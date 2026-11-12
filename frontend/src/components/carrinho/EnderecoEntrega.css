@@ -1,4 +1,4 @@
-/* Coluna da esquerda do carrinho: itens + endereço de entrega */
+
 .carrinho-coluna {
     display: flex;
     flex-direction: column;

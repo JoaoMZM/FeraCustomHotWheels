@@ -177,3 +177,15 @@
 }
 .pedidos-botao--pagar:hover:not(:disabled) { background: var(--color-brand-hover); }
 .pedidos-botao--pagar:disabled { opacity: 0.6; cursor: wait; }
+
+.pedidos-botao--cancelar {
+  background: var(--color-bg-card);
+  color: var(--color-ink);
+  border-color: var(--color-border-strong);
+  box-shadow: none;
+}
+.pedidos-botao--cancelar:hover:not(:disabled) {
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+}
+.pedidos-botao--cancelar:disabled { opacity: 0.6; cursor: wait; }

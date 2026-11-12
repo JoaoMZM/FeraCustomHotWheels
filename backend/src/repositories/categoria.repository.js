@@ -8,6 +8,12 @@ export const categoriaRepository = {
         return rows;
     },
 
+    buscarPorNome: async (nome) => {
+        const sql = 'SELECT * FROM categorias WHERE LOWER(nome) = LOWER(?) LIMIT 1';
+        const [rows] = await db.execute(sql, [nome]);
+        return rows[0] ?? null;
+    },
+
     selecionar: async () => {
         const sql = 'SELECT * FROM categorias'
         const [rows] = await db.execute(sql)

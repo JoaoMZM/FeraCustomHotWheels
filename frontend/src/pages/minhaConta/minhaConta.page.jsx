@@ -173,7 +173,6 @@ export default function MinhaContaPage() {
     }
   }
 
-  // Quem veio do carrinho para cadastrar o endereço volta para finalizar a compra
   function handleEnderecoSalvo() {
     if (searchParams.get('voltar') === 'carrinho') {
       navigate('/carrinho');
